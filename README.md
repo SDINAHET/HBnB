@@ -1,2 +1,1 @@
-# HBnB
-Holberton HBnB
+README.md of HBNB
