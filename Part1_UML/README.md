@@ -74,9 +74,9 @@ classDiagram
         - boolean is_admin
         - String DateTime created_at
         - String DateTime updated_at
-        + getUUID4(): ID
-        + getCreatedAt(): datetime
-        + getUpdatedAt(): datetime
+        + getUUID4() ID
+        + getCreatedAt() datetime
+        + getUpdatedAt() datetime
         + register_profile()
         + update_profile()
 		+delete_profile()
@@ -91,9 +91,9 @@ classDiagram
         - float longitude
         - String DateTime created_at
         - String DateTime updated_at
-        + getUUID4(): ID
-        + getCreatedAt(): datetime
-        + getUpdatedAt(): datetime
+        + getUUID4() ID
+        + getCreatedAt() datetime
+        + getUpdatedAt() datetime
         + create_place()
         + update_place()
         + delete_place()
@@ -105,9 +105,9 @@ classDiagram
         - String comment
         - String DateTime created_at
         - String DateTime updated_at
-        + getUUID4(): ID
-        + getCreatedAt(): datetime
-        + getUpdatedAt(): datetime
+        + getUUID4() ID
+        + getCreatedAt() datetime
+        + getUpdatedAt() datetime
         + create_review()
         + delete_review()
     }
@@ -118,15 +118,15 @@ classDiagram
         - String description
         - String DateTime created_at
         - String DateTime updated_at
-        + getUUID4(): ID
-        + getCreatedAt(): datetime
-        + getUpdatedAt(): datetime
+        + getUUID4() ID
+        + getCreatedAt() datetime
+        + getUpdatedAt() datetime
     }
 
     User "1" -- "*" Place : owns
     User "1" -- "*" Review : update
     Place "1" -- "*" Review : receives
-    Place "1" -- "*" Amenity : has
+    Place "1" o-- "*" Amenity : has
 ```
 
 
