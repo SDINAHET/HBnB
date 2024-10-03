@@ -123,10 +123,10 @@ classDiagram
         + getUUID4() ID
         + getCreatedAt() datetime
         + getUpdatedAt() datetime
-        + liste_amenity()
-        + liste_amenity()
-        + liste_amenity()
-        + liste_amenity()
+        + created_amenity()
+        + updated_amenity()
+        + deleted_amenity()
+        + listed_amenity()
     }
 
     User "1" -- "*" Place : owns
