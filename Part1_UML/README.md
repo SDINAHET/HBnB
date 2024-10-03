@@ -1,4 +1,4 @@
-#Package Diagram
+# Package Diagram
 ```mermaid
 classDiagram
 	class PresentationLayer {
@@ -25,7 +25,7 @@ classDiagram
 ```
 
 
-#Class Diagram
+# Class Diagram
 ```mermaid
 classDiagram
 	class User {
@@ -62,7 +62,7 @@ classDiagram
 ```
 
 
-#correction Class Diagram
+# correction Class Diagram
 ```mermaid
 classDiagram
     class User {
@@ -136,8 +136,8 @@ classDiagram
 ```
 
 
-#Sequence Diagram
-##1. User Registration Sequence Diagram
+# Sequence Diagram
+## 1. User Registration Sequence Diagram
 ```mermaid
 sequenceDiagram
 	participant User
@@ -153,7 +153,7 @@ sequenceDiagram
 	API-->>User: User Created
 ```
 
-##2. Place Creation Sequence Diagram
+## 2. Place Creation Sequence Diagram
 ```mermaid
 sequenceDiagram
 	participant User
@@ -168,7 +168,7 @@ sequenceDiagram
 	BusinessLogic-->>API: Return Place Info
 	API-->>User: Place Created
 ```
-##3. Review Submission Sequence Diagram
+## 3. Review Submission Sequence Diagram
 ```mermaid
 sequenceDiagram
 	participant User
@@ -183,7 +183,7 @@ sequenceDiagram
 	BusinessLogic-->>API: Return Review Info
 	API-->>User: Review Added
 ```
-##4. Fetching a List of Places Sequence Diagram
+## 4. Fetching a List of Places Sequence Diagram
 ```mermaid
 sequenceDiagram
 	participant User
