@@ -126,8 +126,8 @@ classDiagram
     User "1" -- "*" review : update
     Place "1" -- "*" Review : receives
     Place "1" -- "*" Amenity : has
-	Place->>Amenity: addAmenity(name, description)
-	Note over Place: Place can have multiple Amenities
+    Place->>Amenity: addAmenity(name, description)
+    Note over Place: Place can have multiple Amenities
 ```
 
 
