@@ -79,7 +79,7 @@ classDiagram
         + getUpdatedAt() datetime
         + register_profile()
         + update_profile()
-		+delete_profile()
+        + delete_profile()
     }
 
     class Place {
