@@ -97,6 +97,7 @@ classDiagram
         + create_place()
         + update_place()
         + delete_place()
+		+ list_place()
     }
 
     class Review {
@@ -110,6 +111,7 @@ classDiagram
         + getUpdatedAt() datetime
         + create_review()
         + delete_review()
+        + liste_by_place_review()
     }
 
     class Amenity {
@@ -121,6 +123,10 @@ classDiagram
         + getUUID4() ID
         + getCreatedAt() datetime
         + getUpdatedAt() datetime
+        + liste_amenity()
+        + liste_amenity()
+        + liste_amenity()
+        + liste_amenity()
     }
 
     User "1" -- "*" Place : owns
