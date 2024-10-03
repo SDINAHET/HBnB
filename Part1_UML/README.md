@@ -29,7 +29,7 @@ classDiagram
 ```mermaid
 classDiagram
 	class User {
-		 - String first_name
+		- String first_name
 		- String last_name
 		- String email
 		- String password
@@ -39,15 +39,15 @@ classDiagram
 	class Place {
 		- String title
 		- String description
-		- float price
-		- float latitude
-		- float longitude
+		- Float price
+		- Float latitude
+		- Float longitude
 		+ create_place()
 		+ update_place()
 		+ delete_place()
 	}
 	class Review {
-		 - int rating
+		- Int rating
 		- String comment
 		+ create_review()
 		+ delete_review()
@@ -66,12 +66,12 @@ classDiagram
 ```mermaid
 classDiagram
     class User {
-        - string UUID4 id
+        - String UUID4 id
         - String first_name
         - String last_name
         - String email
         - String password
-        - boolean is_admin
+        - Boolean is_admin
         - String DateTime created_at
         - String DateTime updated_at
         + getUUID4() ID
@@ -86,9 +86,9 @@ classDiagram
         - String UUID4 id
         - String title
         - String description
-        - float price
-        - float latitude
-        - float longitude
+        - Float price
+        - Float latitude
+        - Float longitude
         - String DateTime created_at
         - String DateTime updated_at
         + getUUID4() ID
@@ -102,7 +102,7 @@ classDiagram
 
     class Review {
         - String UUID4 id
-        - int rating
+        - Int rating
         - String comment
         - String DateTime created_at
         - String DateTime updated_at
@@ -136,7 +136,7 @@ classDiagram
 ```
 
 
-# Sequence Diagram
+# Sequence Diagrams
 ## 1. User Registration Sequence Diagram
 ```mermaid
 sequenceDiagram
