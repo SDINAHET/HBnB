@@ -1,43 +1,45 @@
 # HBnB Evolution Technical Documentation
 
 Table of Contents
-Introduction
-High-Level Architecture
-Business Logic Layer
-API Interaction Flow
-Conclusion
+1) Introduction
+2) High-Level Architecture
+3) Business Logic Layer
+4) API Interaction Flow
+5) Conclusion
 
-## Introduction
+## 1) Introduction
 ### Overview of the Project
 HBnB Evolution is a simplified version of an AirBnB-like application designed to facilitate user interactions around property listings, user reviews, and amenities. This document serves as a foundation for understanding the architecture, business logic, and API interactions within the application.
 
 ### Purpose of the Document
 The purpose of this document is to provide a clear and detailed reference that outlines the application's structure, the relationships between various components, and the flow of information through the system. This will serve as a guide for the implementation phases of the HBnB Evolution application.
 
-## High-Level Architecture
+## 2) High-Level Architecture
 ### High-Level Package Diagram
 The following diagram illustrates the three-layer architecture of the HBnB Evolution application. It demonstrates the interaction between the Presentation Layer, Business Logic Layer, and Persistence Layer using the facade pattern.
-
 ```mermaid
 classDiagram
-class PresentationLayer {
-    <<Interface>>
-    + ServiceAPI
-}
+	class PresentationLayer {
+		<<Interface>>
+		+ServiceAPI
+		+WebService
+	}
 
-class BusinessLogicLayer {
-    + UserModel
-    + PlaceModel
-    + ReviewModel
-    + AmenityModel
-}
+	class BusinessLogicLayer {
+		+User
+		+Place
+		+Review
+		+Amenity
+	}
 
-class PersistenceLayer {
-    + DatabaseAccess
-}
+	class PersistenceLayer {
+		+DatabaseManager
+		+Database JSON
+		+Queries
+	}
 
-PresentationLayer --> BusinessLogicLayer : Facade Pattern
-BusinessLogicLayer --> PersistenceLayer : Database Operations
+	PresentationLayer --> BusinessLogicLayer : Facade Pattern
+	BusinessLogicLayer --> PersistenceLayer : Database Operations
 ```
 
 Explanatory Notes:
@@ -46,7 +48,7 @@ Business Logic Layer: It includes the core models representing the entities (Use
 Persistence Layer: Responsible for data storage and retrieval, this layer interacts directly with the database to perform CRUD operations.
 Facade Pattern: The facade pattern simplifies communication between the layers by providing a unified interface through which the Presentation Layer interacts with the Business Logic Layer.
 
-## Business Logic Layer
+## 3) Business Logic Layer
 ### Detailed Class Diagram
 The following diagram outlines the classes within the Business Logic layer, detailing the attributes, methods, and relationships between the User, Place, Review, and Amenity entities.
 
@@ -131,7 +133,7 @@ Relationships:
 A user can own multiple places (1 to many).
 A place can have multiple reviews and amenities (1 to many).
 
-## API Interaction Flow
+## 4) API Interaction Flow
 ### Sequence Diagrams for API Calls
 The following sequence diagrams depict the flow of interactions for four different API calls, illustrating how information moves between the layers.
 
@@ -201,5 +203,5 @@ Explanatory Notes:
 Each sequence diagram illustrates the step-by-step interactions for specific API calls.
 The flow shows how data is validated, processed, and stored, as well as how responses are generated and sent back to the user.
 
-## Conclusion
+## 5) Conclusion
 This technical documentation provides a foundational understanding of the HBnB Evolution application's architecture, business logic, and API interactions. The diagrams and explanations included serve as a comprehensive reference for the implementation phases, ensuring that all stakeholders have a clear vision of the system's design and functionality.
