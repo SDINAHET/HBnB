@@ -28,6 +28,43 @@ classDiagram
 # Class Diagram
 ```mermaid
 classDiagram
+	class User {
+		- String first_name
+		- String last_name
+		- String email
+		- String password
+		+ register()
+		+ update_profile()
+	}
+	class Place {
+		- String title
+		- String description
+		- Float price
+		- Float latitude
+		- Float longitude
+		+ create_place()
+		+ update_place()
+		+ delete_place()
+	}
+	class Review {
+		- Int rating
+		- String comment
+		+ create_review()
+		+ delete_review()
+	}
+	class Amenity {
+		- String name
+		- String description
+	}
+	User "1" -- "*" Place : owns
+	Place "1" -- "*" Review : receives
+	Place "1" -- "*" Amenity : has
+```
+
+
+# correction Class Diagram
+```mermaid
+classDiagram
     class User {
         - String UUID4 id
         - String first_name
