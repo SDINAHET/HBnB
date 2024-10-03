@@ -29,14 +29,14 @@ classDiagram
 ```mermaid
 classDiagram
     class User {
-        - String UUID4 id
-        - String first_name
-        - String last_name
-        - String email
-        - String password
-        - Boolean is_admin
-        - String DateTime created_at
-        - String DateTime updated_at
+        - UUID4 ID: String
+        - First_name: String
+        - Last_name: String
+        - Email: String
+        - Password: String
+        - Is_admin: Boolean
+        - DateTime created_at: String
+        - DateTime updated_at: String
         + getUUID4() ID
         + getCreatedAt() datetime
         + getUpdatedAt() datetime
@@ -46,43 +46,43 @@ classDiagram
     }
 
     class Place {
-        - String UUID4 id
-        - String title
-        - String description
-        - Float price
-        - Float latitude
-        - Float longitude
-        - String DateTime created_at
-        - String DateTime updated_at
+        - UUID4 ID: String
+        - Title: String
+        - Description: String
+        - Price: Float
+        - Latitude: Float
+        - Longitude: Float
+        - DateTime created_at: String
+        - DateTime updated_at: String
         + getUUID4() ID
         + getCreatedAt() datetime
         + getUpdatedAt() datetime
-        + create_place()
-        + update_place()
-        + delete_place()
+        + created_place()
+        + updated_place()
+        + deleted_place()
 		+ list_place()
     }
 
     class Review {
-        - String UUID4 id
-        - Int rating
-        - String comment
-        - String DateTime created_at
-        - String DateTime updated_at
+        - UUID4 ID: String
+        - Rating: Int
+        - Comment: String
+        - DateTime created_at: String
+        - DateTime updated_at: String
         + getUUID4() ID
         + getCreatedAt() datetime
         + getUpdatedAt() datetime
-        + create_review()
-        + delete_review()
-        + liste_by_place_review()
+        + created_review()
+        + deleted_review()
+        + listed_by_place_review()
     }
 
     class Amenity {
-        - String UUID4 id
-        - String name
-        - String description
-        - String DateTime created_at
-        - String DateTime updated_at
+        - UUID4 ID: String
+        - Name: String
+        - Description: String
+        - DateTime created_at: String
+        - DateTime updated_at: String
         + getUUID4() ID
         + getCreatedAt() datetime
         + getUpdatedAt() datetime
