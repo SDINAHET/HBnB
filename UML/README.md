@@ -1,4 +1,4 @@
-```Mermaid
+```mermaid
 sequenceDiagram
 	participant User
 	participant API
