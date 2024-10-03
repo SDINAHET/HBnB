@@ -61,6 +61,7 @@ classDiagram
 	Place "1" -- "*" Amenity : has
 ```
 
+
 #correction Class Diagram
 ```mermaid
 classDiagram
@@ -123,11 +124,9 @@ classDiagram
     }
 
     User "1" -- "*" Place : owns
-    User "1" -- "*" review : update
+    User "1" -- "*" Review : update
     Place "1" -- "*" Review : receives
     Place "1" -- "*" Amenity : has
-    Place->>Amenity: addAmenity(name, description)
-    Note over Place: Place can have multiple Amenities
 ```
 
 
