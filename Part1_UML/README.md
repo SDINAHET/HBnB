@@ -1,4 +1,4 @@
-# Package Diagram
+# Task0: Package Diagram
 ```mermaid
 classDiagram
 	class PresentationLayer {
@@ -25,7 +25,7 @@ classDiagram
 ```
 
 
-# Class Diagram
+# Task1: Class Diagram
 ```mermaid
 classDiagram
     class User {
@@ -99,7 +99,7 @@ classDiagram
 ```
 
 
-# Sequence Diagrams
+# Task2: Sequence Diagrams
 ## 1. User Registration Sequence Diagram
 ```mermaid
 sequenceDiagram
