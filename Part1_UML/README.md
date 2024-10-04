@@ -143,7 +143,8 @@ User: Represents the application user with attributes for identification and met
 Place: Represents a property listing, including methods for creation, updating, and listing of properties.
 Review: Allows users to submit reviews for places they have visited, associated with both a user and a place.
 Amenity: Represents amenities that can be associated with places, including methods for managing amenities.
-Relationships:
+
+#### Relationships:
 A user can own multiple places (1 to many).
 A place can have multiple reviews and amenities (1 to many).
 
