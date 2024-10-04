@@ -183,6 +183,20 @@ Database-->>BusinessLogic: Confirm User Registration
 BusinessLogic-->>API: Return Success/Failure
 API-->>User: Response
 ```
+##### Explanatory Notes:
+Overview: This diagram illustrates the sequence of events that occur when a user registers in the application. It outlines the interactions between the user, API, business logic, and persistence layers.
+
+Step-by-Step Explanation:
+1.User Action: The user initiates the registration process by sending a request to the API to create a new user.
+2.API Processing: The API receives the request and forwards the user data to the Business Logic layer for validation.
+3.Data Validation: The Business Logic layer validates the user data to ensure that it meets all required criteria (e.g., format, uniqueness).
+4.Data Persistence: Upon successful validation, the Business Logic layer instructs the Persistence layer to save the new user information to the database.
+5.Success Confirmation: The Persistence layer confirms the successful save operation and returns a success message to the Business Logic layer.
+6.Return to API: The Business Logic layer then sends back the user information to the API.
+7.Final Response: Finally, the API returns a response to the user, confirming that the registration was successful.
+
+Significance: This diagram demonstrates the process flow for user registration, emphasizing data validation and persistence, and highlights the interaction between different layers of the application.
+
 ##### Purpose:
 To outline the process of user registration, illustrating the flow of information and actions between the user and the system.
 
@@ -214,6 +228,21 @@ Database-->>BusinessLogic: Confirm Place Creation
 BusinessLogic-->>API: Return Success/Failure
 API-->>User: Response
 ```
+
+##### Explanatory Notes:
+Overview: This diagram depicts the process of creating a new place within the application, showing the interactions necessary to handle the request.
+
+Step-by-Step Explanation:
+1.User Action: The user sends a request to the API to create a new place.
+2.API Processing: The API forwards the request to the Business Logic layer for processing.
+3.Data Validation: The Business Logic layer validates the place data (e.g., ensuring required fields are filled and values are appropriate).
+4.Data Persistence: After validation, the Business Logic layer instructs the Persistence layer to save the new place information.
+5.Success Confirmation: The Persistence layer confirms the operation's success, returning a message to the Business Logic layer.
+6.Return to API: The Business Logic layer sends the place information back to the API.
+7.Final Response: The API responds to the user, confirming the successful creation of the place.
+
+Significance: This diagram illustrates the workflow for creating places in the application, highlighting the importance of validation and interaction among the layers involved.
+
 ##### Purpose:
 To illustrate the steps involved in creating a new place, detailing the interactions among system components.
 
@@ -242,6 +271,19 @@ Database-->>BusinessLogic: Confirm Review Submission
 BusinessLogic-->>API: Return Success/Failure
 API-->>User: Response
 ```
+##### Explanatory Notes:
+Overview: This diagram shows the steps involved when a user submits a review for a place, detailing how the request is processed.
+
+Step-by-Step Explanation:
+1.User Action: The user initiates the review submission process by sending a request to the API.
+2.API Processing: The API receives the request and forwards it to the Business Logic layer.
+3.Data Validation: The Business Logic layer validates the review data to ensure it meets the necessary criteria (e.g., rating is within an acceptable range).
+4.Data Persistence: Upon successful validation, the Business Logic layer instructs the Persistence layer to save the review.
+5.Success Confirmation: The Persistence layer confirms the save operation and returns a success message to the Business Logic layer.
+6.Return to API: The Business Logic layer sends the review information back to the API.
+7.Final Response: Finally, the API returns a confirmation message to the user, indicating that the review has been successfully added.
+
+Significance: This diagram emphasizes the importance of validating user input and shows how user interactions with reviews are handled within the application's architecture.
 
 ##### Purpose:
 To demonstrate how users submit reviews and how these are processed within the application.
@@ -270,6 +312,20 @@ Database-->>BusinessLogic: Return Places Data
 BusinessLogic-->>API: Send Places Data
 API-->>User: Return List of Places
 ```
+##### Explanatory Notes:
+Overview: This diagram illustrates the process of fetching a list of places, demonstrating the interactions required to retrieve data from the application.
+
+Step-by-Step Explanation:
+1.User Action: The user requests a list of places through the API.
+2.API Processing: The API forwards the request to the Business Logic layer for validation and processing.
+3.Validation Check: The Business Logic layer performs any necessary validation to ensure that the request is legitimate (e.g., checking user permissions).
+4.Data Retrieval: The Business Logic layer then instructs the Persistence layer to retrieve the list of places from the database.
+5.Return Data: The Persistence layer returns the requested list of places to the Business Logic layer.
+6.Return to API: The Business Logic layer sends the list back to the API.
+7.Final Response: The API then returns the list of places to the user.
+
+Significance: This diagram highlights the process for retrieving data in the application, showing how requests are handled and data is managed across the layers, ensuring a smooth user experience.
+
 ##### Purpose:
 To show the process of fetching a list of places, highlighting the interactions necessary to retrieve data.
 
@@ -283,7 +339,7 @@ The validation step ensures that the request is legitimate, while retrieval from
 This diagram illustrates the retrieval operations of the Business Logic Layer and its communication with the Presentation Layer, emphasizing the application’s ability to respond to user queries effectively.
 
 
-#### Explanatory Notes:
+#### Explanatory Notes all sequence diagram:
 Each sequence diagram illustrates the step-by-step interactions for specific API calls.
 The flow shows how data is validated, processed, and stored, as well as how responses are generated and sent back to the user.
 
