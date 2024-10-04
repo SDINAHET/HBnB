@@ -42,7 +42,7 @@ classDiagram
 	BusinessLogicLayer --> PersistenceLayer : Database Operations
 ```
 
-Explanatory Notes:
+#### Explanatory Notes:
 Presentation Layer: This layer encompasses all services and API endpoints that interact with users, facilitating user registration, property management, and review submissions.
 Business Logic Layer: It includes the core models representing the entities (User, Place, Review, Amenity) and their respective business logic.
 Persistence Layer: Responsible for data storage and retrieval, this layer interacts directly with the database to perform CRUD operations.
@@ -152,10 +152,10 @@ A place can have multiple reviews and amenities (1 to many).
 To define the structure of key classes in the application, including their attributes and methods, and to illustrate the relationships between them.
 
 #### Key Components:
-    User: Manages user-related data and functionality.
-    Place: Represents locations that can be listed, reviewed, and interacted with.
-    Review: Handles the reviews made by users on places.
-    Amenity: Describes additional features associated with a place.
+User: Manages user-related data and functionality.
+Place: Represents locations that can be listed, reviewed, and interacted with.
+Review: Handles the reviews made by users on places.
+Amenity: Describes additional features associated with a place.
 
 #### Design Decisions:
 Each class encapsulates its data and provides methods for interacting with that data, promoting encapsulation and abstraction.
