@@ -174,12 +174,12 @@ sequenceDiagram
 participant User
 participant API
 participant BusinessLogic
-participant Database
+participant Persistence
 
 User->>API: Register User (first_name, last_name, email, password)
 API->>BusinessLogic: Validate and Process Registration
-BusinessLogic->>Database: Save User Data
-Database-->>BusinessLogic: Confirm User Registration
+BusinessLogic->>Persistence: Save User Data
+Persistence-->>BusinessLogic: Confirm User Registration
 BusinessLogic-->>API: Return Success/Failure
 API-->>User: Response
 ```
@@ -219,12 +219,12 @@ sequenceDiagram
 participant User
 participant API
 participant BusinessLogic
-participant Database
+participant Persistence
 
 User->>API: Create Place (title, description, price, latitude, longitude)
 API->>BusinessLogic: Validate Place Data
-BusinessLogic->>Database: Save Place Data
-Database-->>BusinessLogic: Confirm Place Creation
+BusinessLogic->>Persistence: Save Place Data
+Persistence-->>BusinessLogic: Confirm Place Creation
 BusinessLogic-->>API: Return Success/Failure
 API-->>User: Response
 ```
@@ -262,12 +262,12 @@ sequenceDiagram
 participant User
 participant API
 participant BusinessLogic
-participant Database
+participant Persistence
 
 User->>API: Submit Review (place_id, rating, comment)
 API->>BusinessLogic: Validate Review Data
-BusinessLogic->>Database: Save Review Data
-Database-->>BusinessLogic: Confirm Review Submission
+BusinessLogic->>Persistence: Save Review Data
+Persistence-->>BusinessLogic: Confirm Review Submission
 BusinessLogic-->>API: Return Success/Failure
 API-->>User: Response
 ```
@@ -303,12 +303,12 @@ sequenceDiagram
 participant User
 participant API
 participant BusinessLogic
-participant Database
+participant Persistence
 
 User->>API: Request List of Places
 API->>BusinessLogic: Fetch Places
-BusinessLogic->>Database: Retrieve Places Data
-Database-->>BusinessLogic: Return Places Data
+BusinessLogic->>Persistence: Retrieve Places Data
+Persistence-->>BusinessLogic: Return Places Data
 BusinessLogic-->>API: Send Places Data
 API-->>User: Return List of Places
 ```
