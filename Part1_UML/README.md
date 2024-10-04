@@ -69,72 +69,71 @@ The following diagram outlines the classes within the Business Logic layer, deta
 
 ```mermaid
 classDiagram
+     %% Classe de Base pour les Entités
+    class BaseEntity {
+        - UUID4 ID: String
+        - createdAt: DateTime
+        - updatedAt: DateTime
+        + getId() String
+        + getCreatedAt() DateTime
+        + getUpdatedAt() DateTime
+    }
+
+    %% Classe User héritant de BaseEntity
     class User {
-        - UUID4 ID: String
-        - First_name: String
-        - Last_name: String
-        - Email: String
-        - Password: String
-        - Is_admin: Boolean
-        - DateTime created_at: String
-        - DateTime updated_at: String
-        + getUUID4() ID
-        + getCreatedAt() datetime
-        + getUpdatedAt() datetime
-        + register_profile()
-        + update_profile()
-        + delete_profile()
+        - firstName: String
+        - lastName: String
+        - email: String
+        - password: String
+        - isAdmin: Boolean
+        + registerProfile() Void
+        + updateProfile() Void
+        + deleteProfile() Void
     }
 
+    %% Classe Place héritant de BaseEntity
     class Place {
-        - UUID4 ID: String
-        - Title: String
-        - Description: String
-        - Price: Float
-        - Latitude: Float
-        - Longitude: Float
-        - DateTime created_at: String
-        - DateTime updated_at: String
-        + getUUID4() ID
-        + getCreatedAt() datetime
-        + getUpdatedAt() datetime
-        + created_place()
-        + updated_place()
-        + deleted_place()
-		+ list_place()
+        - title: String
+        - description: String
+        - price: Float
+        - latitude: Float
+        - longitude: Float
+        - amenities: List<Amenity>
+        - owner: User
+        + createPlace() Void
+        + updatePlace() Void
+        + deletePlace() Void
+        + listPlaces() List<Place>
     }
 
+    %% Classe Review héritant de BaseEntity
     class Review {
-        - UUID4 ID: String
-        - Rating: Int
-        - Comment: String
-        - DateTime created_at: String
-        - DateTime updated_at: String
-        + getUUID4() ID
-        + getCreatedAt() datetime
-        + getUpdatedAt() datetime
-        + created_review()
-        + deleted_review()
-        + listed_by_place_review()
+        - rating: Int
+        - comment: String
+        + createReview() Void
+        + deleteReview() Void
+        + listReviewsByPlace() List<Review>
     }
 
+    %% Classe Amenity héritant de BaseEntity
     class Amenity {
-        - UUID4 ID: String
-        - Name: String
-        - Description: String
-        - DateTime created_at: String
-        - DateTime updated_at: String
-        + getUUID4() ID
-        + getCreatedAt() datetime
-        + getUpdatedAt() datetime
-        + created_amenity()
-        + updated_amenity()
-        + deleted_amenity()
-        + listed_amenity()
+        - name: String
+        - description: String
+        + createAmenity() Void
+        + updateAmenity() Void
+        + deleteAmenity() Void
+        + listAmenities() List<Amenity>
     }
 
+    %% Relations d'Héritage
+    BaseEntity <|-- User
+    BaseEntity <|-- Place
+    BaseEntity <|-- Review
+    BaseEntity <|-- Amenity
+
+    %% Relations entre les Entités
     User "1" -- "*" Place : owns
-    User "1" -- "*" Review : update
+    User "1" -- "*" Review : writes
     Place "1" -- "*" Review : receives
     Place "1" o-- "*" Amenity : has
 ```
