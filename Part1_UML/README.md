@@ -132,10 +132,10 @@ classDiagram
     BaseEntity <|-- Amenity
 
     %% Relations entre les Entités
-    User "1" -- "*" Place : owns
-    User "1" -- "*" Review : writes
-    Place "1" -- "*" Review : receives
-    Place "1" o-- "*" Amenity : has
+    User "1" -- "0..*" Place : owns
+    User "1" -- "0..*" Review : writes
+    Place "1" o-- "0..*" Review : receives
+    Place "1" o-- "0..*" Amenity : has
 ```
 
 #### Explanatory Notes:
