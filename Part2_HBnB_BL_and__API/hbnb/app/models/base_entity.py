@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+# app/models/base_entity.py
 import uuid
 from datetime import datetime
 
