@@ -2,7 +2,6 @@
 
 # app/models/place.py
 
-
 class Place(BaseEntity):
     def __init__(self, title, description, price, latitude, longitude, owner):
         super().__init__()
