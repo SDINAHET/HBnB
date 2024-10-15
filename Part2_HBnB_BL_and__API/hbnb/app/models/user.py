@@ -3,6 +3,7 @@
 # app/models/user.py
 from base_entity import BaseEntity
 import re
+import importlib.util
 
 
 class User(BaseEntity):
@@ -14,10 +15,8 @@ class User(BaseEntity):
         self.password = password
         self.isAdmin = isAdmin
 
-
     def registerProfile(self):
         pass
-
 
     def updateProfile(self):
         pass
