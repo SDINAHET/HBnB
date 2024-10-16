@@ -10,11 +10,12 @@ class HBnBFacade:
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
 
+# User_service_facade
     # Placeholder method for creating a user
     def create_user(self, user_data):
         # Logic will be implemented in later tasks
         pass
-        
+
 
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
@@ -28,6 +29,7 @@ class HBnBFacade:
         return self.user_repo.get_by_attribute('email', email)
 
 
+# Amenity_service_facade
 def create_amenity(self, amenity_data):
     # Placeholder for logic to create an amenity
     pass
@@ -45,6 +47,7 @@ def update_amenity(self, amenity_id, amenity_data):
     pass
 
 
+# Place_service_facade
 def create_place(self, place_data):
     # Placeholder for logic to create a place, including validation for price, latitude, and longitude
     pass
@@ -62,6 +65,7 @@ def update_place(self, place_id, place_data):
     pass
 
 
+# Review_service_facade
 def create_review(self, review_data):
     # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
     pass
