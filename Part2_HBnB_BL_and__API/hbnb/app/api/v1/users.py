@@ -1,6 +1,15 @@
 #!/usr/bin/python3
+"""
+This module defines the API endpoints for user management in the HBnB application.
+It implements the routes for creating, retrieving, and updating users.
 
-# app/api/v1/users.py
+Routes:
+    POST /api/v1/users/ : Create a new user.
+    GET /api/v1/users/ : Get the list of all users.
+    GET /api/v1/users/<user_id> : Get a specific user by ID.
+    PUT /api/v1/users/<user_id> : Update a user's information.
+"""
+
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
 from app.models.user import User
@@ -19,13 +28,31 @@ facade = HBnBFacade()
 
 @api.route('/')
 class UserList(Resource):
+    """
+    Resource class for handling user creation and retrieval of all users.
+    
+    Methods:
+        post: Registers a new user.
+        get: Retrieves a list of all users.
+    """
     @api.expect(user_model, validate=True)
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
     def post(self):
-        """Register a new user"""
+        """
+        Register a new user.
+        
+        This method handles the registration of a new user, checks for email uniqueness, 
+        and returns the user details if successfully created.
+        
+        Returns:
+            dict: A dictionary containing the new user's details.
+            int: The HTTP status code (201 on success, 400 on failure).
+        """
+
         user_data = api.payload
+
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
@@ -41,7 +68,16 @@ class UserList(Resource):
     @api.response(200, 'List of users retrieved successfully')
     @api.response(404, 'No users found')
     def get(self):
-        """Get the list of users"""
+        """
+        Retrieve the list of all users.
+        
+        This method retrieves all registered users. If no users are found, a 404 error is returned.
+        
+        Returns:
+            list: A list of dictionaries containing user details.
+            int: The HTTP status code (200 on success, 404 on failure).
+        """
+
         users = facade.get_all_users()
         if not users:
             return {'error': 'No users found'}, 404
@@ -55,10 +91,30 @@ class UserList(Resource):
 
 @api.route('/<user_id>')
 class UserResource(Resource):
+    """
+    Resource class for handling individual user operations: retrieval and update.
+    
+    Methods:
+        get: Retrieves a specific user by their ID.
+        put: Updates a user's information.
+    """
+
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
     def get(self, user_id):
-        """Get user details by ID"""
+        """
+        Retrieve a user's details by ID.
+        
+        This method retrieves the details of a user with the given user_id. If the user is not found, a 404 error is returned.
+        
+        Args:
+            user_id (str): The ID of the user to retrieve.
+        
+        Returns:
+            dict: A dictionary containing the user's details.
+            int: The HTTP status code (200 on success, 404 on failure).
+        """
+
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
@@ -73,7 +129,19 @@ class UserResource(Resource):
     @api.reponse(200, 'User successfully updated')
     @api.response(404, 'User not found')
     def put(self, user_id):
-        """Update user details"""
+        """
+        Update a user's details by ID.
+        
+        This method updates the details of a user with the given user_id. If the user is not found, a 404 error is returned.
+        
+        Args:
+            user_id (str): The ID of the user to update.
+        
+        Returns:
+            dict: A dictionary containing the updated user's details.
+            int: The HTTP status code (200 on success, 404 on failure).
+        """
+
         user_data = api.payload
         updated_user = facade.update_user(user_id, user_data)
         if not updated_user:

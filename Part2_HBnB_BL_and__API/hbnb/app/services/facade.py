@@ -1,33 +1,90 @@
 #!/usr/bin/python3
+"""
+This module defines the HBnBFacade class, which acts as a service layer for
+handling operations related to users, places, amenities, and reviews.
 
-#app/services/facade.py
+It provides methods for creating, retrieving, updating, and managing these
+entities by interacting with the underlying repository layer.
+"""
+
 from app.models.user import User
 from app.persistence.repository import InMemoryRepository
 
 class HBnBFacade:
+    """
+    The HBnBFacade class provides a unified interface for various services,
+    including user management, place management, amenity management, and
+    review management. It interacts with the repository layer for persistence.
+    """
+
     def __init__(self):
+        """Initialize the HBnBFacade with repositories for users, places,
+        reviews, and amenities."""
         self.user_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
 
-# User_service_facade
-    # Placeholder method for creating a user
+    # User_service_facade
     def create_user(self, user_data):
+        """
+        Create a new user and add it to the repository.
+
+        Args:
+            user_data (dict): A dictionary containing user details (e.g., first name, last name, email).
+
+        Returns:
+            User: The newly created user object.
+        """
+
         user = User(**user_data)
         self.user_repo.add(user)
         return user
 
     def get_user(self, user_id):
+        """
+        Retrieve a user by their ID.
+
+        Args:
+            user_id (str): The unique ID of the user.
+
+        Returns:
+            User: The user object, or None if the user is not found.
+        """
         return self.user_repo.get(user_id)
 
     def get_user_by_email(self, email):
+        """
+        Retrieve a user by their email.
+
+        Args:
+            email (str): The email of the user.
+
+        Returns:
+            User: The user object, or None if the user is not found.
+        """
         return self.user_repo.get_by_attribute('email', email)
 
     def get_all_users(self):
+        """
+        Retrieve all users from the repository.
+
+        Returns:
+            list: A list of all user objects.
+        """
         return self.user_repo.get_all()
 
     def update_user(self, user_id, user_data):
+        """
+        Update the details of an existing user.
+
+        Args:
+            user_id (str): The unique ID of the user to update.
+            user_data (dict): A dictionary containing the updated user details.
+
+        Returns:
+            User: The updated user object, or None if the user is not found.
+        """
         user = self.user_repo.get(user_id)
         if user:
             for key, value in user_data.items():
