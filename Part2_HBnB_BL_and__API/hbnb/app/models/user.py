@@ -27,7 +27,7 @@ class User(BaseEntity):
         User.users[self.id] = self
 
     def validate(self):
-        if not self.first_name or not self.last_name:
+        if not self.firstName or not self.lastName:
             raise ValidationError("First name and last name cannot be empty.")
         if not self.is_valid_email(self.email):
             raise ValidationError("Invalid email format.")
@@ -42,7 +42,7 @@ class User(BaseEntity):
 
     def add_place(self, place):
         """Add a place to the user's list of places."""
-        self.place.append(place)
+        self.places.append(place)
 
     def add_review(self, review):
         """Add a review to the user's list of reviews."""
