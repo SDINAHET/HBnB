@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # app/models/user.py
-from base_entity import BaseEntity
+from .base_entity import BaseEntity
 import re
 import importlib.util
 

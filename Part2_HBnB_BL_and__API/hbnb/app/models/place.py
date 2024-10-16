@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 # app/models/place.py
+from .base_entity import BaseEntity
 
 class Place(BaseEntity):
     def __init__(self, title, description, price, latitude, longitude, owner):
