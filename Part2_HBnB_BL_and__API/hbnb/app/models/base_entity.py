@@ -5,6 +5,12 @@ import uuid
 from datetime import datetime
 
 class BaseEntity:
+
+    def some_method(self):
+        from app.models.review import Review  # Import déplacé ici
+        from app.models.base_entity import BaseEntity
+        from app.models.place import Place
+
     def __init__(self):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()

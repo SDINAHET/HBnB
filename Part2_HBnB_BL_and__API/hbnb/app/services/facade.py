@@ -6,7 +6,12 @@ handling operations related to users, places, amenities, and reviews.
 It provides methods for creating, retrieving, updating, and managing these
 entities by interacting with the underlying repository layer.
 """
+# import standard_library
+# import third_party
+# import local_application
 
+# from app.models import User, Review, Place
+# from app.models import User
 from app.models.user import User
 from app.persistence.repository import InMemoryRepository
 
@@ -36,7 +41,6 @@ class HBnBFacade:
         Returns:
             User: The newly created user object.
         """
-
         user = User(**user_data)
         self.user_repo.add(user)
         return user
@@ -98,66 +102,61 @@ class HBnBFacade:
         # Logic will be implemented in later tasks
         pass
 
+    # Amenity_service_facade
+    def create_amenity(self, amenity_data):
+        # Placeholder for logic to create an amenity
+        pass
 
+    def get_amenity(self, amenity_id):
+        # Placeholder for logic to retrieve an amenity by ID
+        pass
 
+    def get_all_amenities(self):
+        # Placeholder for logic to retrieve all amenities
+        pass
 
-# Amenity_service_facade
-def create_amenity(self, amenity_data):
-    # Placeholder for logic to create an amenity
-    pass
+    def update_amenity(self, amenity_id, amenity_data):
+        # Placeholder for logic to update an amenity
+        pass
 
-def get_amenity(self, amenity_id):
-    # Placeholder for logic to retrieve an amenity by ID
-    pass
+    # Place_service_facade
+    def create_place(self, place_data):
+        # Placeholder for logic to create a place, including validation for price, latitude, and longitude
+        pass
 
-def get_all_amenities(self):
-    # Placeholder for logic to retrieve all amenities
-    pass
+    def get_place(self, place_id):
+        # Placeholder for logic to retrieve a place by ID, including associated owner and amenities
+        pass
 
-def update_amenity(self, amenity_id, amenity_data):
-    # Placeholder for logic to update an amenity
-    pass
+    def get_all_places(self):
+        # Placeholder for logic to retrieve all places
+        pass
 
+    def update_place(self, place_id, place_data):
+        # Placeholder for logic to update a place
+        pass
 
-# Place_service_facade
-def create_place(self, place_data):
-    # Placeholder for logic to create a place, including validation for price, latitude, and longitude
-    pass
+    # Review_service_facade
+    def create_review(self, review_data):
+        # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
+        pass
 
-def get_place(self, place_id):
-    # Placeholder for logic to retrieve a place by ID, including associated owner and amenities
-    pass
+    def get_review(self, review_id):
+        # Placeholder for logic to retrieve a review by ID
+        pass
 
-def get_all_places(self):
-    # Placeholder for logic to retrieve all places
-    pass
+    def get_all_reviews(self):
+        # Placeholder for logic to retrieve all reviews
+        pass
 
-def update_place(self, place_id, place_data):
-    # Placeholder for logic to update a place
-    pass
+    def get_reviews_by_place(self, place_id):
+        # Placeholder for logic to retrieve all reviews for a specific place
+        pass
 
+    def update_review(self, review_id, review_data):
+        # Placeholder for logic to update a review
+        pass
 
-# Review_service_facade
-def create_review(self, review_data):
-    # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
-    pass
-
-def get_review(self, review_id):
-    # Placeholder for logic to retrieve a review by ID
-    pass
-
-def get_all_reviews(self):
-    # Placeholder for logic to retrieve all reviews
-    pass
-
-def get_reviews_by_place(self, place_id):
-    # Placeholder for logic to retrieve all reviews for a specific place
-    pass
-
-def update_review(self, review_id, review_data):
-    # Placeholder for logic to update a review
-    pass
-
-def delete_review(self, review_id):
-    # Placeholder for logic to delete a review
-    pass
+    def delete_review(self, review_id):
+        # Placeholder for logic to delete a review
+        pass

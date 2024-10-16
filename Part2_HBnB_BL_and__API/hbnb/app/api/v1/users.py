@@ -12,7 +12,8 @@ Routes:
 
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
-from app.models.user import User
+# from app.models.user import User
+from app.models.user import UserSchema
 
 api = Namespace('users', description='User operations')
 
@@ -20,17 +21,20 @@ api = Namespace('users', description='User operations')
 user_model = api.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
-    'email': fields.String(required=True, description='Email of the user')
+    'email': fields.String(required=True, description='Email of the user'),
+    'password': fields.String(required=True, description='Password of the user'),  # Ajout du mot de passe
+    'isAdmin': fields.Boolean(required=True, description='Is the user an admin')  # Ajout du champ isAdmin
 })
 
 facade = HBnBFacade()
-
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 
 @api.route('/')
 class UserList(Resource):
     """
     Resource class for handling user creation and retrieval of all users.
-    
+
     Methods:
         post: Registers a new user.
         get: Retrieves a list of all users.
@@ -42,10 +46,10 @@ class UserList(Resource):
     def post(self):
         """
         Register a new user.
-        
-        This method handles the registration of a new user, checks for email uniqueness, 
+
+        This method handles the registration of a new user, checks for email uniqueness,
         and returns the user details if successfully created.
-        
+
         Returns:
             dict: A dictionary containing the new user's details.
             int: The HTTP status code (201 on success, 400 on failure).
@@ -57,43 +61,48 @@ class UserList(Resource):
         if existing_user:
             return {'error': 'Email already registered'}, 400
 
-        new_user = facade.create_user(user_data)
-        return {
-            'id': new_user.id,
-            'first_name': new_user.first_name,
-            'last_name': new_user.last_name,
-            'email': new_user.email
+        try:
+            new_user = facade.create_user(user_data)
+            return {
+                'id': new_user.id,
+                'first_name': new_user.first_name,
+                'last_name': new_user.last_name,
+                'email': new_user.email
             }, 201
+        except ValidationError as ve:
+            return {'error': ve.messages}, 400
+        except Exception as e:
+            return {'error': str(e)}, 400
 
     @api.response(200, 'List of users retrieved successfully')
     @api.response(404, 'No users found')
     def get(self):
         """
         Retrieve the list of all users.
-        
+
         This method retrieves all registered users. If no users are found, a 404 error is returned.
-        
+
         Returns:
             list: A list of dictionaries containing user details.
             int: The HTTP status code (200 on success, 404 on failure).
         """
-
         users = facade.get_all_users()
         if not users:
             return {'error': 'No users found'}, 404
-        return [{
-            'id': user.id,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email
-            } for user in users], 200
+        # return [{
+        #     'id': user.id,
+        #     'first_name': user.first_name,
+        #     'last_name': user.last_name,
+        #     'email': user.email
+        #     } for user in users], 200
+        return users_schema.dump(users), 200
 
 
 @api.route('/<user_id>')
 class UserResource(Resource):
     """
     Resource class for handling individual user operations: retrieval and update.
-    
+
     Methods:
         get: Retrieves a specific user by their ID.
         put: Updates a user's information.
@@ -104,12 +113,12 @@ class UserResource(Resource):
     def get(self, user_id):
         """
         Retrieve a user's details by ID.
-        
+
         This method retrieves the details of a user with the given user_id. If the user is not found, a 404 error is returned.
-        
+
         Args:
             user_id (str): The ID of the user to retrieve.
-        
+
         Returns:
             dict: A dictionary containing the user's details.
             int: The HTTP status code (200 on success, 404 on failure).
@@ -122,21 +131,22 @@ class UserResource(Resource):
             'id': user.id,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'email': user.email
+            'email': user.email,
+            'isAdmin': user.isAdmin
             }, 200
 
     @api.expect(user_model, validate=True)
-    @api.reponse(200, 'User successfully updated')
+    @api.response(200, 'User successfully updated')
     @api.response(404, 'User not found')
     def put(self, user_id):
         """
         Update a user's details by ID.
-        
+
         This method updates the details of a user with the given user_id. If the user is not found, a 404 error is returned.
-        
+
         Args:
             user_id (str): The ID of the user to update.
-        
+
         Returns:
             dict: A dictionary containing the updated user's details.
             int: The HTTP status code (200 on success, 404 on failure).
@@ -150,5 +160,6 @@ class UserResource(Resource):
             'id': updated_user.id,
             'first_name': updated_user.first_name,
             'last_name': updated_user.last_name,
-            'email': updated_user.email
+            'email': updated_user.email,
+            'isAdmin': updated_user.isAdmin
         }, 200
