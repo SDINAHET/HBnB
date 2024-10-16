@@ -39,3 +39,11 @@ class User(BaseEntity):
         # Simple regex for email validation
         regex = r'^\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         return re.match(regex, email) is not None
+
+    def add_place(self, place):
+        """Add a place to the user's list of places."""
+        self.place.append(place)
+
+    def add_review(self, review):
+        """Add a review to the user's list of reviews."""
+        self.reviews.append(review)
