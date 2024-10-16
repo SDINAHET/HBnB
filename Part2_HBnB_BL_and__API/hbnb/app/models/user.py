@@ -14,10 +14,10 @@ class User(BaseEntity):
 
     users: Dict[str, 'User'] = {} # Class-level storage for users
 
-    def __init__(self, firstName, lastName, email, password, isAdmin):
+    def __init__(self, first_name, last_name, email, password, isAdmin):
         super().__init__() #appelle le constructeur de BaseEntity
-        self.firstName = firstName
-        self.lastName = lastName
+        self.first_name = first_name
+        self.last_name = last_name
         self.email = email
         self.password = password
         self.isAdmin = isAdmin
@@ -27,7 +27,7 @@ class User(BaseEntity):
         User.users[self.id] = self
 
     def validate(self):
-        if not self.firstName or not self.lastName:
+        if not self.first_name or not self.last_name:
             raise ValidationError("First name and last name cannot be empty.")
         if not self.is_valid_email(self.email):
             raise ValidationError("Invalid email format.")
