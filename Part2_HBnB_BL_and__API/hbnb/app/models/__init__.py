@@ -1,7 +1,7 @@
 # app/models/__init__.py
 
-from .user import User, UserSchema
-from .review import Review, ReviewSchema
-from .place import Place, PlaceSchema  # Supposons que vous avez une classe Place
+from .user import User
+from .review import Review
+from .place import Place  # Supposons que vous avez une classe Place
 
-__all__ = ['User', 'UserSchema', 'Review', 'ReviewSchema', 'Place', 'PlaceSchema']
+__all__ = ['User', 'UserSchema', 'Review', 'Place']

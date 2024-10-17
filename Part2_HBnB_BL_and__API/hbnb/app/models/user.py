@@ -1,34 +1,10 @@
 #!/usr/bin/python3
 
-# app/models/user.py
-# from marshmallow import ValidationError  # error ModuleNotFoundError: No module named 'marshmallow pip install marshmallow
-# from marshmallow import Schema, fields, validate, ValidationError
-# from marshmallow import ValidationError
-from marshmallow import Schema, fields, post_load, ValidationError
+from marshmallow import ValidationError
 import re
 from typing import List, Dict
-import logging
-
-# Configuration du logging
-logging.basicConfig(level=logging.DEBUG)
-
-# Ajout d'un log pour tracer l'importation de Review
-logging.debug("Importing Review in user.py")
-
-# from .base_entity import BaseEntity
-# from .place import Place
-# from .review import Review
 from app.models.base_entity import BaseEntity
-# Ne pas importer Review directement
-# from app.models.review import Review
 
-# class ValidationError(Exception):
-#     pass
-
-# Importation différée pour éviter les importations circulaires
-def get_review_schema():
-    from app.models.review import ReviewSchema
-    return ReviewSchema()
 
 class User(BaseEntity):
 
@@ -72,36 +48,3 @@ class User(BaseEntity):
     def get_reviews(self) -> List['Review']:
         from app.models.review import Review  # Importation retardée
         return self.reviews
-
-# class UserSchema(Schema):
-#     id = fields.Int(required=True)
-#     name = fields.Str(required=True, validate=validate.Length(min=1))
-#     email = fields.Email(required=True)
-
-# Example usage
-# user_data = {
-#     "id": 1,
-#     "name": "",  # This will fail validation
-#     "email": "user@example.com"
-# }
-
-# user_schema = UserSchema()
-
-# try:
-#     validated_data = user_schema.load(user_data)
-#     print("Validated Data:", validated_data)
-# except ValidationError as err:
-#     print("Validation Errors:", err.messages)
-
-class UserSchema(Schema):
-    id = fields.Str(dump_only=True)
-    first_name = fields.Str(required=True)
-    last_name = fields.Str(required=True)
-    email = fields.Email(required=True)
-    password = fields.Str(load_only=True, required=True, validate=fields.Length(min=6))
-    isAdmin = fields.Bool(required=True)
-    reviews = fields.List(fields.Nested(get_review_schema), dump_only=True)
-
-    @post_load
-    def make_user(self, data, **kwargs):
-        return User(**data)
