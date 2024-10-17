@@ -19,7 +19,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(user.first_name, "John")
         self.assertEqual(user.last_name, "Doe")
         self.assertEqual(user.email, "john.doe@example.com")
-        self.assertFalse(user.is_admin)  # Default value
+        self.assertFalse(user.isAdmin)  # Default value
 
     def test_user_invalid_email(self):
         with self.assertRaises(ValidationError):
@@ -27,7 +27,7 @@ class TestUser(unittest.TestCase):
 
     def test_user_short_password(self):
         with self.assertRaises(ValidationError):
-            User(first_name="Alice", last_name="Smith", email="alice.smith@example.com", password="123")
+            User(first_name="Alice", last_name="Smith", email="alice.smith@example.com", password="123", isAdmin=True)
 
 if __name__ == "__main__":
     unittest.main()

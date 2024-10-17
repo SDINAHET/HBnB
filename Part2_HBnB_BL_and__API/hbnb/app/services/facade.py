@@ -6,14 +6,10 @@ handling operations related to users, places, amenities, and reviews.
 It provides methods for creating, retrieving, updating, and managing these
 entities by interacting with the underlying repository layer.
 """
-# import standard_library
-# import third_party
-# import local_application
 
-# from app.models import User, Review, Place
-# from app.models import User
 from app.models.user import User
 from app.persistence.repository import InMemoryRepository
+
 
 class HBnBFacade:
     """
