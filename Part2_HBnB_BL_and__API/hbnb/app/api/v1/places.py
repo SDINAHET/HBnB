@@ -33,22 +33,24 @@ Usage:
 
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
+from app.api.v1.users import api as users_ns  # Import the users namespace
+from app.api.v1.users import user_model  # Import user_model directly
 
 
 api = Namespace('places', description='Place operations')
 
 # Define the models for related entities
-amenity_model = api.model('Amenity', {
-    'id': fields.String(description='Amenity ID'),
-    'name': fields.String(description='Name of the amenity')
-})
+# amenity_model = api.model('Amenity', {
+#     'id': fields.String(description='Amenity ID'),
+#     'name': fields.String(description='Name of the amenity')
+# })
 
-user_model = api.model('User', {
-    'id': fields.String(description='User ID'),
-    'first_name': fields.String(description='First name of the owner'),
-    'last_name': fields.String(description='Last name of the owner'),
-    'email': fields.String(description='Email of the owner')
-})
+# user_model = api.model('User', {
+#     'id': fields.String(description='User ID'),
+#     'first_name': fields.String(description='First name of the owner'),
+#     'last_name': fields.String(description='Last name of the owner'),
+#     'email': fields.String(description='Email of the owner')
+# })
 
 # Define the place model for input validation and documentation
 place_model = api.model('Place', {
@@ -102,11 +104,8 @@ class PlaceList(Resource):
             amenity = facade.get_amenity_by_id(amenity_id)  # Assuming facade has this method
             new_place.add_amenity(amenity)
 
-        # Now pass this Place instance to the facade to handle saving
         saved_place = facade.save_place(new_place)
-
-        # Return the new place details in a dictionary format
-        return new_place.to_dict(), 201
+        return saved_place.to_dict(), 201  # Return the saved place
 
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
@@ -186,3 +185,6 @@ class PlaceResource(Resource):
 #     'amenities': fields.List(fields.Nested(amenity_model), description='List of amenities'),
 #     'reviews': fields.List(fields.Nested(review_model), description='List of reviews')
 # })
+
+
+# longitude test float
