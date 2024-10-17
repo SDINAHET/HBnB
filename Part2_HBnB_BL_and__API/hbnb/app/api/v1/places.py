@@ -1,6 +1,36 @@
 #!/usr/bin/python3
+"""
+app/api/v1/places.py
 
-# app/api/v1/places.py
+This module defines the API endpoints for managing places in the HBnB application.
+It provides functionalities to create, retrieve, and update place information, including
+handling related entities such as the owner (User) and amenities (Amenity). The DELETE
+operation for places is not implemented in this part of the project.
+
+The API is built using Flask-RESTx, and the module integrates with the business logic layer
+through the HBnBFacade, adhering to a Facade pattern to manage interactions with entities.
+
+Endpoints:
+    - POST /api/v1/places/: Register a new place.
+    - GET /api/v1/places/: Return a list of all places.
+    - GET /api/v1/places/<place_id>: Retrieve details of a specific place, including its associated owner and amenities.
+    - PUT /api/v1/places/<place_id>: Update place information.
+
+Models:
+    - Place: Defines the schema for place data used for input validation and documentation.
+    - Amenity: Represents an associated amenity of a place.
+    - User: Represents the owner of a place.
+
+Related Entities:
+    - Amenity: A list of amenities that can be linked to a place.
+    - User: The owner of the place.
+
+Usage:
+    This module is part of the API layer of the HBnB application and interacts with the
+    business logic layer to perform place management operations.
+
+"""
+
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
 
