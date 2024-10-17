@@ -8,9 +8,9 @@ import unittest
 # Append the project's root directory to the system path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.models.base_entity import BaseEntity
+# from app.models.base_entity import BaseEntity
 # , ValidationError
-from app.models.user import User, ValidationError
+from ..models.user import User, ValidationError
 
 class TestUser(unittest.TestCase):
 
