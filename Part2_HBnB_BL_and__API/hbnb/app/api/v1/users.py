@@ -10,6 +10,7 @@ Routes:
     PUT /api/v1/users/<user_id> : Update a user's information.
 """
 
+from marshmallow import fields, ValidationError
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
 # from app.models.user import User
