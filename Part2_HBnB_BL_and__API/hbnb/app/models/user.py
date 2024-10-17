@@ -31,7 +31,7 @@ class User(BaseEntity):
             raise ValidationError("Password must be at least 6 characters long.")
 
     @staticmethod
-    def is_valid_email(email: str) -> bool:
+    def is_valid_email(email):
         # Simple regex for email validation
         regex = r'^\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         return re.match(regex, email) is not None
@@ -42,9 +42,7 @@ class User(BaseEntity):
 
     def add_review(self, review):
         """Add a review to the user's list of reviews."""
-        from app.models.review import Review   # Import à l'intérieur de la méthode
         self.reviews.append(review)
 
-    def get_reviews(self) -> List['Review']:
-        from app.models.review import Review  # Importation retardée
+    def get_reviews(self):
         return self.reviews
