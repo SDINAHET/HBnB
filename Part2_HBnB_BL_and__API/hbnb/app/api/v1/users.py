@@ -10,10 +10,9 @@ Routes:
     PUT /api/v1/users/<user_id> : Update a user's information.
 """
 
+from marshmallow import fields, ValidationError
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
-# from app.models.user import User
-from app.models.user import UserSchema
 
 api = Namespace('users', description='User operations')
 
@@ -27,8 +26,6 @@ user_model = api.model('User', {
 })
 
 facade = HBnBFacade()
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
 
 @api.route('/')
 class UserList(Resource):
@@ -89,13 +86,13 @@ class UserList(Resource):
         users = facade.get_all_users()
         if not users:
             return {'error': 'No users found'}, 404
-        # return [{
-        #     'id': user.id,
-        #     'first_name': user.first_name,
-        #     'last_name': user.last_name,
-        #     'email': user.email
-        #     } for user in users], 200
-        return users_schema.dump(users), 200
+        return [{
+            'id': user.id,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email
+            } for user in users], 200
+        # return users_schema.dump(users), 200
 
 
 @api.route('/<user_id>')
