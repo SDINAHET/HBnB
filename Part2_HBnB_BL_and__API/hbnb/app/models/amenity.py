@@ -8,3 +8,11 @@ class Amenity(BaseEntity):
         super().__init__()
         self.name = name
         self.description = description
+
+    def to_dict(self):
+        """Return a dictionary representation of the Amenity instance."""
+        return {
+            'id': self.id,  # Assuming BaseEntity provides an 'id' attribute
+            'name': self.name,
+            'description': self.description
+        }

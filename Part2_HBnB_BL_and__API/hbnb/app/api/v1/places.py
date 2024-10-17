@@ -94,7 +94,16 @@ class PlaceList(Resource):
             longitude=longitude,
             owner_id=owner_id,
             amenities=amenities
+            # owner=facade.get_owner_by_id(owner_id)  # Assuming facade has this method
         )
+
+        # Add amenities if provided
+        for amenity_id in amenities:
+        amenity = facade.get_amenity_by_id(amenity_id)  # Assuming facade has this method
+        new_place.add_amenity(amenity)
+
+        # Now pass this Place instance to the facade to handle saving
+        saved_place = facade.save_place(new_place)
 
         # Return the new place details in a dictionary format
         return new_place.to_dict(), 201

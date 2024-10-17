@@ -22,4 +22,19 @@ class Place(BaseEntity):
 
     def add_amenity(self, amenity: 'Amenity'):
         """Add an amenity to the place."""
-        pass
+        #pass
+        self.amenities.append(amenity)
+
+    def to_dict(self):
+        """Return a dictionary representation of the Place instance."""
+        return {
+            # 'id': self.id,  # Assuming BaseEntity provides an 'id' attribute
+            'title': self.title,
+            'description': self.description,
+            'price': self.price,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'owner': self.owner.to_dict() if self.owner else None,
+            'reviews': [review.to_dict() for review in self.reviews],
+            'amenities': [amenity.to_dict() for amenity in self.amenities]
+        }
