@@ -10,7 +10,8 @@ class User(BaseEntity):
 
     users: Dict[str, 'User'] = {} # Class-level storage for users
 
-    def __init__(self, first_name, last_name, email, password, isAdmin=False):
+    # def __init__(self, first_name, last_name, email, password, isAdmin=False):
+    def __init__(self, first_name, last_name, email, isAdmin=False):
         super().__init__() #appelle le constructeur de BaseEntity
         # self.first_name = first_name
         # self.last_name = last_name
@@ -19,7 +20,7 @@ class User(BaseEntity):
         self.first_name = self.validate_first_name(first_name)
         self.last_name = self.validate_last_name(last_name)
         self.email = self.validate_email(email)
-        self.password = self.validate_password(password)
+        # self.password = self.validate_password(password)
         self.isAdmin = isAdmin
         self.places: List['Place'] = []  # Places owned by the user
         self.reviews: List['Review'] = []  # Reviews written by the user
@@ -63,10 +64,10 @@ class User(BaseEntity):
             raise ValidationError("Invalid email format.")
         return email
 
-    def validate_password(self, password):
-        if not password or len(password) < 6:
-            raise ValidationError("Password must be at least 6 characters long.")
-        return password
+    # def validate_password(self, password):
+        # if not password or len(password) < 6:
+            # raise ValidationError("Password must be at least 6 characters long.")
+        # return password
 
     def add_place(self, place):
         """Add a place to the user's list of places."""
@@ -81,16 +82,16 @@ class User(BaseEntity):
     def get_reviews(self):
         return self.reviews
 
-    def to_dict(self):
-        """Return a dictionary representation of the User instance."""
-        return {
-            'id': self.id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'email': self.email,
-            'is_admin': self.is_admin,
-            'created_at': self.created_at.isoformat(),
-            'updated_at': self.updated_at.isoformat(),
-            'places': [place.to_dict() for place in self.places],
-            'reviews': [review.to_dict() for review in self.reviews]
-        }
+#    def to_dict(self):
+#        """Return a dictionary representation of the User instance."""
+#        return {
+#            # 'id': self.id,
+#            'first_name': self.first_name,
+#            'last_name': self.last_name,
+#            'email': self.email,
+#            'is_admin': self.is_admin,
+#            'created_at': self.created_at.isoformat(),
+#            'updated_at': self.updated_at.isoformat(),
+#            'places': [place.to_dict() for place in self.places],
+#            'reviews': [review.to_dict() for review in self.reviews]
+#        }

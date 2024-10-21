@@ -46,7 +46,7 @@ amenity_model = api.model('Amenity', {
 })
 
 user_model = api.model('User', {
-    'id': fields.String(description='User ID'),
+    # 'id': fields.String(description='User ID'),
     'first_name': fields.String(description='First name of the owner'),
     'last_name': fields.String(description='Last name of the owner'),
     'email': fields.String(description='Email of the owner')

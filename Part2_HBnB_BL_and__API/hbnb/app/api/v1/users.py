@@ -21,7 +21,7 @@ user_model = api.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
     'email': fields.String(required=True, description='Email of the user'),
-    'password': fields.String(required=True, description='Password of the user'),  # Ajout du mot de passe
+    # 'password': fields.String(required=True, description='Password of the user'),  # Ajout du mot de passe
     'isAdmin': fields.Boolean(required=False, default=False, description='Is the user an admin')  # Ajout du champ isAdmin
 })
 
@@ -64,7 +64,8 @@ class UserList(Resource):
                 'id': new_user.id,
                 'first_name': new_user.first_name,
                 'last_name': new_user.last_name,
-                'email': new_user.email
+                'email': new_user.email,
+                # 'isAdmin': new_user.isAdmin  # Assurez-vous que 'id' n'est pas ici
             }, 201
         except ValidationError as ve:
             return {'error': ve.messages}, 400
@@ -90,7 +91,8 @@ class UserList(Resource):
             'id': user.id,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'email': user.email
+            'email': user.email,
+            # 'isAdmin': user.isAdmin  # Ne pas inclure 'id'
             } for user in users], 200
         # return users_schema.dump(users), 200
 
@@ -129,12 +131,13 @@ class UserResource(Resource):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'email': user.email,
-            'isAdmin': user.isAdmin
+            # 'isAdmin': user.isAdmin
             }, 200
 
     @api.expect(user_model, validate=True)
     @api.response(200, 'User successfully updated')
     @api.response(404, 'User not found')
+    @api.response(400, 'Invalid input data')
     def put(self, user_id):
         """
         Update a user's details by ID.
@@ -149,14 +152,31 @@ class UserResource(Resource):
             int: The HTTP status code (200 on success, 404 on failure).
         """
 
+        # Récupérer les données envoyées dans la requête
         user_data = api.payload
-        updated_user = facade.update_user(user_id, user_data)
-        if not updated_user:
-            return {'error': 'User not found'}, 404
-        return {
-            'id': updated_user.id,
-            'first_name': updated_user.first_name,
-            'last_name': updated_user.last_name,
-            'email': updated_user.email,
-            'isAdmin': updated_user.isAdmin
-        }, 200
+
+        # Essayer de mettre à jour l'utilisateur
+        try:
+            # Tentez de mettre à jour l'utilisateur dans le système
+            updated_user = facade.update_user(user_id, user_data)
+
+            # Vérifier si l'utilisateur a été trouvé
+            if not updated_user:
+                return {'error': 'User not found'}, 404
+
+            # Si l'utilisateur a été mis à jour avec succès, renvoyez les détails
+            return {
+                'id': updated_user.id,
+                'first_name': updated_user.first_name,
+                'last_name': updated_user.last_name,
+                'email': updated_user.email,
+            }, 200
+
+        except ValidationError as ve:
+            # Si la validation échoue, renvoyez un message d'erreur approprié
+            return {'error': 'Invalid input data: ' + str(ve.messages)}, 400
+
+        except Exception as e:
+            # En cas d'erreur inattendue, consignez l'erreur et renvoyez un message générique
+            print(f"Error updating user: {e}")  # Remplacez ceci par une journalisation appropriée
+            return {'error': 'An unexpected error occurred. Please try again later.'}, 500

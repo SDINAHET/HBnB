@@ -88,13 +88,25 @@ class HBnBFacade:
         Returns:
             User: The updated user object, or None if the user is not found.
         """
-        user = self.user_repo.get(user_id)
-        if user:
-            for key, value in user_data.items():
-                setattr(user, key, value)
-            self.user_repo.update(user)
-            return user
-        return None
+        # user = self.user_repo.get(user_id)
+        # if user:
+        #    for key, value in user_data.items():
+        #        setattr(user, key, value)
+        #    self.user_repo.update(user)
+        #    return user
+        # return None
+        user = self.user_repo.get(user_id)  # Récupération de l'utilisateur par ID
+        if user is None:
+            return None  # Ou le code pour gérer l'utilisateur non trouvé
+
+        # Mettez à jour les attributs de l'utilisateur avec les nouvelles données
+        user.first_name = user_data.get('first_name', user.first_name)
+        user.last_name = user_data.get('last_name', user.last_name)
+        user.email = user_data.get('email', user.email)
+
+        # Mettez à jour l'utilisateur dans le référentiel
+        self.user_repo.update(user_id, user)  # Passez user_id et user à la méthode update
+        return user
 
     # Amenity_service_facade
     def create_amenity(self, amenity_data):

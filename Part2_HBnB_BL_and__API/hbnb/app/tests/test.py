@@ -2,7 +2,7 @@
 
 # hbnb/tests/test.py
 import unittest
-from app import create_app
+from Part2_HBnB_BL_and__API.hbnb.app.tests import create_app
 
 class TestUserEndpoints(unittest.TestCase):
 

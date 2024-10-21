@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from __future__ import annotations  # Doit être la première ligne
+from marshmallow import ValidationError
 from .base_entity import BaseEntity
 from app.models.user import User
 from app.models.place import Place

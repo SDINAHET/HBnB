@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # app/models/__init__.py
 
 from .user import User
