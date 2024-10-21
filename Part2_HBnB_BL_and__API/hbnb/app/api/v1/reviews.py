@@ -69,8 +69,6 @@ class ReviewList(Resource):
     @api.response(200, 'List of reviews retrieved successfully')
     def get(self):
         """Retrieve a list of all reviews"""
-        # Placeholder for logic to return a list of all reviews
-        # pass
         reviews = facade.get_all_reviews()
         return [review.to_dict() for review in reviews], 200
 
@@ -81,8 +79,6 @@ class ReviewResource(Resource):
     @api.response(404, 'Review not found')
     def get(self, review_id):
         """Get review details by ID"""
-        # Placeholder for the logic to retrieve a review by ID
-        # pass
         review = facade.get_review_by_id(review_id)
         if review is None:
             api.abort(404, 'Review not found')
@@ -95,8 +91,6 @@ class ReviewResource(Resource):
     @api.response(400, 'Invalid input data')
     def put(self, review_id):
         """Update a review's information"""
-        # Placeholder for the logic to update a review by ID
-        # pass
         review = facade.get_review_by_id(review_id)
         if review is None:
             api.abort(404, 'Review not found')
@@ -113,18 +107,16 @@ class ReviewResource(Resource):
         updated_review = facade.update_review(review)
         return updated_review.to_dict(), 200
 
-    @api.response(200, 'Review deleted successfully')
+    @api.response(204, 'Review deleted successfully')
     @api.response(404, 'Review not found')
     def delete(self, review_id):
         """Delete a review"""
-        # Placeholder for the logic to delete a review
-        # pass
         review = facade.get_review_by_id(review_id)
         if review is None:
             api.abort(404, 'Review not found')
 
         facade.delete_review(review_id)
-        return '', 200
+        return '', 204
 
 @api.route('/places/<place_id>/reviews')
 class PlaceReviewList(Resource):
@@ -132,8 +124,6 @@ class PlaceReviewList(Resource):
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """Get all reviews for a specific place"""
-        # Placeholder for logic to return a list of reviews for a place
-        # pass
         reviews = facade.get_reviews_by_place_id(place_id)
         if not reviews:
             api.abort(404, 'Place not found or no reviews for this place')

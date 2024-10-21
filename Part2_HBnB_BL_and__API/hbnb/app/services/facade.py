@@ -153,12 +153,30 @@ class HBnBFacade:
 
     # Place_service_facade
     def create_place(self, place_data):
+        """
+        Create a new place and add it to the repository.
+
+        Args:
+            place_data (dict): A dictionary containing place details (e.g., name, description, owner_id).
+
+        Returns:
+            Place: The newly created place object.
+        """
         new_place = Place(**place_data)
         self.place_repo.add(new_place)
         return new_place
 
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
+        """
+        Retrieve a place by its ID.
+
+        Args:
+            place_id (str): The unique ID of the place.
+
+        Returns:
+            Place: The place object, or None if not found.
+        """
         place = self.place_repo.get(place_id)
         if place:
             owner = self.user_repo.get(place.owner_id)
@@ -167,6 +185,12 @@ class HBnBFacade:
         return place
 
     def get_all_places(self):
+        """
+        Retrieve all places from the repository.
+
+        Returns:
+            list: A list of all place objects.
+        """
         places = self.place_repo.get_all()
         for place in places:
             place.owner = self.user_repo.get(place.owner_id)
@@ -174,6 +198,16 @@ class HBnBFacade:
         return places
 
     def update_place(self, place_id, place_data):
+        """
+        Update the details of an existing place.
+
+        Args:
+            place_id (str): The unique ID of the place to update.
+            place_data (dict): A dictionary containing the updated place details.
+
+        Returns:
+            Place: The updated place object, or None if not found.
+        """
         place = self.place_repo.get(place_id)
         if place:
             for key, value in place_data.items():
@@ -185,25 +219,83 @@ class HBnBFacade:
 
     # Review_service_facade
     def create_review(self, review_data):
-        # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
-        pass
+        """
+        Create a new review and add it to the repository.
+
+        Args:
+            review_data (dict): A dictionary containing review details (e.g., place_id, user_id, text).
+
+        Returns:
+            Review: The newly created review object.
+        """
+        new_review = Review(**review_data)
+        self.review_repo.add(new_review)
+        return new_review
 
     def get_review(self, review_id):
-        # Placeholder for logic to retrieve a review by ID
-        pass
+        """
+        Retrieve a review by its ID.
+
+        Args:
+            review_id (str): The unique ID of the review.
+
+        Returns:
+            Review: The review object, or None if not found.
+        """
+        return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
-        # Placeholder for logic to retrieve all reviews
-        pass
+        """
+        Retrieve all reviews from the repository.
+
+        Returns:
+            list: A list of all review objects.
+        """
+        return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-        # Placeholder for logic to retrieve all reviews for a specific place
-        pass
+        """
+        Retrieve all reviews for a specific place.
+
+        Args:
+            place_id (str): The unique ID of the place.
+
+        Returns:
+            list: A list of review objects for the specified place.
+        """
+        return self.review_repo.get_by_attribute('place_id', place_id)
 
     def update_review(self, review_id, review_data):
-        # Placeholder for logic to update a review
-        pass
+        """
+        Update the details of an existing review.
+
+        Args:
+            review_id (str): The unique ID of the review to update.
+            review_data (dict): A dictionary containing the updated review details.
+
+        Returns:
+            Review: The updated review object, or None if not found.
+        """
+        review = self.review_repo.get(review_id)
+        if review:
+            for key, value in review_data.items():
+                setattr(review, key, value)
+            self.review_repo.update(review)
+            return review
+        return None
 
     def delete_review(self, review_id):
-        # Placeholder for logic to delete a review
-        pass
+        """
+        Delete a review by its ID.
+
+        Args:
+            review_id (str): The unique ID of the review to delete.
+
+        Returns:
+            bool: True if the review was deleted, False otherwise.
+        """
+        review = self.review_repo.get(review_id)
+        if review:
+            self.review_repo.delete(review_id)
+            return True
+        return False
