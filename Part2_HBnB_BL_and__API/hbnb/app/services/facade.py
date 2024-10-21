@@ -9,6 +9,8 @@ entities by interacting with the underlying repository layer.
 
 from app.models.user import User
 from app.models.amenity import Amenity
+from app.models.place import Place
+from app.models.review import Review
 from app.persistence.repository import InMemoryRepository
 
 
@@ -149,27 +151,37 @@ class HBnBFacade:
             return amenity
         return None
 
-    # Placeholder method for fetching a place by ID
-    def get_place(self, place_id):
-        # Logic will be implemented in later tasks
-        pass
-
     # Place_service_facade
     def create_place(self, place_data):
-        # Placeholder for logic to create a place, including validation for price, latitude, and longitude
-        pass
+        new_place = Place(**place_data)
+        self.place_repo.add(new_place)
+        return new_place
 
+    # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
-        # Placeholder for logic to retrieve a place by ID, including associated owner and amenities
-        pass
+        place = self.place_repo.get(place_id)
+        if place:
+            owner = self.user_repo.get(place.owner_id)
+            place.owner = owner
+            place.amenities = [self.amenity_repo.get(a_id) for a_id in place.amenities]
+        return place
 
     def get_all_places(self):
-        # Placeholder for logic to retrieve all places
-        pass
+        places = self.place_repo.get_all()
+        for place in places:
+            place.owner = self.user_repo.get(place.owner_id)
+            place.amenities = [self.amenity_repo.get(a_id) for a_id in place.amenities]
+        return places
 
     def update_place(self, place_id, place_data):
-        # Placeholder for logic to update a place
-        pass
+        place = self.place_repo.get(place_id)
+        if place:
+            for key, value in place_data.items():
+                if value is not None:
+                    setattr(place, key, value)
+            self.place_repo.update(place)
+            return place
+        return None
 
     # Review_service_facade
     def create_review(self, review_data):
