@@ -18,7 +18,7 @@ class Review(BaseEntity):
         self.user_id = user.id
         # self.place = place
         self.place_id = place.id
-        # self.validate()
+        self.validate()
         self.register_review(user, place)
 
 #    def validate(self):
