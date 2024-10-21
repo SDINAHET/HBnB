@@ -4,4 +4,4 @@ from .user import User
 from .review import Review
 from .place import Place  # Supposons que vous avez une classe Place
 
-__all__ = ['User', 'UserSchema', 'Review', 'Place']
+__all__ = ['User', 'Review', 'Place']

@@ -8,6 +8,7 @@ entities by interacting with the underlying repository layer.
 """
 
 from app.models.user import User
+from app.models.amenity import Amenity
 from app.persistence.repository import InMemoryRepository
 
 
@@ -93,26 +94,64 @@ class HBnBFacade:
             return user
         return None
 
+    # Amenity_service_facade
+    def create_amenity(self, amenity_data):
+        """
+        Create a new amenity and add it to the repository.
+
+        Args:
+            amenity_data (dict): A dictionary containing amenity details (e.g., name).
+
+        Returns:
+            Amenity: The newly created amenity object.
+        """
+        new_amenity = Amenity(**amenity_data)
+        self.amenity_repo.add(new_amenity)
+        return new_amenity
+
+    def get_amenity(self, amenity_id):
+        """
+        Retrieve an amenity by its ID.
+
+        Args:
+            amenity_id (str): The unique ID of the amenity.
+
+        Returns:
+            Amenity: The amenity object, or None if not found.
+        """
+        return self.amenity_repo.get(amenity_id)
+
+    def get_all_amenities(self):
+        """
+        Retrieve all amenities from the repository.
+
+        Returns:
+            list: A list of all amenity objects.
+        """
+        return self.amenity_repo.get_all()
+
+    def update_amenity(self, amenity_id, amenity_data):
+        """
+        Update the details of an existing amenity.
+
+        Args:
+            amenity_id (str): The unique ID of the amenity to update.
+            amenity_data (dict): A dictionary containing the updated amenity details.
+
+        Returns:
+            Amenity: The updated amenity object, or None if not found.
+        """
+        amenity = self.amenity_repo.get(amenity_id)
+        if amenity:
+            for key, value in amenity_data.items():
+                setattr(amenity, key, value)
+            self.amenity_repo.update(amenity)
+            return amenity
+        return None
+
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
         # Logic will be implemented in later tasks
-        pass
-
-    # Amenity_service_facade
-    def create_amenity(self, amenity_data):
-        # Placeholder for logic to create an amenity
-        pass
-
-    def get_amenity(self, amenity_id):
-        # Placeholder for logic to retrieve an amenity by ID
-        pass
-
-    def get_all_amenities(self):
-        # Placeholder for logic to retrieve all amenities
-        pass
-
-    def update_amenity(self, amenity_id, amenity_data):
-        # Placeholder for logic to update an amenity
         pass
 
     # Place_service_facade
