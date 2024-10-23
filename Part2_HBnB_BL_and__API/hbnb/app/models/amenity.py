@@ -20,6 +20,14 @@ class Amenity(BaseEntity):
         if not isinstance(self.description, str):
             raise ValidationError("Description must be a string.")
 
+    def update(self, name: str = None, description: str = None):
+        """Update the amenity's attributes."""
+        if name is not None:
+            self.name = name  # Update name
+        if description is not None:
+            self.description = description  # Update description
+        self.validate()  # Validate the updated values
+
     def to_dict(self):
         """Return a dictionary representation of the Amenity instance."""
         return {

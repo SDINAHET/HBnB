@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+# run python test_user.py   --> python3 -m unittest app.tests.test_user
+# root@UID7E:/mnt/c/Users/steph/Documents/2ème trimestre holberton/HBnB/HBnB/P
+# art2_HBnB_BL_and__API/hbnb# python3 -m unittest app.tests.test_user
+
 # hbnb/tests/test_user.py
 import sys
 import os
@@ -11,7 +15,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # from app.models.base_entity import BaseEntity
 # , ValidationError
-from ....models.user import User, ValidationError
+# from app.models.user import User, ValidationError
+from app.models.user import User, ValidationError
 # from app.models.user import User
 # from marshmallow import ValidationError
 

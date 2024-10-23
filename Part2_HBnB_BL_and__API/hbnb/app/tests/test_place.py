@@ -13,19 +13,33 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # from app.models.base_entity import BaseEntity
 # , ValidationError
-from ....models.user import User, ValidationError
-from ....models.place import Place, ValidationError
+from app.models.user import User, ValidationError
+from app.models.place import Place, ValidationError
 
 class TestPlace(unittest.TestCase):
 
     def setUp(self):
         """Set up a User and a Place instance for testing."""
-        # self.user = User(first_name="John", last_name="Doe", email="test_user@example.com", password="secure123")
-        self.user = User(first_name="John", last_name="Doe",
-                 email=f"test_user_{int(time.time())}@example.com",
-                 password="secure123")
+        self.user = User(first_name="Juhn", last_name="Doe",
+                        email=f"test_user_{int(time.time())}@example.com")  # Removed password
         self.place = Place(title="Beautiful Beach House", description="A lovely house by the beach.",
-                           price=150.0, latitude=34.0522, longitude=-118.2437, owner=self.user)
+                        price=150.0, latitude=34.0522, longitude=-118.2437, owner=self.user)
+
+    # def setUp(self):
+    #     """Set up a User and a Place instance for testing."""
+    #     self.user = User(
+    #         first_name="John",
+    #         last_name="Doe",
+    #         email=f"test_user_{int(time.time())}_{random.randint(1000, 9999)}@example.com",
+    #     )
+    #     self.place = Place(
+    #         title="Beautiful Beach House",
+    #         description="A lovely house by the beach.",
+    #         price=150.0,
+    #         latitude=34.0522,
+    #         longitude=-118.2437,
+    #         owner=self.user
+    #     )
 
     def test_place_creation(self):
         """Test that a Place can be created with valid attributes."""
@@ -38,9 +52,17 @@ class TestPlace(unittest.TestCase):
         self.assertIsInstance(self.place.created_at, datetime)
         self.assertIsInstance(self.place.updated_at, datetime)
 
+
     def test_title_too_long(self):
         """Test that a Title exceeding 100 characters raises ValidationError."""
         long_title = "x" * 101  # Create a title with 101 characters
+        with self.assertRaises(ValidationError):
+            Place(title=long_title, description="A description.", price=100.0,
+                  latitude=34.0522, longitude=-118.2437, owner=self.user)
+
+    def test_title_OK(self):
+        """Test that a Title exceeding 100 characters raises ValidationError."""
+        long_title = "x" * 99  # Create a title with 101 characters
         with self.assertRaises(ValidationError):
             Place(title=long_title, description="A description.", price=100.0,
                   latitude=34.0522, longitude=-118.2437, owner=self.user)

@@ -9,15 +9,16 @@ from datetime import datetime
 # Append the project's root directory to the system path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ....models.review import Review, ValidationError  # Adjust the import based on your project structure
-from ....models.user import User  # Assuming the User class is in the models directory
-from ....models.place import Place  # Assuming the Place class is in the models directory
+from app.models.review import Review, ValidationError  # Adjust the import based on your project structure
+from app.models.user import User  # Assuming the User class is in the models directory
+from app.models.place import Place  # Assuming the Place class is in the models directory
 
 class TestReview(unittest.TestCase):
 
     def setUp(self):
         """Set up the test environment."""
-        self.user = User(first_name="John", last_name="Doe", email="john.doe@example.com", password="secure123")
+        # self.user = User(first_name="John", last_name="Doe", email="john.doe@example.com", password="secure123")
+        self.user = User(first_name="John", last_name="Doe", email="john.doe@example.com")
         self.place = Place(name="Sample Place")  # Ensure you have a valid constructor for Place
         # Add the required attributes to the Place if necessary
 

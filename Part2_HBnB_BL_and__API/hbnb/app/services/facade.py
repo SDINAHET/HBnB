@@ -77,6 +77,16 @@ class HBnBFacade:
         """
         return self.user_repo.get_all()
 
+    def validate_user_data(user_data):
+        """Validate the incoming user data."""
+        if 'first_name' in user_data and not isinstance(user_data['first_name'], str):
+            raise ValidationError("First name must be a string.")
+        if 'last_name' in user_data and not isinstance(user_data['last_name'], str):
+            raise ValidationError("Last name must be a string.")
+        if 'email' in user_data and not self.is_valid_email(user_data['email']):
+            raise ValidationError("Invalid email format.")
+        # Add any other validation rules as necessary
+
     def update_user(self, user_id, user_data):
         """
         Update the details of an existing user.
@@ -103,6 +113,7 @@ class HBnBFacade:
         user.first_name = user_data.get('first_name', user.first_name)
         user.last_name = user_data.get('last_name', user.last_name)
         user.email = user_data.get('email', user.email)
+        user.is_admin = user_data.get('isAdmin', user.is_admin)  # Note the camel case
 
         # Mettez à jour l'utilisateur dans le référentiel
         self.user_repo.update(user_id, user)  # Passez user_id et user à la méthode update

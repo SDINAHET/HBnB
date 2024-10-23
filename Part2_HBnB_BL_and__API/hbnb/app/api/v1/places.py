@@ -40,13 +40,15 @@ from app.api.v1.users import user_model  # Import user_model directly
 api = Namespace('places', description='Place operations')
 
 # Define the models for related entities
-amenity_model = api.model('Amenity', {
+amenity_model = api.model('PlaceAmenity', {
+# amenity_model = api.model('Amenity', {
     'id': fields.String(description='Amenity ID'),
     'name': fields.String(description='Name of the amenity')
 })
 
-user_model = api.model('User', {
-    # 'id': fields.String(description='User ID'),
+user_model = api.model('PlaceUser', {
+# user_model = api.model('User', {
+    'id': fields.String(description='User ID'),
     'first_name': fields.String(description='First name of the owner'),
     'last_name': fields.String(description='Last name of the owner'),
     'email': fields.String(description='Email of the owner')
@@ -75,7 +77,16 @@ class PlaceList(Resource):
         data = api.payload
         try:
             new_place = facade.create_place(data)
-            return new_place.to_dict(), 201
+            return {
+                'id': new_place.id,
+                'title': new_place.title,
+                'description': new_place.description,
+                'price': new_place.price,
+                'latitude': new_place.latitude,
+                'longitude': new_place.longitude,
+                'owner_id': new_place.owner_id
+            }, 201
+            # return new_place.to_dict(), 201
         except ValueError as err:
             api.abort(400, str(err))
 
@@ -83,7 +94,13 @@ class PlaceList(Resource):
     def get(self):
         """Retrieve a list of all places"""
         places = facade.get_all_places()
-        return [place.to_dict() for place in places], 200
+        # return [place.to_dict() for place in places], 200
+        return [{
+            'id': place.id,
+            'title': place.title,
+            'latitude': place.latitude,
+            'longitude': place.longitude
+        } for place in places], 200
 
 
 @api.route('/<place_id>')
@@ -96,7 +113,24 @@ class PlaceResource(Resource):
         place = facade.get_place_by_id(place_id)
         if place is None:
             api.abort(404, 'Place not found')
-        return place.to_dict(), 200
+        # return place.to_dict(), 200
+        return {
+            'id': place.id,
+            'title': place.title,
+            'description': place.description,
+            'latitude': place.latitude,
+            'longitude': place.longitude,
+            'owner': {
+                'id': place.owner.id,
+                'first_name': place.owner.first_name,
+                'last_name': place.owner.last_name,
+                'email': place.owner.email
+            },
+            'amenities': [{
+                'id': amenity.id,
+                'name': amenity.name
+            } for amenity in place.amenities]
+        }, 200
 
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
@@ -104,10 +138,18 @@ class PlaceResource(Resource):
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
         """Update a place's information"""
+        # data = api.payload
+        # try:
+        #     updated_place = facade.update_place(place_id, data)
+        #     return updated_place.to_dict(), 200
+        # except ValueError as err:
+        #     api.abort(400, str(err))
+        # except KeyError:
+        #     api.abort(404, 'Place not found')
         data = api.payload
         try:
             updated_place = facade.update_place(place_id, data)
-            return updated_place.to_dict(), 200
+            return {'message': 'Place updated successfully'}, 200
         except ValueError as err:
             api.abort(400, str(err))
         except KeyError:

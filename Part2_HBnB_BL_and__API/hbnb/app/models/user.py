@@ -21,7 +21,8 @@ class User(BaseEntity):
         self.last_name = self.validate_last_name(last_name)
         self.email = self.validate_email(email)
         # self.password = self.validate_password(password)
-        self.isAdmin = isAdmin
+        # self.isAdmin = isAdmin
+        self.is_admin = False  # Ajoutez cet attribut si nécessaire
         self.places: List['Place'] = []  # Places owned by the user
         self.reviews: List['Review'] = []  # Reviews written by the user
         # self.validate()

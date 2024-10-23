@@ -9,7 +9,7 @@ from datetime import datetime
 # Append the project's root directory to the system path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ....models.amenity import Amenity, ValidationError  # Adjust the import based on your project structure
+from app.models.amenity import Amenity, ValidationError  # Adjust the import based on your project structure
 
 class TestAmenity(unittest.TestCase):
 
