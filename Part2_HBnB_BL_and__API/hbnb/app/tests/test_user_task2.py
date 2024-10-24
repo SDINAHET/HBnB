@@ -1,11 +1,15 @@
 #!/usr/bin/python3
 
+# python3 -m unittest app.tests.test_user_task2
+
 import sys
 import os
+import time
 import unittest
 import requests  # Ajout de l'import manquant
 from datetime import datetime
 from app.models.user import User, ValidationError
+import logging
 
 BASE_URL = "http://localhost:5000/api/v1/users/"  # Remplacez par l'URL de votre API
 
@@ -20,6 +24,10 @@ class TestUser(unittest.TestCase):
         email = f"test_user_{TestUser.email_counter}@example.com"
         TestUser.email_counter += 1
         return email
+        # """Generate a unique email address for testing."""
+        # timestamp = int(time.time())
+        # email = f"test_user_{timestamp}@example.com"
+        # return email
 
     def setUp(self):
         """Create a default user for tests."""
@@ -79,6 +87,9 @@ class TestUser(unittest.TestCase):
         response = requests.get(f"{BASE_URL}{user_id}")
         self.assertEqual(response.status_code, 200, f"Expected 200, got {response.status_code}")
 
+        # Cleanup: delete the user after the test
+        # requests.delete(f"{BASE_URL}{user_id}")
+
     def test_list_users(self):
         """Test retrieving the list of users."""
         response = requests.get(BASE_URL)
@@ -96,6 +107,7 @@ class TestUser(unittest.TestCase):
         }
         create_response = requests.post(BASE_URL, json=user_data)
         self.assertEqual(create_response.status_code, 201, "Failed to create user")
+        print(f"Create response: {create_response.json()}")  # Debugging
 
         user_id = create_response.json().get("id")
 
@@ -104,13 +116,19 @@ class TestUser(unittest.TestCase):
             "first_name": "Jane",
             "last_name": "Doe",
             "email": "jane.doe@example.com"
+            # "email": self.get_unique_email()
         }
+         # Updated URL to include user_id in the path
         response = requests.put(f"{BASE_URL}{user_id}", json=updated_data)
+        print(f"Update response: {response.json()}")  # Add more detailed debug output
         self.assertEqual(response.status_code, 200, f"Expected 200, got {response.status_code}")
-        print(response.json())  # Print the JSON response for debugging
+        # print(response.json())  # Print the JSON response for debugging
+        print(f"Update response: {response.json()}")  # Debugging output
 
         # Cleanup: delete the user after the test
-        requests.delete(f"{BASE_URL}{user_id}")
+        # requests.delete(f"{BASE_URL}{user_id}")
+        delete_response = requests.delete(f"{BASE_URL}{user_id}")
+        self.assertEqual(delete_response.status_code, 204, "Failed to delete user after test")
 
 if __name__ == "__main__":
     unittest.main()

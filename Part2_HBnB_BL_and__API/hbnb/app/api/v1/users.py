@@ -10,9 +10,11 @@ Routes:
     PUT /api/v1/users/<user_id> : Update a user's information.
 """
 
+import logging
 from marshmallow import fields, ValidationError
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
+import re  # Add this for email validation
 
 api = Namespace('users', description='User operations')
 
@@ -26,6 +28,8 @@ user_model = api.model('User', {
 })
 
 facade = HBnBFacade()
+
+logging.basicConfig(level=logging.INFO)  # Or DEBUG, depending on your needs
 
 @api.route('/')
 class UserList(Resource):
@@ -56,6 +60,7 @@ class UserList(Resource):
 
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
+        # if existing_userr and existing_user.id != user_id:  # fix Erwan
             return {'error': 'Email already registered'}, 400
 
         try:
@@ -157,6 +162,16 @@ class UserResource(Resource):
 
         # Essayer de mettre à jour l'utilisateur
         try:
+            if not user_data.get('first_name'):
+                raise ValueError("First name is required.")
+            if not user_data.get('last_name'):
+                raise ValueError("Last name is required.")
+
+            # Optional: Validate email format
+            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            if 'email' in user_data and not re.match(email_pattern, user_data['email']):
+                raise ValueError("Invalid email format.")
+
             # Tentez de mettre à jour l'utilisateur dans le système
             updated_user = facade.update_user(user_id, user_data)
 
@@ -172,11 +187,19 @@ class UserResource(Resource):
                 'email': updated_user.email,
             }, 200
 
-        except ValidationError as ve:
-            # Si la validation échoue, renvoyez un message d'erreur approprié
-            return {'error': 'Invalid input data: ' + str(ve.messages)}, 400
-
         except Exception as e:
-            # En cas d'erreur inattendue, consignez l'erreur et renvoyez un message générique
-            print(f"Error updating user: {e}")  # Remplacez ceci par une journalisation appropriée
+            logging.error(f"Unexpected error during updating user: {str(e)}")
             return {'error': 'An unexpected error occurred. Please try again later.'}, 500
+
+        # except ValidationError as ve:
+        #     # Si la validation échoue, renvoyez un message d'erreur approprié
+        #     logging.error(f"Validation error: {ve.messages}")
+        #     return {'error': 'Invalid input data: ' + str(ve.messages)}, 400
+        # except ValueError as ve:
+        #     logging.warning(f"ValueError: {str(ve)}")
+        #     return {'error': str(ve)}, 400  # Capture ValueError
+        # except Exception as e:
+        #     # En cas d'erreur inattendue, consignez l'erreur et renvoyez un message générique
+        #     print(f"Unexpecting error during updating user: {str(e)}")  # Remplacez ceci par une journalisation appropriée   # fix Erwan
+        #     logging.error(f"Unexpected error during updating user: {str(e)}")  # Use logging instead of print
+        #     return {'error': 'An unexpected error occurred. Please try again later.' + str(e)}, 500 # retourne l'erreur exacte

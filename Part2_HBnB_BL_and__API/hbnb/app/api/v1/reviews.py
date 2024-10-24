@@ -24,6 +24,7 @@ Models:
 """
 
 from flask_restx import Namespace, Resource, fields
+from typing import List
 from app.services.facade import HBnBFacade
 
 api = Namespace('reviews', description='Review operations')

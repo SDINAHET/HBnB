@@ -15,6 +15,7 @@ Models:
     - Amenity: Defines the schema for amenity data used for input validation and documentation.
 """
 from flask_restx import Namespace, Resource, fields
+from typing import List
 from app.services.facade import HBnBFacade
 
 api = Namespace('amenities', description='Amenity operations')
