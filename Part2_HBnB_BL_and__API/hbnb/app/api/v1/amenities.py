@@ -40,14 +40,14 @@ class AmenityList(Resource):
             # Abort with a 400 error if validation fails
             api.abort(400, 'Invalid input data: name is required.')
         new_amenity = facade.create_amenity(data)
-        # return new_amenity.to_dict(), 201
+        return new_amenity.to_dict(), 201
 
         # Return only 'id' and 'name' in the response
-        response_data = {
-            "id": new_amenity.id,  # Assuming your amenity object has an 'id' attribute
-            "name": new_amenity.name
-        }
-        return response_data, 201
+        # response_data = {
+        #     "id": new_amenity.id,  # Assuming your amenity object has an 'id' attribute
+        #     "name": new_amenity.name
+        # }
+        # return response_data, 201
 
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
