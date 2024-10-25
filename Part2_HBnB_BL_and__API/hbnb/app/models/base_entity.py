@@ -7,8 +7,9 @@ from datetime import datetime
 class BaseEntity:
 
     def some_method(self):
+        from app.models.base_entity import ValidationError
         from app.models.review import Review  # Import déplacé ici
-        from app.models.base_entity import BaseEntity
+        # from app.models.base_entity import BaseEntity
         from app.models.place import Place
         from app.models.amenity import Amenity  # Import déplacé ici
 
@@ -32,3 +33,7 @@ class BaseEntity:
             else:
                 print(f"Warning: {key} is not a valid attribute.")
         self.save()  # Update the updated_at timestamp
+
+class ValidationError(Exception):
+    """Custom exception for validation errors."""
+    pass
