@@ -10,23 +10,14 @@ class User(BaseEntity):
 
     users: Dict[str, 'User'] = {} # Class-level storage for users
 
-    # def __init__(self, first_name, last_name, email, password, isAdmin=False):
-    def __init__(self, first_name, last_name, email, isAdmin=False):
+    def __init__(self, first_name, last_name, email, is_admin=False):
         super().__init__() #appelle le constructeur de BaseEntity
-        # self.first_name = first_name
-        # self.last_name = last_name
-        # self.email = email
-        # self.password = password
         self.first_name = self.validate_first_name(first_name)
         self.last_name = self.validate_last_name(last_name)
         self.email = self.validate_email(email)
-        # self.password = self.validate_password(password)
-        # self.isAdmin = isAdmin
-        self.is_admin = False  # Ajoutez cet attribut si nécessaire
+        self.is_admin = is_admin  # Ajoutez cet attribut si nécessaire
         self.places: List['Place'] = []  # Places owned by the user
         self.reviews: List['Review'] = []  # Reviews written by the user
-        # self.validate()
-        # User.users[self.id] = self
         self.register_user()  # ajout
 
     def register_user(self):
@@ -46,18 +37,9 @@ class User(BaseEntity):
             raise ValidationError("Last name must be between 1 and 50 characters.")
         return last_name
 
-    # def validate(self):
-    #     if not self.first_name or not self.last_name:
-    #         raise ValidationError("First name and last name cannot be empty.")
-    #    if not self.is_valid_email(self.email):
-    #         raise ValidationError("Invalid email format.")
-    #     if not self.password or len(self.password) < 6:
-    #         raise ValidationError("Password must be at least 6 characters long.")
-
     @staticmethod
     def is_valid_email(email):
         # Simple regex for email validation
-        # regex = r'^\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         return re.match(regex, email) is not None
 
@@ -65,11 +47,6 @@ class User(BaseEntity):
         if not self.is_valid_email(email):
             raise ValidationError("Invalid email format.")
         return email
-
-    # def validate_password(self, password):
-        # if not password or len(password) < 6:
-            # raise ValidationError("Password must be at least 6 characters long.")
-        # return password
 
     def add_place(self, place):
         """Add a place to the user's list of places."""
@@ -83,17 +60,3 @@ class User(BaseEntity):
 
     def get_reviews(self):
         return self.reviews
-
-#    def to_dict(self):
-#        """Return a dictionary representation of the User instance."""
-#        return {
-#            # 'id': self.id,
-#            'first_name': self.first_name,
-#            'last_name': self.last_name,
-#            'email': self.email,
-#            'is_admin': self.is_admin,
-#            'created_at': self.created_at.isoformat(),
-#            'updated_at': self.updated_at.isoformat(),
-#            'places': [place.to_dict() for place in self.places],
-#            'reviews': [review.to_dict() for review in self.reviews]
-#        }

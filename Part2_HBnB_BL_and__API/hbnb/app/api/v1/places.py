@@ -32,8 +32,6 @@ Usage:
 """
 
 from flask_restx import Namespace, Resource, fields
-from typing import List
-# from app.services.facade import HBnBFacade
 from app.services import facade
 from app.api.v1.users import api as users_ns  # Import the users namespace
 from app.api.v1.users import user_model  # Import user_model directly

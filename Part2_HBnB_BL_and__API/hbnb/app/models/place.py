@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
 from __future__ import annotations  # Doit être la première ligne
-from marshmallow import ValidationError
 from .base_entity import BaseEntity
 from app.models.user import User
+from typing import List
 
 class Place(BaseEntity):
     def __init__(self, title, description, price, latitude, longitude, owner):
@@ -11,9 +11,6 @@ class Place(BaseEntity):
         self.title = title
         self.description = description
         self.price = price
-        # self.latitude = latitude
-        # self.longitude = longitude
-        # self.owner = owner
         self.latitude = self.validate_latitude(latitude)
         self.longitude = self.validate_longitude(longitude)
         self.owner = self.validate_owner(owner)
@@ -51,9 +48,6 @@ class Place(BaseEntity):
     @staticmethod
     def validate_owner(owner):
         """Validate that the owner is a valid User instance."""
-        # if owner is None or not hasattr(owner, 'to_dict'):
-        #     raise ValueError("Owner must be a valid User instance")
-        # return owner
         if not isinstance(owner, User):
             raise ValueError("Owner must be a valid User instance")
         return owner

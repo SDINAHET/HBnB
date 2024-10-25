@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 from __future__ import annotations  # Doit être la première ligne
-from marshmallow import ValidationError
 from .base_entity import BaseEntity
 from app.models.user import User
 from app.models.place import Place
@@ -17,16 +16,9 @@ class Review(BaseEntity):
         self.comment = comment
         self.rating = rating
         self.user_id = user.id
-        # self.place = place
         self.place_id = place.id
         self.validate()
         self.register_review(user, place)
-
-#    def validate(self):
-#        if not isinstance(self.comment, str) or not self.comment:
-#            raise ValueError('Comment must be a non empty string.')
-#        if not isinstance(self.rating, int) or self.rating < 1 or self.rating > 5:
-#            raise ValueError('Rating must be an integer between 1 and 5.')
 
     def validate(self):
         """Validate the review attributes."""
@@ -34,7 +26,6 @@ class Review(BaseEntity):
             raise ValueError('Comment must be a non-empty string.')
         if not isinstance(self.rating, int) or self.rating < 1 or self.rating > 5:
             raise ValueError('Rating must be an integer between 1 and 5.')
-        # Validation pour s'assurer que l'utilisateur et le lieu existent
         if not User.get_by_id(self.user_id):
             raise ValueError("User does not exist.")
         if not Place.get_by_id(self.place_id):
