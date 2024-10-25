@@ -13,7 +13,7 @@ class Place(BaseEntity):
         self.price = price
         self.latitude = self.validate_latitude(latitude)
         self.longitude = self.validate_longitude(longitude)
-        self.owner = self.validate_owner(owner)
+        # self.owner = self.validate_owner(owner)
         self.reviews: List['Review'] = []  # List to store related reviews
         self.amenities: List['Amenity'] = []  # List to store related amenities
 
@@ -72,7 +72,7 @@ class Place(BaseEntity):
             'price': self.price,
             'latitude': self.latitude,
             'longitude': self.longitude,
-            'owner': self.owner.to_dict() if self.owner else None,
+            # 'owner': self.owner.to_dict() if self.owner else None,
             'reviews': [review.to_dict() for review in self.reviews],
             'amenities': [amenity.to_dict() for amenity in self.amenities]
         }
@@ -89,6 +89,6 @@ class Place(BaseEntity):
             self.latitude = self.validate_latitude(kwargs['latitude'])
         if 'longitude' in kwargs:
             self.longitude = self.validate_longitude(kwargs['longitude'])
-        if 'owner' in kwargs:
-            self.owner = self.validate_owner(kwargs['owner'])
+        # if 'owner' in kwargs:
+        #     self.owner = self.validate_owner(kwargs['owner'])
         self.save()  # Update the updated_at timestamp

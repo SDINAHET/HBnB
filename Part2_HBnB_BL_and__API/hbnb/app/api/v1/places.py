@@ -113,12 +113,12 @@ class PlaceResource(Resource):
             'description': place.description,
             'latitude': place.latitude,
             'longitude': place.longitude,
-            'owner': {
-                'id': place.owner.id,
-                'first_name': place.owner.first_name,
-                'last_name': place.owner.last_name,
-                'email': place.owner.email
-            },
+            # 'owner': {
+                # 'id': place.owner.id,
+                # 'first_name': place.owner.first_name,
+                # 'last_name': place.owner.last_name,
+                # 'email': place.owner.email
+            # },
             'amenities': [{
                 'id': amenity.id,
                 'name': amenity.name
