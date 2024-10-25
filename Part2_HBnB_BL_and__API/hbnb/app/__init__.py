@@ -13,7 +13,8 @@ from app.api.v1.amenities import api as amenities_ns
 
 def create_app():
     app = Flask(__name__)
-    api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API')
+    api = Api(app, version='1.0', title='HBnB API',
+              description='HBnB Application API', doc='/api/v1')
 
     # Register the user namespace
     api.add_namespace(users_ns, path='/api/v1/users')
