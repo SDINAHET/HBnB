@@ -34,7 +34,7 @@ class AmenityList(Resource):
         """Register a new amenity"""
         data = api.payload
         # Validate if 'name' is present in the input data
-        if not data or 'name' not in data:
+        if not data or 'name' not in data or data['name'].strip() == "":
             # Abort with a 400 error if validation fails
             api.abort(400, 'Invalid input data: name is required.')
         new_amenity = facade.create_amenity(data)
@@ -92,7 +92,7 @@ class AmenityResource(Resource):
         # Get the input data sent in the request
         data = api.payload
         # Validate that input data is provided
-        if not data or 'name' not in data:
-            api.abort(400, 'Invalid input data: name is required.')
+        if not data or 'name' not in data or data['name'].strip() == "":
+            api.abort(400, 'Invalid input data: non-empty name is required.')
         facade.update_amenity(amenity_id, data)
         return {'message': 'Amenity updated successfully'}, 200
