@@ -13,7 +13,6 @@ Routes:
 import logging
 from marshmallow import fields, ValidationError
 from flask_restx import Namespace, Resource, fields
-# from app.services.facade import HBnBFacade
 from app.services import facade
 import re  # Add this for email validation
 
@@ -24,11 +23,9 @@ user_model = api.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
     'email': fields.String(required=True, description='Email of the user'),
-    # 'password': fields.String(required=True, description='Password of the user'),  # Ajout du mot de passe
     'isAdmin': fields.Boolean(required=False, default=False, description='Is the user an admin')  # Ajout du champ isAdmin
 })
 
-# facade = HBnBFacade()
 
 logging.basicConfig(level=logging.INFO)  # Or DEBUG, depending on your needs
 
@@ -61,7 +58,7 @@ class UserList(Resource):
 
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
-        # if existing_userr and existing_user.id != user_id:  # fix Erwan
+        # if existing_user and existing_user.id != user_id:  # fix Erwan
             return {'error': 'Email already registered'}, 400
 
         try:
@@ -71,7 +68,6 @@ class UserList(Resource):
                 'first_name': new_user.first_name,
                 'last_name': new_user.last_name,
                 'email': new_user.email,
-                # 'isAdmin': new_user.isAdmin  # Assurez-vous que 'id' n'est pas ici
             }, 201
         except ValidationError as ve:
             return {'error': ve.messages}, 400
@@ -98,9 +94,7 @@ class UserList(Resource):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'email': user.email,
-            # 'isAdmin': user.isAdmin  # Ne pas inclure 'id'
             } for user in users], 200
-        # return users_schema.dump(users), 200
 
 
 @api.route('/<user_id>')
@@ -137,7 +131,6 @@ class UserResource(Resource):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'email': user.email,
-            # 'isAdmin': user.isAdmin
             }, 200
 
     @api.expect(user_model, validate=True)
@@ -191,16 +184,3 @@ class UserResource(Resource):
         except Exception as e:
             logging.error(f"Unexpected error during updating user: {str(e)}")
             return {'error': 'An unexpected error occurred. Please try again later.'}, 500
-
-        # except ValidationError as ve:
-        #     # Si la validation échoue, renvoyez un message d'erreur approprié
-        #     logging.error(f"Validation error: {ve.messages}")
-        #     return {'error': 'Invalid input data: ' + str(ve.messages)}, 400
-        # except ValueError as ve:
-        #     logging.warning(f"ValueError: {str(ve)}")
-        #     return {'error': str(ve)}, 400  # Capture ValueError
-        # except Exception as e:
-        #     # En cas d'erreur inattendue, consignez l'erreur et renvoyez un message générique
-        #     print(f"Unexpecting error during updating user: {str(e)}")  # Remplacez ceci par une journalisation appropriée   # fix Erwan
-        #     logging.error(f"Unexpected error during updating user: {str(e)}")  # Use logging instead of print
-        #     return {'error': 'An unexpected error occurred. Please try again later.' + str(e)}, 500 # retourne l'erreur exacte

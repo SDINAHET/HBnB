@@ -16,7 +16,6 @@ Models:
 """
 from flask_restx import Namespace, Resource, fields
 from typing import List
-# from app.services.facade import HBnBFacade
 from app.services import facade
 
 api = Namespace('amenities', description='Amenity operations')
@@ -25,8 +24,6 @@ api = Namespace('amenities', description='Amenity operations')
 amenity_model = api.model('Amenity', {
     'name': fields.String(required=True, description='Name of the amenity')
 })
-
-# facade = HBnBFacade()
 
 @api.route('/')
 class AmenityList(Resource):
@@ -43,21 +40,12 @@ class AmenityList(Resource):
         new_amenity = facade.create_amenity(data)
         return new_amenity.to_dict(), 201
 
-        # Return only 'id' and 'name' in the response
-        # response_data = {
-        #     "id": new_amenity.id,  # Assuming your amenity object has an 'id' attribute
-        #     "name": new_amenity.name
-        # }
-        # return response_data, 201
 
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
         """Retrieve a list of all amenities"""
         # Get all amenities using the facade
         amenities = facade.get_all_amenities()
-
-        # Return the list of amenities as dictionaries with a 200 status code
-        # return [amenity.to_dict() for amenity in amenities], 200
 
         # Return only 'id' and 'name' in the response
         response_data = [
@@ -82,8 +70,6 @@ class AmenityResource(Resource):
         # If the amenity does not exist, return a 404 error
         if amenity is None:
             api.abort(404, 'Amenity not found')
-        # Return the amenity's details in dictionary format with a 200 status code
-        # return amenity.to_dict(), 200
         # Return only 'id' and 'name' in the response
         response_data = {
             'id': amenity.id,
@@ -106,16 +92,6 @@ class AmenityResource(Resource):
         # Get the input data sent in the request
         data = api.payload
         # Validate that input data is provided
-        # if not data:
-        #    api.abort(400, 'Invalid input data: must provide valid fields to update.')
-        # updated_amenity = facade.update_amenity(amenity_id, data)
-        # return updated_amenity.to_dict(), 200
-
-        # Return the updated amenity's details as a dictionary
-        # return {
-        #     "id": updated_amenity.id,
-        #     "name": updated_amenity.name
-        # }, 200
         if not data or 'name' not in data:
             api.abort(400, 'Invalid input data: name is required.')
         facade.update_amenity(amenity_id, data)

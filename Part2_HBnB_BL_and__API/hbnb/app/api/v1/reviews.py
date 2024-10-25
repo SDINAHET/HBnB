@@ -25,7 +25,6 @@ Models:
 
 from flask_restx import Namespace, Resource, fields
 from typing import List
-# from app.services.facade import HBnBFacade
 from app.services import facade
 
 api = Namespace('reviews', description='Review operations')
@@ -38,7 +37,6 @@ review_model = api.model('Review', {
     'place_id': fields.String(required=True, description='ID of the place')
 })
 
-# facade = HBnBFacade()
 
 @api.route('/')
 class ReviewList(Resource):
@@ -47,8 +45,6 @@ class ReviewList(Resource):
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new review"""
-        # Placeholder for the logic to register a new review
-        # pass
         data = api.payload
         if not data:
             api.abort(400, 'Invalid input data')
