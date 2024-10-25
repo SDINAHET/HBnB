@@ -38,7 +38,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(user.email, "john.doe@example.com")
         # self.assertEqual(user.email, user.email)
         # self.assertTrue(user.email.startswith("test_user_"))  # Check it starts with "test_user_"
-        self.assertFalse(user.isAdmin)  # Default value
+        self.assertFalse(user.is_admin)  # Default value
         self.assertIsInstance(user.created_at, datetime)  # Check created_at is a datetime object
         self.assertIsInstance(user.updated_at, datetime)  # Check updated_at is a datetime object
 
