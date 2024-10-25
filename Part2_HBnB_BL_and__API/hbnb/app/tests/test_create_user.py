@@ -8,8 +8,8 @@ class TestUserModel(unittest.TestCase):
 
     def get_unique_email(self):
         """Generate a unique email address for testing."""
-        email = f"test_user_{TestUser.email_counter}@example.com"
-        TestUser.email_counter += 1
+        email = f"test_user_{TestUserModel.email_counter}@example.com"
+        TestUserModel.email_counter += 1
         return email
 
     def setUp(self):
