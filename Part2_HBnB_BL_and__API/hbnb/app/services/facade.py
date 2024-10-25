@@ -6,7 +6,7 @@ handling operations related to users, places, amenities, and reviews.
 It provides methods for creating, retrieving, updating, and managing these
 entities by interacting with the underlying repository layer.
 """
-
+from marshmallow import ValidationError
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
@@ -85,7 +85,6 @@ class HBnBFacade:
             raise ValidationError("Last name must be a string.")
         if 'email' in user_data and not self.is_valid_email(user_data['email']):
             raise ValidationError("Invalid email format.")
-        # Add any other validation rules as necessary
 
     def update_user(self, user_id, user_data):
         """
@@ -102,23 +101,9 @@ class HBnBFacade:
         if user:
             for key, value in user_data.items():
                 setattr(user, key, value)
-            # self.user_repo.update(user)
             self.user_repo.update(user_id, user_data)  # Pass user_id and user_data
             return user
         return None
-        # user = self.user_repo.get(user_id)  # Récupération de l'utilisateur par ID
-        # if user is None:
-        #     return None  # Ou le code pour gérer l'utilisateur non trouvé
-
-        # # Mettez à jour les attributs de l'utilisateur avec les nouvelles données
-        # user.first_name = user_data.get('first_name', user.first_name)
-        # user.last_name = user_data.get('last_name', user.last_name)
-        # user.email = user_data.get('email', user.email)
-        # user.is_admin = user_data.get('isAdmin', user.is_admin)  # Note the camel case
-
-        # # Mettez à jour l'utilisateur dans le référentiel
-        # self.user_repo.update(user_id, user)  # Passez user_id et user à la méthode update
-        # return user
 
     # Amenity_service_facade
     def create_amenity(self, amenity_data):
@@ -171,7 +156,6 @@ class HBnBFacade:
         if amenity:
             for key, value in amenity_data.items():
                 setattr(amenity, key, value)
-            # self.amenity_repo.update(amenity)
             self.user_repo.update(amenity_id, amenity_data)  # Pass amenity_id and amenity_data
             return amenity
         return None
@@ -191,7 +175,6 @@ class HBnBFacade:
         self.place_repo.add(new_place)
         return new_place
 
-    # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
         """
         Retrieve a place by its ID.
@@ -238,7 +221,6 @@ class HBnBFacade:
             for key, value in place_data.items():
                 if value is not None:
                     setattr(place, key, value)
-            # self.place_repo.update(place)
             self.place_repo.update(place_id, place_data)
             return place
         return None
@@ -306,8 +288,6 @@ class HBnBFacade:
         if review:
             for key, value in review_data.items():
                 setattr(review, key, value)
-            # self.review_repo.update(review)
-            # self.review_repo.update(review)
             self.review_repo.update(review_id, review_data) # Pass user_id and user_data
             return review
         return None
