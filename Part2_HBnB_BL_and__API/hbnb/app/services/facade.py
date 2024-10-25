@@ -98,26 +98,27 @@ class HBnBFacade:
         Returns:
             User: The updated user object, or None if the user is not found.
         """
-        # user = self.user_repo.get(user_id)
-        # if user:
-        #    for key, value in user_data.items():
-        #        setattr(user, key, value)
-        #    self.user_repo.update(user)
-        #    return user
-        # return None
-        user = self.user_repo.get(user_id)  # Récupération de l'utilisateur par ID
-        if user is None:
-            return None  # Ou le code pour gérer l'utilisateur non trouvé
+        user = self.user_repo.get(user_id)
+        if user:
+            for key, value in user_data.items():
+                setattr(user, key, value)
+            # self.user_repo.update(user)
+            self.user_repo.update(user_id, user_data)  # Pass user_id and user_data
+            return user
+        return None
+        # user = self.user_repo.get(user_id)  # Récupération de l'utilisateur par ID
+        # if user is None:
+        #     return None  # Ou le code pour gérer l'utilisateur non trouvé
 
-        # Mettez à jour les attributs de l'utilisateur avec les nouvelles données
-        user.first_name = user_data.get('first_name', user.first_name)
-        user.last_name = user_data.get('last_name', user.last_name)
-        user.email = user_data.get('email', user.email)
-        user.is_admin = user_data.get('isAdmin', user.is_admin)  # Note the camel case
+        # # Mettez à jour les attributs de l'utilisateur avec les nouvelles données
+        # user.first_name = user_data.get('first_name', user.first_name)
+        # user.last_name = user_data.get('last_name', user.last_name)
+        # user.email = user_data.get('email', user.email)
+        # user.is_admin = user_data.get('isAdmin', user.is_admin)  # Note the camel case
 
-        # Mettez à jour l'utilisateur dans le référentiel
-        self.user_repo.update(user_id, user)  # Passez user_id et user à la méthode update
-        return user
+        # # Mettez à jour l'utilisateur dans le référentiel
+        # self.user_repo.update(user_id, user)  # Passez user_id et user à la méthode update
+        # return user
 
     # Amenity_service_facade
     def create_amenity(self, amenity_data):
@@ -170,7 +171,8 @@ class HBnBFacade:
         if amenity:
             for key, value in amenity_data.items():
                 setattr(amenity, key, value)
-            self.amenity_repo.update(amenity)
+            # self.amenity_repo.update(amenity)
+            self.user_repo.update(amenity_id, amenity_data)  # Pass amenity_id and amenity_data
             return amenity
         return None
 
@@ -236,7 +238,8 @@ class HBnBFacade:
             for key, value in place_data.items():
                 if value is not None:
                     setattr(place, key, value)
-            self.place_repo.update(place)
+            # self.place_repo.update(place)
+            self.place_repo.update(place_id, place_data)
             return place
         return None
 
@@ -303,7 +306,9 @@ class HBnBFacade:
         if review:
             for key, value in review_data.items():
                 setattr(review, key, value)
-            self.review_repo.update(review)
+            # self.review_repo.update(review)
+            # self.review_repo.update(review)
+            self.review_repo.update(review_id, review_data) # Pass user_id and user_data
             return review
         return None
 

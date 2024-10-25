@@ -33,7 +33,8 @@ Usage:
 
 from flask_restx import Namespace, Resource, fields
 from typing import List
-from app.services.facade import HBnBFacade
+# from app.services.facade import HBnBFacade
+from app.services import facade
 from app.api.v1.users import api as users_ns  # Import the users namespace
 from app.api.v1.users import user_model  # Import user_model directly
 
@@ -63,11 +64,11 @@ place_model = api.model('Place', {
     'latitude': fields.Float(required=True, description='Latitude of the place'),
     'longitude': fields.Float(required=True, description='Longitude of the place'),
     'owner_id': fields.String(required=True, description='ID of the owner'),
-    'owner': fields.Nested(user_model, description='Owner details'),
+    # 'owner': fields.Nested(user_model, description='Owner details'),
     'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
 })
 
-facade = HBnBFacade()
+# facade = HBnBFacade()
 
 @api.route('/')
 class PlaceList(Resource):

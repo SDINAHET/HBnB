@@ -13,7 +13,8 @@ Routes:
 import logging
 from marshmallow import fields, ValidationError
 from flask_restx import Namespace, Resource, fields
-from app.services.facade import HBnBFacade
+# from app.services.facade import HBnBFacade
+from app.services import facade
 import re  # Add this for email validation
 
 api = Namespace('users', description='User operations')
@@ -27,7 +28,7 @@ user_model = api.model('User', {
     'isAdmin': fields.Boolean(required=False, default=False, description='Is the user an admin')  # Ajout du champ isAdmin
 })
 
-facade = HBnBFacade()
+# facade = HBnBFacade()
 
 logging.basicConfig(level=logging.INFO)  # Or DEBUG, depending on your needs
 

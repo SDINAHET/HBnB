@@ -43,9 +43,9 @@ class InMemoryRepository(Repository):
         return list(self._storage.values())
 
     def update(self, obj_id, data):
-        # obj = self.get(obj_id)
-        # if obj:
-        #     obj.update(data
+        obj = self.get(obj_id)
+        if obj:
+            obj.update(data)
         #                )
 
         # obj = self.get(obj_id)
@@ -55,24 +55,24 @@ class InMemoryRepository(Repository):
         #         if hasattr(obj, key):
         #             setattr(obj, key, value)
         # Retrieve the object by its ID
-        obj = self.get(obj_id)
-        if obj is None:
-            logging.warning(f"Update failed: Object with ID {obj_id} not found.")
-            return False  # Indicate that the object was not found
+    #     obj = self.get(obj_id)
+    #     if obj is None:
+    #         logging.warning(f"Update failed: Object with ID {obj_id} not found.")
+    #         return False  # Indicate that the object was not found
 
-        try:
-            # Update the object's attributes with the new data
-            obj.update(data)  # Ensure the object's update method handles the data correctly
+    #     try:
+    #         # Update the object's attributes with the new data
+    #         obj.update(data)  # Ensure the object's update method handles the data correctly
 
-            # Optionally save the updated object back to the storage (if applicable)
-            self.save(obj)  # Implement the save logic if needed
+    #         # Optionally save the updated object back to the storage (if applicable)
+    #         self.save(obj)  # Implement the save logic if needed
 
-            logging.info(f"Object with ID {obj_id} updated successfully.")
-            return True  # Indicate that the update was successful
+    #         logging.info(f"Object with ID {obj_id} updated successfully.")
+    #         return True  # Indicate that the update was successful
 
-        except Exception as e:
-            logging.error(f"Error updating object {obj_id}: {e}")  # Log the error
-            return False  # Indicate that the update failed
+    #     except Exception as e:
+    #         logging.error(f"Error updating object {obj_id}: {e}")  # Log the error
+    #         return False  # Indicate that the update failed
 
     def delete(self, obj_id):
         if obj_id in self._storage:

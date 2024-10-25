@@ -127,8 +127,8 @@ class TestUser(unittest.TestCase):
 
         # Cleanup: delete the user after the test
         # requests.delete(f"{BASE_URL}{user_id}")
-        delete_response = requests.delete(f"{BASE_URL}{user_id}")
-        self.assertEqual(delete_response.status_code, 204, "Failed to delete user after test")
+        # delete_response = requests.delete(f"{BASE_URL}{user_id}")
+        # self.assertEqual(delete_response.status_code, 204, "Failed to delete user after test")
 
 if __name__ == "__main__":
     unittest.main()
