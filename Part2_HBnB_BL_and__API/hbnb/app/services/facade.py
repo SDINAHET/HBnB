@@ -22,8 +22,10 @@ class HBnBFacade:
     """
 
     def __init__(self):
-        """Initialize the HBnBFacade with repositories for users, places,
-        reviews, and amenities."""
+        """
+        Initialize the HBnBFacade with repositories for users, places,
+        reviews, and amenities.
+        """
         self.user_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
