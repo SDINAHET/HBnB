@@ -29,6 +29,12 @@ Usage:
     This module is part of the API layer of the HBnB application and interacts with the
     business logic layer to perform place management operations.
 
+Error Handling:
+    - Returns a 201 status code for successful creation (POST).
+    - Returns a 200 status code for successful retrieval and updates (GET, PUT).
+    - Returns a 400 status code for invalid input data (POST, PUT).
+    - Returns a 404 status code if a requested place is not found (GET, PUT).
+
 """
 
 from flask_restx import Namespace, Resource, fields
@@ -66,10 +72,25 @@ place_model = api.model('Place', {
 
 @api.route('/')
 class PlaceList(Resource):
+    """
+    Resource for handling requests to list all places or to create a new place.
+    """
+
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
+        """
+        Register a new place.
+
+        Expects:
+            - JSON payload matching the place_model, with fields such as title,
+              price, location, owner ID, and a list of amenities.
+
+        Returns:
+            - JSON response with the details of the created place.
+            - 201 status code if successful, or 400 if data is invalid.
+        """
         data = api.payload
         try:
             new_place = facade.create_place(data)
@@ -87,7 +108,13 @@ class PlaceList(Resource):
 
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
-        """Retrieve a list of all places"""
+        """
+        Retrieve a list of all places.
+
+        Returns:
+            - A list of places, each with minimal details like ID, title, and location.
+            - 200 status code upon success.
+        """
         places = facade.get_all_places()
         return [{
             'id': place.id,
@@ -99,11 +126,24 @@ class PlaceList(Resource):
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
+    """
+    Resource for handling requests for a specific place by its ID.
+    """
+
     @api.response(200, 'Place details retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
-        """Get place details by ID"""
-        # Logic to retrieve a place by ID, including owner and amenities
+        """
+        Get the details of a place by its ID.
+
+        Parameters:
+            - place_id: The unique identifier for the place.
+
+        Returns:
+            - Detailed information about the place, including its title, description,
+              owner details, and associated amenities.
+            - 200 status code if the place exists, or 404 if it is not found.
+        """
         place = facade.get_place_by_id(place_id)
         if place is None:
             api.abort(404, 'Place not found')
@@ -113,12 +153,6 @@ class PlaceResource(Resource):
             'description': place.description,
             'latitude': place.latitude,
             'longitude': place.longitude,
-            # 'owner': {
-                # 'id': place.owner.id,
-                # 'first_name': place.owner.first_name,
-                # 'last_name': place.owner.last_name,
-                # 'email': place.owner.email
-            # },
             'amenities': [{
                 'id': amenity.id,
                 'name': amenity.name
@@ -130,7 +164,19 @@ class PlaceResource(Resource):
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
-        """Update a place's information"""
+        """
+        Update the information of a specific place.
+
+        Parameters:
+            - place_id: The unique identifier of the place to update.
+
+        Expects:
+            - JSON payload with updated fields matching the place_model.
+
+        Returns:
+            - Success message with a 200 status code if updated successfully,
+              or 400 for invalid data, or 404 if the place is not found.
+        """
         data = api.payload
         try:
             updated_place = facade.update_place(place_id, data)
