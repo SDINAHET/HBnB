@@ -30,13 +30,13 @@ Usage:
     business logic layer to perform place management operations.
 
 """
-
+from flask import Flask, request, jsonify # *
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 from app.api.v1.users import api as users_ns  # Import the users namespace
 from app.api.v1.users import user_model  # Import user_model directly
 
-
+app = Flask(__name__) # *
 api = Namespace('places', description='Place operations')
 
 # Define the models for related entities
@@ -71,8 +71,16 @@ class PlaceList(Resource):
     @api.response(400, 'Invalid input data')
     def post(self):
         data = api.payload
+
+        # Vérifiez les données d'entrée
+        required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
+        for field in required_fields:
+            if field not in data:
+                api.abort(400, f'Missing required field: {field}')
+
         try:
             new_place = facade.create_place(data)
+            # new_place = facade.create_place(place_data)
             return {
                 'id': new_place.id,
                 'title': new_place.title,
@@ -113,12 +121,12 @@ class PlaceResource(Resource):
             'description': place.description,
             'latitude': place.latitude,
             'longitude': place.longitude,
-            # 'owner': {
-                # 'id': place.owner.id,
-                # 'first_name': place.owner.first_name,
-                # 'last_name': place.owner.last_name,
-                # 'email': place.owner.email
-            # },
+            'owner': {
+                'id': place.owner.id,
+                'first_name': place.owner.first_name,
+                'last_name': place.owner.last_name,
+                'email': place.owner.email
+            },
             'amenities': [{
                 'id': amenity.id,
                 'name': amenity.name

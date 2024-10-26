@@ -28,3 +28,4 @@ python3 -m unittest app.tests.test_review
 python3 -m unittest app.tests.test_review_task5
 python3 -m unittest app.tests.test_all
 pytest app/tests/test_user_task2_pytest.py
+python3 -m unittest app.tests.test_creation_place

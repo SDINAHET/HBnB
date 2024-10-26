@@ -6,16 +6,20 @@ from app.models.user import User
 from typing import List
 
 class Place(BaseEntity):
-    def __init__(self, title, description, price, latitude, longitude, owner):
+    def __init__(self, title, description, price, latitude, longitude, owner_id, owner, reviews=None, amenities=None):
         super().__init__()
         self.title = title
         self.description = description
         self.price = price
         self.latitude = self.validate_latitude(latitude)
         self.longitude = self.validate_longitude(longitude)
+        self.owner_id = owner_id  # Ensure this is included
+        self.owner = owner
         # self.owner = self.validate_owner(owner)
-        self.reviews: List['Review'] = []  # List to store related reviews
-        self.amenities: List['Amenity'] = []  # List to store related amenities
+        # self.reviews: List['Review'] = []  # List to store related reviews
+        # self.amenities: List['Amenity'] = []  # List to store related amenities
+        self.reviews = reviews if reviews is not None else []
+        self.amenities = amenities if amenities is not None else []
 
     @staticmethod
     def validate_title(title):
@@ -72,7 +76,7 @@ class Place(BaseEntity):
             'price': self.price,
             'latitude': self.latitude,
             'longitude': self.longitude,
-            # 'owner': self.owner.to_dict() if self.owner else None,
+            'owner': self.owner.to_dict() if self.owner else None,
             'reviews': [review.to_dict() for review in self.reviews],
             'amenities': [amenity.to_dict() for amenity in self.amenities]
         }
@@ -89,6 +93,6 @@ class Place(BaseEntity):
             self.latitude = self.validate_latitude(kwargs['latitude'])
         if 'longitude' in kwargs:
             self.longitude = self.validate_longitude(kwargs['longitude'])
-        # if 'owner' in kwargs:
-        #     self.owner = self.validate_owner(kwargs['owner'])
+        if 'owner' in kwargs:
+            self.owner = self.validate_owner(kwargs['owner'])
         self.save()  # Update the updated_at timestamp

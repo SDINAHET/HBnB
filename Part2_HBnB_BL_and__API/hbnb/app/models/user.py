@@ -20,13 +20,6 @@ class User(BaseEntity):
         self.reviews: List['Review'] = []  # Reviews written by the user
         self.register_user()  # ajout
 
-    def register_user(self):
-        """Register the user in the class-level dictionary."""
-        # Vérifie si un utilisateur avec cet email existe déjà
-        if any(user.email == self.email for user in User.users.values()):
-            raise ValidationError("An account with this email already exists.")
-        User.users[self.id] = self
-
     def validate_first_name(self, first_name):
         if not first_name or len(first_name) > 50:
             raise ValidationError("First name must be between 1 and 50 characters.")
@@ -36,6 +29,13 @@ class User(BaseEntity):
         if not last_name or len(last_name) > 50:
             raise ValidationError("Last name must be between 1 and 50 characters.")
         return last_name
+
+    def register_user(self):
+        """Register the user in the class-level dictionary."""
+        # Vérifie si un utilisateur avec cet email existe déjà
+        if any(user.email == self.email for user in User.users.values()):
+            raise ValidationError("An account with this email already exists.")
+        User.users[self.id] = self
 
     @staticmethod
     def is_valid_email(email):
@@ -48,15 +48,15 @@ class User(BaseEntity):
             raise ValidationError("Invalid email format.")
         return email
 
-    def add_place(self, place):
-        """Add a place to the user's list of places."""
-        self.places.append(place)
-        self.save()  # Update timestamp when adding a place
+    # def add_place(self, place):
+    #     """Add a place to the user's list of places."""
+    #     self.places.append(place)
+    #     self.save()  # Update timestamp when adding a place
 
-    def add_review(self, review):
-        """Add a review to the user's list of reviews."""
-        self.reviews.append(review)
-        self.save()  # Update timestamp when adding a place
+    # def add_review(self, review):
+    #     """Add a review to the user's list of reviews."""
+    #     self.reviews.append(review)
+    #     self.save()  # Update timestamp when adding a place
 
     def get_reviews(self):
         return self.reviews

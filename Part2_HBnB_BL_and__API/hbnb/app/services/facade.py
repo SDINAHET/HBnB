@@ -170,9 +170,45 @@ class HBnBFacade:
 
         Returns:
             Place: The newly created place object.
+
+        Raises:
+            ValueError: If the owner doesn't exist or if there's invalid input data.
         """
-        new_place = Place(**place_data)
+        # new_place = Place(**place_data)
+        # self.place_repo.add(new_place)
+        # return new_place
+        # Vérifier si le propriétaire existe
+        # owner = get_user_by_id(data['owner_id'])
+        owner = self.user_repo.get(place_data['owner_id'])
+        if not owner:
+            raise ValueError("Owner not found")
+
+        # Créer une nouvelle instance de Place
+        new_place = Place(
+            title=place_data['title'],
+            description=place_data.get('description'),
+            price=place_data['price'],
+            latitude=place_data['latitude'],
+            longitude=place_data['longitude'],
+            owner_id=place_data['owner_id'],  # Ensure this is included
+            owner=owner,   # Associate owner instance
+            # amenities=data['amenities']
+            reviews=[],  # ou data.get('reviews', [])
+            amenities=[]  # ou data.get('amenities', [])
+            )
+
+        # # Ajouter les amenities si présentes
+        if 'amenities' in place_data:
+            amenities = [self.amenity_repo.get(amenity_id) for amenity_id in place_data['amenities']]
+            new_place.amenities = [amenity for amenity in amenities if amenity is not None]
+
+        # Ajouter la nouvelle place au repository
         self.place_repo.add(new_place)
+        # owner = self.user_repo.get(place_data['owner_id'])
+
+        # # Ajoutez la place au dictionnaire
+        # places_data[place_id] = new_place
+
         return new_place
 
     def get_place(self, place_id):
@@ -307,3 +343,4 @@ class HBnBFacade:
             self.review_repo.delete(review_id)
             return True
         return False
+
