@@ -107,12 +107,14 @@ class PlaceList(Resource):
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
+    @api.doc('get_place')
     @api.response(200, 'Place details retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """Get place details by ID"""
         # Logic to retrieve a place by ID, including owner and amenities
-        place = facade.get_place_by_id(place_id)
+        # place = facade.get_place_by_id(place_id)
+        place = facade.get_place(place_id)
         if place is None:
             api.abort(404, 'Place not found')
         return {
@@ -130,7 +132,8 @@ class PlaceResource(Resource):
             'amenities': [{
                 'id': amenity.id,
                 'name': amenity.name
-            } for amenity in place.amenities]
+            # } for amenity in place.amenities]
+            } for amenity in place.amenities if amenity is not None]
         }, 200
 
     @api.expect(place_model)
@@ -142,8 +145,11 @@ class PlaceResource(Resource):
         data = api.payload
         try:
             updated_place = facade.update_place(place_id, data)
+            if updated_place is None:
+                api.abort(404, 'Place not found')
+
             return {'message': 'Place updated successfully'}, 200
         except ValueError as err:
             api.abort(400, str(err))
-        except KeyError:
-            api.abort(404, 'Place not found')
+        # except KeyError:
+        #     api.abort(404, 'Place not found')
