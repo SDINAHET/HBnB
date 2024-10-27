@@ -180,26 +180,26 @@ class Place(BaseEntity):
             'amenities': [amenity.to_dict() for amenity in self.amenities]
         }
 
-    def update(self, **kwargs):
-        """
-        Updates the Place instance with new values, validating each updated field.
+    # def update(self, **kwargs):
+    #     """
+    #     Updates the Place instance with new values, validating each updated field.
 
-        Args:
-            kwargs: Dictionary containing attributes to update.
+    #     Args:
+    #         kwargs: Dictionary containing attributes to update.
 
-        Raises:
-            ValueError: If any updated field fails validation.
-        """
-        if 'title' in kwargs:
-            self.title = self.validate_title(kwargs['title'])
-        if 'description' in kwargs:
-            self.description = kwargs['description']
-        if 'price' in kwargs:
-            self.price = self.validate_price(kwargs['price'])
-        if 'latitude' in kwargs:
-            self.latitude = self.validate_latitude(kwargs['latitude'])
-        if 'longitude' in kwargs:
-            self.longitude = self.validate_longitude(kwargs['longitude'])
-        if 'owner' in kwargs:
-            self.owner = self.validate_owner(kwargs['owner'])
-        self.save()  # Update the updated_at timestamp
+    #     Raises:
+    #         ValueError: If any updated field fails validation.
+    #     """
+    #     if 'title' in kwargs:
+    #         self.title = self.validate_title(kwargs['title'])
+    #     if 'description' in kwargs:
+    #         self.description = kwargs['description']
+    #     if 'price' in kwargs:
+    #         self.price = self.validate_price(kwargs['price'])
+    #     if 'latitude' in kwargs:
+    #         self.latitude = self.validate_latitude(kwargs['latitude'])
+    #     if 'longitude' in kwargs:
+    #         self.longitude = self.validate_longitude(kwargs['longitude'])
+    #     if 'owner' in kwargs:
+    #         self.owner = self.validate_owner(kwargs['owner'])
+    #     self.save()  # Update the updated_at timestamp
