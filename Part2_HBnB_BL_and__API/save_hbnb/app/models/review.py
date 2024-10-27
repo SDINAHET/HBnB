@@ -3,7 +3,7 @@
 from __future__ import annotations  # Doit être la première ligne
 from .base_entity import BaseEntity
 from app.models.user import User
-# from app.models.place import Place
+from app.models.place import Place
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -60,7 +60,3 @@ class Review(BaseEntity):
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
         }
-
-    def some_method():
-        from app.models.place import Place
-        # Your logic her

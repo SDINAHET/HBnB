@@ -6,8 +6,6 @@ handling operations related to users, places, amenities, and reviews.
 It provides methods for creating, retrieving, updating, and managing these
 entities by interacting with the underlying repository layer.
 """
-import logging
-
 from marshmallow import ValidationError
 from app.models.user import User
 from app.models.amenity import Amenity
@@ -15,9 +13,6 @@ from app.models.place import Place
 from app.models.review import Review
 from app.persistence.repository import InMemoryRepository
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)  # You can adjust the level as needed
-logger = logging.getLogger(__name__)  # Create a logger for this module
 
 class HBnBFacade:
     """
@@ -167,91 +162,6 @@ class HBnBFacade:
         return None
 
     # Place_service_facade
-    # def create_place(self, place_data):
-        """
-        Create a new place and add it to the repository.
-
-        Args:
-            place_data (dict): A dictionary containing place details (e.g., name, description, owner_id).
-
-        Returns:
-            Place: The newly created place object.
-        """
-        # new_place = Place(**place_data)
-        # self.place_repo.add(new_place)
-        # return new_place
-    # def create_place(self, place_data):
-
-        '''# Check if the owner exists
-            owner = self.user_repo.get(place_data['owner_id'])
-            if not owner:
-                raise ValueError("Owner not found")
-
-            # Create a new instance of Place
-            new_place = Place(
-                title=place_data['title'],
-                description=place_data.get('description', ""),  # Default to empty string if not provided
-                price=place_data['price'],
-                latitude=place_data['latitude'],
-                longitude=place_data['longitude'],
-                owner_id=place_data['owner_id'],  # Include owner_id
-                owner=owner,  # Associate the owner instance
-                reviews=[],  # Initialize with empty list
-                amenities=[]  # Initialize with empty list
-            )
-
-            # Add amenities if present in place_data
-            if 'amenities' in place_data:
-                amenities = [self.amenity_repo.get(amenity_id) for amenity_id in place_data['amenities']]
-                # Filter out None values from amenities
-                new_place.amenities = [amenity for amenity in amenities if amenity is not None]
-
-            # Add the new place to the repository
-            self.place_repo.add(new_place)
-
-            return new_place'''
-
-        '''def create_place(self, place_data):
-        """
-        Create a new place and add it to the repository.
-
-        Args:
-            place_data (dict): A dictionary containing place details (e.g., name, description, owner_id).
-
-        Returns:
-            Place: The newly created place object.
-        """'''
-        '''try:
-            logging.info(f"Creating place with data: {place_data}")
-
-            # Check if the owner exists
-            owner = self.user_repo.get(place_data['owner_id'])
-            if not owner:
-                raise ValueError("Owner not found")
-
-            # Create a new instance of Place
-            new_place = Place(
-                title=place_data['title'],
-                description=place_data.get('description', ""),
-                price=place_data['price'],
-                latitude=place_data['latitude'],
-                longitude=place_data['longitude'],
-                owner=owner
-            )
-
-            # Add amenities if present in place_data
-            if 'amenities' in place_data:
-                amenities = [self.amenity_repo.get(amenity_id) for amenity_id in place_data['amenities']]
-                new_place.amenities = [amenity for amenity in amenities if amenity is not None]
-
-            # Add the new place to the repository
-            self.place_repo.add(new_place)
-            logging.info(f"Successfully created place: {new_place}")
-
-            return new_place
-        except Exception as e:
-            logging.error(f"Error creating place: {e}")
-            return None'''
     def create_place(self, place_data):
         """
         Create a new place and add it to the repository.
@@ -261,17 +171,26 @@ class HBnBFacade:
 
         Returns:
             Place: The newly created place object.
+
+        Raises:
+            ValueError: If the owner doesn't exist or if there's invalid input data.
         """
+        # place = self.place_repo.get(place_id)  # Assuming you have a repository for places
+        # if place:
+        #     for key, value in place_data.items():
+        #         setattr(place, key, value)
+        #     self.place_repo.update(place_id, place_data)  # Pass place_id and place_data
+        #     return place
+        # return None
+
+        # new_place = Place(**place_data)
+        # self.place_repo.add(new_place)
+        # return new_place
+        # Vérifier si le propriétaire existe
+        # owner = get_user_by_id(data['owner_id'])
         owner = self.user_repo.get(place_data['owner_id'])
         if not owner:
             raise ValueError("Owner not found")
-
-        # Récupérer et initialiser les amenities
-        amenities = []
-        if 'amenities' in place_data:
-            amenities = [self.amenity_repo.get(amenity_id) for amenity_id in place_data['amenities']]
-            # Filtrer les amenities valides
-            amenities = [amenity for amenity in amenities if amenity is not None]
 
         # Créer une nouvelle instance de Place
         new_place = Place(
@@ -282,28 +201,25 @@ class HBnBFacade:
             longitude=place_data['longitude'],
             owner_id=place_data['owner_id'],  # Ensure this is included
             owner=owner,   # Associate owner instance
-            # amenities=place_data.get['amenities'],
-            # amenities=place_data.get('amenities', []),
-            reviews=[],  # ou data.get('reviews', [])
+            # amenities=place_data.get['amenities']
+            amenities=place_data.get('amenities', [])
+            # reviews=[],  # ou data.get('reviews', [])
             # amenities=[]  # ou data.get('amenities', [])
-            amenities=amenities
             )
 
-        # # Ajouter les amenities si présentes
-        # if 'amenities' in place_data:
-        #     amenities = [self.amenity_repo.get(amenity_id) for amenity_id in place_data['amenities']]
-        #     new_place.amenities = [amenity for amenity in amenities if amenity is not None]
+        # Ajouter les amenities si présentes
+        if 'amenities' in place_data:
+            amenities = [self.amenity_repo.get(amenity_id) for amenity_id in place_data['amenities']]
+            new_place.amenities = [amenity for amenity in amenities if amenity is not None]
 
         try:
             # Ajouter la nouvelle place au repository
             self.place_repo.add(new_place)
         # owner = self.user_repo.get(place_data['owner_id'])
-            logging.info(f"Successfully created place: {new_place}")
 
         # # Ajoutez la place au dictionnaire
         # places_data[place_id] = new_place
         except Exception as e:
-            logging.error(f"Error adding place: {e}")
             raise ValueError(f"Error adding place: {str(e)}")
             # Log the error or handle it as appropriate
             # print(f"Error creating place: {e}")
@@ -320,29 +236,109 @@ class HBnBFacade:
         Returns:
             Place: The place object, or None if not found.
         """
-        logger.info(f"Retrieving place with ID: {place_id}")
-        place = self.place_repo.get(place_id)
-
+        '''place = self.place_repo.get(place_id)
         if place:
-            logger.info(f"Found place: {place}")
-
-            # Récupérer le propriétaire de la place
             owner = self.user_repo.get(place.owner_id)
             place.owner = owner
-            logger.info(f"Associated owner: {owner}")
+            place.amenities = [self.amenity_repo.get(a_id) for a_id in place.amenities]
 
-            # Récupérer les amenities basées sur les IDs
-            if place.amenities:  # Vérifiez si la place a des IDs d'amenities
-                amenities = [self.amenity_repo.get(a_id) for a_id in place.amenities]
-                # Filtrer pour enlever les None
+            # Handle amenities that may not be found
+            place.amenities = [a for a in place.amenities if a is not None]  # Filter out None values
+
+        return place'''
+
+        '''try:
+            place = self.place_repo.get(place_id)
+            if place:
+                owner = self.user_repo.get(place.owner_id)
+                place.owner = owner if owner else None  # Assign None if owner is not found
+
+                # Récupérer les amenities
+                amenities = [
+                self.amenity_repo.get(a_id) for a_id in place.amenities
+                ]
+
+                # Filtrer les amenities qui n'ont pas été trouvées
+                # place.amenities = [a for a in amenities if a is not None]  # Filter out None values
                 place.amenities = [amenity for amenity in amenities if amenity is not None]
-                logger.info(f"Associated amenities: {place.amenities}")
 
-        else:
-            logger.warning(f"No place found with ID: {place_id}")
 
-        return place
-        # return self.place_repo.get(place_id)
+                # Formater les amenities pour inclure id et name
+                # place.amenities = [amenity.to_dict() for amenity in place.amenities]
+
+                # Formater les amenities pour inclure uniquement id et name
+                place.amenities = [
+                    {
+                        'id': amenity.id,
+                        'name': amenity.name
+                    } for amenity in place.amenities
+                ]
+                # place.amenities = [
+                #     self.amenity_repo.get(a_id) for a_id in place.amenities
+                # ]
+                # Handle amenities that may not be found
+                # place.amenities = [a for a in place.amenities if a is not None]  # Filter out None values
+                 # Préparer la réponse finale en formatant place
+                response = {
+                    "id": place.id,
+                    "title": place.title,
+                    "description": place.description,
+                    "latitude": place.latitude,
+                    "longitude": place.longitude,
+                    "owner": {
+                        "id": place.owner.id if place.owner else None,
+                        "first_name": place.owner.first_name if place.owner else None,
+                        "last_name": place.owner.last_name if place.owner else None,
+                        "email": place.owner.email if place.owner else None,
+                    },
+                    "amenities": place.amenities
+                }
+
+                # return place
+                return response
+            return None   # Return None if place not found
+        except Exception as e:
+            # Log the error or handle it as appropriate
+            print(f"Error retrieving place: {e}")
+            return None'''
+
+        '''for place in places:  # Supposons que `places` est votre liste de lieux
+            if place.id == place_id:
+                return place
+        return None'''
+
+        '''return self.place_repo.get(place_id)'''
+        """Retrieve a place by its ID."""
+        place = self.place_repo.get(place_id)
+        if place:
+            # Récupérer les détails du propriétaire
+            owner = self.user_repo.get(place.owner_id)
+            response = {
+                "id": place.id,
+                "title": place.title,
+                "description": place.description,
+                "latitude": place.latitude,
+                "longitude": place.longitude,
+                "owner": {
+                    "id": owner.id if owner else None,
+                    "first_name": owner.first_name if owner else None,
+                    "last_name": owner.last_name if owner else None,
+                    "email": owner.email if owner else None,
+                },
+                "amenities": [self.get_amenity_details(a_id) for a_id in place.amenities],
+            }
+
+            # response = {
+            #     "id": place.id,
+            #     "title": place.title,
+            #     "description": place.description,
+            #     "latitude": place.latitude,
+            #     "longitude": place.longitude,
+            #     "owner": self.get_user_details(place.owner_id),
+            #     "amenities": [self.get_amenity_details(a_id) for a_id in place.amenities],
+            # }'''
+            return response
+        return None
 
     def get_all_places(self):
         """
@@ -354,6 +350,9 @@ class HBnBFacade:
         places = self.place_repo.get_all()
         for place in places:
             place.owner = self.user_repo.get(place.owner_id)
+            # Vérifiez si owner_id est valide avant d'assigner
+            # owner = self.user_repo.get(place.owner_id)
+            # place.amenities = [self.amenity_repo.get(a_id) for a_id in place.amenities]
             place.amenities = [self.amenity_repo.get(a_id) for a_id in place.amenities]
         return places
 
@@ -368,27 +367,42 @@ class HBnBFacade:
         Returns:
             Place: The updated place object, or None if not found.
         """
-        logger.info(f"Updating place with ID: {place_id}")
+        # place = self.place_repo.get(place_id)
+        # if place:
+        #     place.update(place_data)  # Call the update method on the Place instance
+        #     self.place_repo.update(place)  # Pass the updated Place object
+        #     return place
+        # return None
         place = self.place_repo.get(place_id)
-
         if place:
             for key, value in place_data.items():
                 if value is not None:
                     setattr(place, key, value)
+
+            # Vérifiez si owner_id est dans place_data avant de l'assigner
+            if 'owner_id' in place_data:
+                owner = self.user_repo.get(place_data['owner_id'])
+                if owner is not None:
+                    place.owner = owner
+                else:
+                    raise ValueError("Invalid owner_id")  # Gérer cette situation comme vous le souhaitez
+
             self.place_repo.update(place_id, place_data)
             return place
-        logger.warning(f"No place found with ID: {place_id} to update.")
-        return None
+        else:
+            raise ValueError("Place not found")
 
-    def check_owner_exists(self, owner_id):
-        # Implémentez la logique pour vérifier si l'owner existe
-        owner = get_owner_by_id(owner_id)  # Récupérez l'owner par ID
-        return owner is not None
+        # place = self.place_repo.get(place_id)
+        # if not place:
+        #     return None  # Returning None will trigger 404 in the API layer
 
-    def check_amenity_exists(self, amenity_id):
-        # Implémentez la logique pour vérifier si l'amenity existe
-        amenity = get_amenity_by_id(amenity_id)  # Récupérez l'amenity par ID
-        return amenity is not None
+        # # Only update fields that are not None
+        # place.update(**{k: v for k, v in place_data.items() if v is not None})
+        # # self.place_repo.update(place)  # Save the updated place in the repo
+        # # Corrected in the `facade.update_place` method
+        # self.place_repo.update(place, data)
+
+        # return place
 
     # Review_service_facade
     def create_review(self, review_data):
