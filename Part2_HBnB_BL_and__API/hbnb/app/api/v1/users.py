@@ -39,6 +39,7 @@ class UserList(Resource):
         post: Registers a new user.
         get: Retrieves a list of all users.
     """
+
     @api.expect(user_model, validate=True)
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
@@ -51,8 +52,13 @@ class UserList(Resource):
         and returns the user details if successfully created.
 
         Returns:
-            dict: A dictionary containing the new user's details.
-            int: The HTTP status code (201 on success, 400 on failure).
+            tuple: A tuple containing:
+                - dict: A dictionary with the new user's details.
+                - int: The HTTP status code (201 on success, 400 on failure).
+
+        Raises:
+            ValidationError: If input data fails validation checks.
+            ValueError: If the email is already registered.
         """
 
         user_data = api.payload
@@ -84,8 +90,9 @@ class UserList(Resource):
         This method retrieves all registered users. If no users are found, a 404 error is returned.
 
         Returns:
-            list: A list of dictionaries containing user details.
-            int: The HTTP status code (200 on success, 404 on failure).
+            tuple: A tuple containing:
+                - list: A list of dictionaries with user details.
+                - int: The HTTP status code (200 on success, 404 on failure).
         """
         users = facade.get_all_users()
         if not users:
@@ -120,8 +127,9 @@ class UserResource(Resource):
             user_id (str): The ID of the user to retrieve.
 
         Returns:
-            dict: A dictionary containing the user's details.
-            int: The HTTP status code (200 on success, 404 on failure).
+            tuple: A tuple containing:
+                - dict: A dictionary with the user's details.
+                - int: The HTTP status code (200 on success, 404 on failure).
         """
 
         user = facade.get_user(user_id)
@@ -148,8 +156,13 @@ class UserResource(Resource):
             user_id (str): The ID of the user to update.
 
         Returns:
-            dict: A dictionary containing the updated user's details.
-            int: The HTTP status code (200 on success, 404 on failure).
+            tuple: A tuple containing:
+                - dict: A dictionary with the updated user's details.
+                - int: The HTTP status code (200 on success, 404 on failure).
+
+        Raises:
+            ValueError: If required fields are missing or the email format is invalid.
+            Exception: For any other unexpected errors.
         """
 
         # Récupérer les données envoyées dans la requête

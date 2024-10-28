@@ -41,11 +41,33 @@ review_model = api.model('Review', {
 
 @api.route('/')
 class ReviewList(Resource):
+    """
+    Resource class for handling review creation and retrieval of all reviews.
+
+    Methods:
+        post: Registers a new review.
+        get: Retrieves a list of all reviews.
+    """
+
     @api.expect(review_model)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
-        """Register a new review"""
+        """
+        Register a new review.
+
+        Parameters:
+            self: The instance of the Resource class.
+
+        Returns:
+            tuple: A tuple containing:
+                - dict: Newly created review details.
+                - int: HTTP status code (201) for successful creation.
+
+        Raises:
+            400: If the input data is invalid.
+        """
+
         data = api.payload
         if not data:
             api.abort(400, 'Invalid input data')
@@ -67,17 +89,52 @@ class ReviewList(Resource):
 
     @api.response(200, 'List of reviews retrieved successfully')
     def get(self):
-        """Retrieve a list of all reviews"""
+        """
+        Retrieve a list of all reviews.
+
+        Parameters:
+            self: The instance of the Resource class.
+
+        Returns:
+            tuple: A tuple containing:
+                - List[dict]: List of all reviews.
+                - int: HTTP status code (200) for successful retrieval.
+        """
+
         reviews = facade.get_all_reviews()
         return [review.to_dict() for review in reviews], 200
 
 
 @api.route('/<review_id>')
 class ReviewResource(Resource):
+    """
+    Resource class for handling single review operations.
+
+    Methods:
+        get: Retrieves review details by review ID.
+        put: Updates review details by review ID.
+        delete: Deletes review by review ID.
+    """
+
     @api.response(200, 'Review details retrieved successfully')
     @api.response(404, 'Review not found')
     def get(self, review_id):
-        """Get review details by ID"""
+        """
+        Get review details by ID.
+
+        Parameters:
+            self: The instance of the Resource class.
+            review_id (str): The ID of the review to retrieve.
+
+        Returns:
+            tuple: A tuple containing:
+                - dict: Review details.
+                - int: HTTP status code (200) for successful retrieval.
+
+        Raises:
+            404: If the review is not found.
+        """
+
         review = facade.get_review_by_id(review_id)
         if review is None:
             api.abort(404, 'Review not found')
@@ -89,7 +146,23 @@ class ReviewResource(Resource):
     @api.response(404, 'Review not found')
     @api.response(400, 'Invalid input data')
     def put(self, review_id):
-        """Update a review's information"""
+        """
+        Update a review's information.
+
+        Parameters:
+            self: The instance of the Resource class.
+            review_id (str): The ID of the review to update.
+
+        Returns:
+            tuple: A tuple containing:
+                - dict: Updated review details.
+                - int: HTTP status code (200) for successful update.
+
+        Raises:
+            404: If the review is not found.
+            400: If the input data is invalid.
+        """
+
         review = facade.get_review_by_id(review_id)
         if review is None:
             api.abort(404, 'Review not found')
@@ -109,7 +182,22 @@ class ReviewResource(Resource):
     @api.response(204, 'Review deleted successfully')
     @api.response(404, 'Review not found')
     def delete(self, review_id):
-        """Delete a review"""
+        """
+        Delete a review.
+
+        Parameters:
+            self: The instance of the Resource class.
+            review_id (str): The ID of the review to delete.
+
+        Returns:
+            tuple: A tuple containing:
+                - str: Empty string indicating success.
+                - int: HTTP status code (204) for successful deletion.
+
+        Raises:
+            404: If the review is not found.
+        """
+
         review = facade.get_review_by_id(review_id)
         if review is None:
             api.abort(404, 'Review not found')
@@ -119,10 +207,32 @@ class ReviewResource(Resource):
 
 @api.route('/places/<place_id>/reviews')
 class PlaceReviewList(Resource):
+    """
+    Resource class for handling retrieval of reviews for a specific place.
+
+    Methods:
+        get: Retrieves all reviews associated with a specific place by place ID.
+    """
+
     @api.response(200, 'List of reviews for the place retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
-        """Get all reviews for a specific place"""
+        """
+        Get all reviews for a specific place.
+
+        Parameters:
+            self: The instance of the Resource class.
+            place_id (str): The ID of the place to retrieve reviews for.
+
+        Returns:
+            tuple: A tuple containing:
+                - List[dict]: List of reviews for the specified place.
+                - int: HTTP status code (200) for successful retrieval.
+
+        Raises:
+            404: If the place is not found or has no reviews.
+        """
+
         reviews = facade.get_reviews_by_place_id(place_id)
         if not reviews:
             api.abort(404, 'Place not found or no reviews for this place')

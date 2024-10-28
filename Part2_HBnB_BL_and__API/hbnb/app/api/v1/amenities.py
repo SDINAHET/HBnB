@@ -27,11 +27,32 @@ amenity_model = api.model('Amenity', {
 
 @api.route('/')
 class AmenityList(Resource):
+    """
+    AmenityList class handles the operations related to amenities.
+
+    Methods:
+        post: Register a new amenity.
+        get: Retrieve a list of all amenities.
+    """
     @api.expect(amenity_model)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
-        """Register a new amenity"""
+        """
+        Retrieve a list of all amenities.
+
+        Parameters:
+            self: The instance of the Resource class.
+
+        Returns:
+            tuple: A tuple containing:
+                - List[dict]: List of amenities (id and name).
+                - int: HTTP status code (200) for successful retrieval.
+        Raises:
+            - `ValueError`: If the input data is invalid or required fields are missing.
+            - `KeyError`: If the input data does not contain the required keys defined in the amenity_model.
+        """
+
         data = api.payload
         # Validate if 'name' is present in the input data
         if not data or 'name' not in data or data['name'].strip() == "":
@@ -43,7 +64,21 @@ class AmenityList(Resource):
 
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
-        """Retrieve a list of all amenities"""
+        """
+        Get amenity details by ID.
+
+        Parameters:
+            self: The instance of the Resource class.
+            amenity_id (str): The ID of the amenity to retrieve.
+
+        Returns:
+            tuple: A tuple containing:
+                - dict: Amenity details (id and name).
+                - int: HTTP status code (200) for successful retrieval.
+
+        Raises:
+            404: If the amenity is not found.
+        """
         # Get all amenities using the facade
         amenities = facade.get_all_amenities()
 
@@ -60,10 +95,32 @@ class AmenityList(Resource):
 
 @api.route('/<amenity_id>')
 class AmenityResource(Resource):
+    """
+    AmenityResource class handles operations for a specific amenity.
+
+    Methods:
+        get: Get details of an amenity by its ID.
+        put: Update an amenity's information.
+    """
+
     @api.response(200, 'Amenity details retrieved successfully')
     @api.response(404, 'Amenity not found')
     def get(self, amenity_id):
-        """Get amenity details by ID"""
+        """
+        Get amenity details by ID.
+
+        Parameters:
+            self: The instance of the Resource class.
+            amenity_id (str): The ID of the amenity to retrieve.
+
+        Returns:
+            tuple: A tuple containing:
+                - dict: Amenity details (id and name).
+                - int: HTTP status code (200) for successful retrieval.
+
+        Raises:
+            404: If the amenity is not found.
+        """
         # Retrieve the amenity by ID using the facade
         amenity = facade.get_amenity(amenity_id)
 
@@ -82,7 +139,22 @@ class AmenityResource(Resource):
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
     def put(self, amenity_id):
-        """Update an amenity's information"""
+        """
+        Get amenity details by ID.
+
+        Parameters:
+            self: The instance of the Resource class.
+            amenity_id (str): The ID of the amenity to retrieve.
+
+        Returns:
+            tuple: A tuple containing:
+                - dict: Amenity details (id and name).
+                - int: HTTP status code (200) for successful retrieval.
+
+        Raises:
+            404: If the amenity is not found.
+        """
+
         # Retrieve the amenity by ID to update it
         amenity = facade.get_amenity(amenity_id)
 

@@ -573,9 +573,9 @@ Possible Status Codes Endpoint:
 // `400 Bad Request`: If input data is invalid.
 ```
 
-### Get all Review with review ID
+### Get all Review
 ```bash
-curl -X GET http://localhost:5000/api/v1/reviews/
+curl -X GET http://localhost:5000/api/v1/places/<place_id>/reviews
 ```
 
 ```jsonc
@@ -592,6 +592,17 @@ curl -X GET http://localhost:5000/api/v1/reviews/<review_id>/
 Possible Status Codes Endpoint:
 // `200 OK`: When the review is successfully retrieved.
 // `404 Not Found`: If the review does not exist.
+```
+
+### Get all Review with place ID
+```bash
+curl -X GET http://localhost:5000/api/v1/places/<place_id>/reviews
+```
+
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: List of reviews for the place retrieved successfully.
+// `404 Not Found`: If the place does not exist.
 ```
 
 ### Update/Put a Review with review ID
@@ -618,8 +629,8 @@ curl -X DELETE http://localhost:5000/api/v1/reviews/<review_id>
 
 ```jsonc
 Possible Status Codes Endpoint:
-// Created: When the user is successfully created.
-// Bad Request: If the email is already registered or input data is invalid.
+// `200 OK`: When the review is successfully deleted.
+// `404 Not Found`: If the review does not exist.
 ```
 
 ## In exemple Sequence Diagram: Visualizing the Flow of User Registration

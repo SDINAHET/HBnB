@@ -83,14 +83,35 @@ class PlaceList(Resource):
         """
         Register a new place.
 
+        Parameters:
+            - `self`: Reference to the instance of the resource class.
+
         Expects:
-            - JSON payload matching the place_model, with fields such as title,
-              price, location, owner ID, and a list of amenities.
+            - JSON payload matching the place_model, with fields such as:
+              - `title` (str): Title of the place.
+              - `description` (str): Description of the place.
+              - `price` (float): Price per night.
+              - `latitude` (float): Latitude of the place.
+              - `longitude` (float): Longitude of the place.
+              - `owner_id` (str): ID of the owner.
+              - `amenities` (list): List of amenities ID's.
 
         Returns:
-            - JSON response with the details of the created place.
-            - 201 status code if successful, or 400 if data is invalid.
+            - (dict): JSON response with the details of the created place, including:
+              - `id` (str): Unique identifier of the created place.
+              - `title` (str): Title of the created place.
+              - `description` (str): Description of the created place.
+              - `price` (float): Price per night of the created place.
+              - `latitude` (float): Latitude of the created place.
+              - `longitude` (float): Longitude of the created place.
+              - `owner_id` (str): ID of the owner of the created place.
+            - Status code 201 if successful.
+            - Status code 400 if data is invalid.
+
+        Raises:
+            - `ValueError`: If input data is invalid or required fields are missing.
         """
+
         data = api.payload
 
        # Vérifiez les données d'entrée
@@ -119,10 +140,21 @@ class PlaceList(Resource):
         """
         Retrieve a list of all places.
 
+        Parameters:
+            - `self`: Reference to the instance of the resource class.
+
+        Expects:
+            - No additional parameters.
+
         Returns:
-            - A list of places, each with minimal details like ID, title, and location.
-            - 200 status code upon success.
+            - (list): A list of places, each represented as a dictionary containing:
+              - `id` (str): Unique identifier of the place.
+              - `title` (str): Title of the place.
+              - `latitude` (float): Latitude of the place.
+              - `longitude` (float): Longitude of the place.
+            - Status code 200 upon success.
         """
+
         places = facade.get_all_places()
         return [{
             'id': place.id,
@@ -144,13 +176,32 @@ class PlaceResource(Resource):
         Get the details of a place by its ID.
 
         Parameters:
-            - place_id: The unique identifier for the place.
+            - `self`: Reference to the instance of the resource class.
+            - `place_id` (str): The unique identifier for the place.
+
+        Expects:
+            - No additional parameters.
 
         Returns:
-            - Detailed information about the place, including its title, description,
-              owner details, and associated amenities.
-            - 200 status code if the place exists, or 404 if it is not found.
+            - (dict): Detailed information about the place, including:
+              - `id` (str): Unique identifier of the place.
+              - `title` (str): Title of the place.
+              - `description` (str): Description of the place.
+              - `latitude` (float): Latitude of the place.
+              - `longitude` (float): Longitude of the place.
+              - `owner` (dict): Information about the owner, including:
+                - `id` (str): Owner ID.
+                - `first_name` (str): First name of the owner.
+                - `last_name` (str): Last name of the owner.
+                - `email` (str): Email of the owner.
+              - `amenities` (list): List of associated amenities.
+            - Status code 200 if the place exists.
+            - Status code 404 if the place is not found.
+
+        Raises:
+            - `ValueError`: If an unexpected error occurs while retrieving the place.
         """
+
         # Logic to retrieve a place by ID, including owner and amenities
         place = facade.get_place(place_id)
         if place is None:
@@ -193,14 +244,26 @@ class PlaceResource(Resource):
         Update the information of a specific place.
 
         Parameters:
-            - place_id: The unique identifier of the place to update.
+            - `self`: Reference to the instance of the resource class.
+            - `place_id` (str): The unique identifier of the place to update.
 
         Expects:
-            - JSON payload with updated fields matching the place_model.
+            - JSON payload with updated fields matching the place_model, including:
+              - `title` (str): Updated title of the place.
+              - `description` (str): Updated description of the place.
+              - `price` (float): Updated price per night.
+              - `latitude` (float): Updated latitude of the place.
+              - `longitude` (float): Updated longitude of the place.
 
         Returns:
-            - Success message with a 200 status code if updated successfully,
-              or 400 for invalid data, or 404 if the place is not found.
+            - (dict): Success message indicating the place was updated successfully.
+            - Status code 200 if updated successfully.
+            - Status code 400 if data is invalid.
+            - Status code 404 if the place is not found.
+
+        Raises:
+            - `ValueError`: If input data is invalid or required fields are missing.
+            - `KeyError`: If the specified place ID does not correspond to an existing place.
         """
         # data = api.payload
         # # Validate input data here
