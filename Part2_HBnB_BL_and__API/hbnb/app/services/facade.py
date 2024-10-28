@@ -162,6 +162,7 @@ class HBnBFacade:
             for key, value in amenity_data.items():
                 setattr(amenity, key, value)
             # self.user_repo.update(amenity_id, amenity_data)  # Pass amenity_id and amenity_data
+            # amenity.update(**amenity_data)
             self.amenity_repo.update(amenity_id, amenity_data)
             return amenity
         return None
