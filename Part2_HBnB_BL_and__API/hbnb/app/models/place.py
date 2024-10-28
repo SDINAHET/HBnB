@@ -2,7 +2,9 @@
 
 from __future__ import annotations  # Doit être la première ligne
 from .base_entity import BaseEntity
-from app.models.user import User
+# from app.models.user import User
+# from app.api.v1.places import review_model
+# from app.models.places import Review
 from typing import List
 
 class Place(BaseEntity):
@@ -47,9 +49,9 @@ class Place(BaseEntity):
         self.owner = self.validate_owner(owner)
         # self.reviews: List['Review'] = []  # List to store related reviews
         # self.amenities: List['Amenity'] = []  # List to store related amenities
-        self.reviews = reviews if reviews is not None else []
         self.amenities = amenities if amenities is not None else []
         # self.amenities = amenities or []
+        self.reviews = reviews if reviews is not None else []
 
     @staticmethod
     def validate_title(title):

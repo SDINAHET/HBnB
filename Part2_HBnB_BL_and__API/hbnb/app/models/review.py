@@ -2,15 +2,18 @@
 
 from __future__ import annotations  # Doit être la première ligne
 from .base_entity import BaseEntity
-from app.models.user import User
+# from app.models.user import User
 # from app.models.place import Place
+# from app.models.review import review_model
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from .user import User
-    from .place import Place
+# if TYPE_CHECKING:
+#     from .user import User
+#     from .place import Place
 
 class Review(BaseEntity):
+    reviews = {}  # This will hold all Review instances
+
     def __init__(self, comment: str, rating: int, user: User, place: Place):
         super().__init__()
         self.comment = comment
@@ -19,6 +22,7 @@ class Review(BaseEntity):
         self.place_id = place.id
         self.validate()
         self.register_review(user, place)
+        self.reviews[self.id] = self  # Store this review instance
 
     def validate(self):
         """Validate the review attributes."""

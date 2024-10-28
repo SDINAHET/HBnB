@@ -9,10 +9,10 @@ entities by interacting with the underlying repository layer.
 import logging
 
 from marshmallow import ValidationError
-from app.models.user import User
-from app.models.amenity import Amenity
-from app.models.place import Place
-from app.models.review import Review
+# from app.models.user import User
+# from app.models.amenity import Amenity
+# from app.models.place import Place
+# from app.models.review import Review
 from app.persistence.repository import InMemoryRepository
 
 # Configure logging
@@ -401,8 +401,32 @@ class HBnBFacade:
         Returns:
             Review: The newly created review object.
         """
+        # new_review = Review(**review_data)
+        # self.review_repo.add(new_review)
+        # return new_review
+        # Validate required fields
+        user_id = review_data.get('user_id')
+        place_id = review_data.get('place_id')
+        text = review_data.get('text')
+        rating = review_data.get('rating')
+
+        # Check if user_id and place_id are provided and valid
+        if not user_id or not self.user_repo.exists(user_id):
+            raise ValueError("Invalid user_id provided.")
+
+        if not place_id or not self.place_repo.exists(place_id):
+            raise ValueError("Invalid place_id provided.")
+
+        # Check if rating is valid (between 1 and 5)
+        if not isinstance(rating, int) or rating < 1 or rating > 5:
+            raise ValueError("Rating must be an integer between 1 and 5.")
+
+        # Create a new Review instance
         new_review = Review(**review_data)
+
+        # Add the review to the repository
         self.review_repo.add(new_review)
+
         return new_review
 
     def get_review(self, review_id):

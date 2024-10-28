@@ -39,11 +39,24 @@ Error Handling:
 
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
-from app.api.v1.users import api as users_ns  # Import the users namespace
-from app.api.v1.users import user_model  # Import user_model directly
+# from app.api.v1.users import api as users_ns  # Import the users namespace
+# from app.api.v1.users import user_model  # Import user_model directly
+# from app.api.v1.reviews import api as review_ns
+# from app.api.v1.reviews import review_model
+# from app.api.v1.places import place_model  # Assurez-vous que le chemin est correct
 
+# places_ns = Namespace('places')
 
 api = Namespace('places', description='Place operations')
+
+# Define the review model for input validation and documentation
+review_model = api.model('Review', {
+    'id': fields.String(description='Review ID'),
+    'comment': fields.String(required=True, description='Review comment'),
+    'rating': fields.Integer(required=True, description='Rating from 1 to 5'),
+    'user': fields.Nested(user_model, description='User who wrote the review'),
+    'place': fields.Nested(place_model, description='Place being reviewed')
+})
 
 # Define the models for related entities
 amenity_model = api.model('PlaceAmenity', {
@@ -66,9 +79,9 @@ place_model = api.model('Place', {
     'latitude': fields.Float(required=True, description='Latitude of the place'),
     'longitude': fields.Float(required=True, description='Longitude of the place'),
     'owner_id': fields.String(required=True, description='ID of the owner'),
-    'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
+    'amenities': fields.List(fields.String, required=True, description="List of amenities ID's"),
+    'reviews': fields.List(fields.Nested(review_model), description='List of reviews')
 })
-
 
 @api.route('/')
 class PlaceList(Resource):
