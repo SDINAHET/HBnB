@@ -16,7 +16,7 @@ from flask_restx import Namespace, Resource, fields
 from app.services import facade
 import re  # Add this for email validation
 
-# users_ns = Namespace('users')
+users_ns = Namespace('users')
 
 api = Namespace('users', description='User operations')
 

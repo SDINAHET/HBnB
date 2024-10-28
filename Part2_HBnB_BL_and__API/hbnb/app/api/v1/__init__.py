@@ -1,9 +1,11 @@
 # #!/usr/bin/python3
 # from flask_restx import Api
 # from places import api as places_api
-
+# from app.api.v1 import api
 # api = Api()
 # api.add_namespace(places_api)
+# def create_app():
+# from app.api.v1.users import users_ns
 
 # app/api/v1/__init__.py
 # from flask_restx import Api

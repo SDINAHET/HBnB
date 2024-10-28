@@ -10,7 +10,7 @@ from flask_restx import Api
 # from hbtn.app.api.v1.reviews import api as reviews_ns
 # from hbtn.app.api.v1.places import api as places_ns
 # from hbtn.app.api.v1.amenities import api as amenities_ns
-from app.api.v1 import api
+# from app.api.v1 import api
 from app.api.v1.users import users_ns
 from app.api.v1.places import places_ns
 from app.api.v1.reviews import reviews_ns

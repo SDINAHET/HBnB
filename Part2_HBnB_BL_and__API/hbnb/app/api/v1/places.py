@@ -39,15 +39,23 @@ Error Handling:
 
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
-# from app.api.v1.users import api as users_ns  # Import the users namespace
-# from app.api.v1.users import user_model  # Import user_model directly
+from app.api.v1.users import api as users_ns  # Import the users namespace
+from app.api.v1.users import user_model  # Import user_model directly
 # from app.api.v1.reviews import api as review_ns
 # from app.api.v1.reviews import review_model
 # from app.api.v1.places import place_model  # Assurez-vous que le chemin est correct
 
 # places_ns = Namespace('places')
+from app.models import place_model
 
 api = Namespace('places', description='Place operations')
+
+
+# Define the models for related entities
+amenity_model = api.model('PlaceAmenity', {
+    'id': fields.String(description='Amenity ID'),
+    'name': fields.String(description='Name of the amenity')
+})
 
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
@@ -58,11 +66,6 @@ review_model = api.model('Review', {
     'place': fields.Nested(place_model, description='Place being reviewed')
 })
 
-# Define the models for related entities
-amenity_model = api.model('PlaceAmenity', {
-    'id': fields.String(description='Amenity ID'),
-    'name': fields.String(description='Name of the amenity')
-})
 
 user_model = api.model('PlaceUser', {
     'id': fields.String(description='User ID'),
