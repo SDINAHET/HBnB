@@ -6,12 +6,12 @@ from datetime import datetime
 
 class BaseEntity:
 
-    def some_method(self):
-        from app.models.base_entity import ValidationError
-        from app.models.review import Review  # Import déplacé ici
-        # from app.models.base_entity import BaseEntity
-        from app.models.place import Place
-        from app.models.amenity import Amenity  # Import déplacé ici
+    # def some_method(self):
+    #     from app.models.base_entity import ValidationError
+    #     from app.models.review import Review  # Import déplacé ici
+    #     # from app.models.base_entity import BaseEntity
+    #     from app.models.place import Place
+    #     from app.models.amenity import Amenity  # Import déplacé ici
 
     def __init__(self):
         self.id = str(uuid.uuid4())
@@ -37,3 +37,10 @@ class BaseEntity:
 class ValidationError(Exception):
     """Custom exception for validation errors."""
     pass
+
+    def some_method(self):
+        # Import seulement si nécessaire pour éviter les importations circulaires
+        from app.models.review import Review
+        from app.models.place import Place
+        from app.models.amenity import Amenity
+        from app.models.review import Review

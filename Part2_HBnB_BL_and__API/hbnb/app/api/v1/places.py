@@ -92,8 +92,16 @@ class PlaceList(Resource):
             - 201 status code if successful, or 400 if data is invalid.
         """
         data = api.payload
+
+       # Vérifiez les données d'entrée
+        required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
+        for field in required_fields:
+            if field not in data:
+                api.abort(400, f'Missing required field: {field}')
+
         try:
             new_place = facade.create_place(data)
+            # new_place = facade.create_place(place_data)
             return {
                 'id': new_place.id,
                 'title': new_place.title,
@@ -123,7 +131,6 @@ class PlaceList(Resource):
             'longitude': place.longitude
         } for place in places], 200
 
-
 @api.route('/<place_id>')
 class PlaceResource(Resource):
     """
@@ -144,19 +151,37 @@ class PlaceResource(Resource):
               owner details, and associated amenities.
             - 200 status code if the place exists, or 404 if it is not found.
         """
-        place = facade.get_place_by_id(place_id)
+        # Logic to retrieve a place by ID, including owner and amenities
+        place = facade.get_place(place_id)
         if place is None:
             api.abort(404, 'Place not found')
+
+        # Prepare owner information, handling case if owner is None
+        owner_info = {
+            'id': place.owner.id if place.owner else None,
+            'first_name': place.owner.first_name if place.owner else None,
+            'last_name': place.owner.last_name if place.owner else None,
+            'email': place.owner.email if place.owner else None
+        }
+
+        # Ensure that amenities are correctly populated
+        amenities_info = []
+        if place.amenities:  # Vérifiez si la place a des IDs d'amenities
+            amenities_info = [{
+                'id': amenity.id,
+                'name': amenity.name
+            } for amenity in place.amenities]
+
+        # place = facade.get_place(place_id)
+
         return {
             'id': place.id,
             'title': place.title,
             'description': place.description,
             'latitude': place.latitude,
             'longitude': place.longitude,
-            'amenities': [{
-                'id': amenity.id,
-                'name': amenity.name
-            } for amenity in place.amenities]
+            'owner': owner_info,
+            'amenities': amenities_info
         }, 200
 
     @api.expect(place_model)
@@ -177,11 +202,46 @@ class PlaceResource(Resource):
             - Success message with a 200 status code if updated successfully,
               or 400 for invalid data, or 404 if the place is not found.
         """
+        # data = api.payload
+        # # Validate input data here
+        # required_fields = ['title', 'description', 'price', 'latitude', 'longitude']
+        # for field in required_fields:
+        #     if field not in data:
+        #         api.abort(400, f'Missing required field: {field}')
+
+        # try:
+        #     updated_place = facade.update_place(place_id, data)
+        #     return {'message': 'Place updated successfully'}, 200
+        # except ValueError as err:
+        #     api.abort(400, str(err))
+        # except KeyError:
+        #     api.abort(404, 'Place not found')
         data = api.payload
+
+        # Validate input data here
+        required_fields = ['title', 'description', 'price', 'latitude', 'longitude']
+        for field in required_fields:
+            if field not in data:
+                api.abort(400, f'Missing required field: {field}')
+
+        # Additional validation for types and values
+        if not isinstance(data['title'], str) or not isinstance(data['description'], str):
+            api.abort(400, 'Title and description must be strings.')
+
+        if not isinstance(data['price'], (int, float)) or data['price'] < 0:
+            api.abort(400, 'Price must be a positive number.')
+
+        if not isinstance(data['latitude'], (int, float)) or not (-90 <= data['latitude'] <= 90):
+            api.abort(400, 'Latitude must be a number between -90 and 90.')
+
+        if not isinstance(data['longitude'], (int, float)) or not (-180 <= data['longitude'] <= 180):
+            api.abort(400, 'Longitude must be a number between -180 and 180.')
+
         try:
             updated_place = facade.update_place(place_id, data)
+            if updated_place is None:
+                api.abort(404, 'Place not found')
+
             return {'message': 'Place updated successfully'}, 200
         except ValueError as err:
             api.abort(400, str(err))
-        except KeyError:
-            api.abort(404, 'Place not found')

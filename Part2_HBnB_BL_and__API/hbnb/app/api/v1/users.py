@@ -39,7 +39,6 @@ class UserList(Resource):
         post: Registers a new user.
         get: Retrieves a list of all users.
     """
-
     @api.expect(user_model, validate=True)
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
@@ -55,6 +54,7 @@ class UserList(Resource):
             dict: A dictionary containing the new user's details.
             int: The HTTP status code (201 on success, 400 on failure).
         """
+
         user_data = api.payload
 
         existing_user = facade.get_user_by_email(user_data['email'])
@@ -81,11 +81,11 @@ class UserList(Resource):
         """
         Retrieve the list of all users.
 
-        Returns a list of all users, or a 404 error if no users are found.
+        This method retrieves all registered users. If no users are found, a 404 error is returned.
 
         Returns:
-            list: List of dictionaries with user details.
-            int: HTTP status code (200 on success, 404 on error).
+            list: A list of dictionaries containing user details.
+            int: The HTTP status code (200 on success, 404 on failure).
         """
         users = facade.get_all_users()
         if not users:
@@ -142,15 +142,17 @@ class UserResource(Resource):
         """
         Update a user's details by ID.
 
-        Validates required fields and updates a user's details if the user exists.
+        This method updates the details of a user with the given user_id. If the user is not found, a 404 error is returned.
 
         Args:
             user_id (str): The ID of the user to update.
 
         Returns:
-            dict: Dictionary with the updated user's details.
-            int: HTTP status code (200 on success, 404 or 400 on error).
+            dict: A dictionary containing the updated user's details.
+            int: The HTTP status code (200 on success, 404 on failure).
         """
+
+        # Récupérer les données envoyées dans la requête
         user_data = api.payload
 
         # Essayer de mettre à jour l'utilisateur

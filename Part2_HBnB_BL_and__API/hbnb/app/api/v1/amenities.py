@@ -13,12 +13,6 @@ Routes:
 
 Models:
     - Amenity: Defines the schema for amenity data used for input validation and documentation.
-
-Error Handling:
-    - Returns **201** on successful creation (POST).
-    - Returns **200** on successful retrieval and updates (GET, PUT).
-    - Returns **400** for invalid input data (POST, PUT).
-    - Returns **404** if the requested amenity is not found (GET, PUT).
 """
 from flask_restx import Namespace, Resource, fields
 from typing import List
@@ -33,26 +27,11 @@ amenity_model = api.model('Amenity', {
 
 @api.route('/')
 class AmenityList(Resource):
-    """
-    Resource for managing a collection of amenities.
-
-    - POST: Registers a new amenity with specified data.
-    - GET: Retrieves a list of all available amenities.
-    """
-
     @api.expect(amenity_model)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
-        """
-        Register a new amenity.
-
-        Expects JSON data that contains the "name" field as required by the `amenity_model`.
-
-        Returns:
-            - 201 status code with the new amenity data if successful.
-            - 400 status code if input data is invalid.
-        """
+        """Register a new amenity"""
         data = api.payload
         # Validate if 'name' is present in the input data
         if not data or 'name' not in data or data['name'].strip() == "":
@@ -64,12 +43,7 @@ class AmenityList(Resource):
 
     @api.response(200, 'List of amenities retrieved successfully')
     def get(self):
-        """
-        Retrieve a list of all amenities.
-
-        Returns:
-            - 200 status code with a list of amenities (each with 'id' and 'name').
-        """
+        """Retrieve a list of all amenities"""
         # Get all amenities using the facade
         amenities = facade.get_all_amenities()
 
@@ -86,29 +60,10 @@ class AmenityList(Resource):
 
 @api.route('/<amenity_id>')
 class AmenityResource(Resource):
-    """
-    Resource for managing individual amenities based on `amenity_id`.
-
-    - GET: Retrieves amenity details by ID.
-    - PUT: Updates the information of an amenity by ID.
-    """
-
     @api.response(200, 'Amenity details retrieved successfully')
     @api.response(404, 'Amenity not found')
     def get(self, amenity_id):
-        """
-        Get amenity details by ID.
-
-        Args:
-            amenity_id (str): ID of the amenity to retrieve.
-
-        Returns:
-            - 200 status code with amenity data if found.
-            - 404 status code if the amenity is not found.
-
-        Example:
-            GET /api/v1/amenities/12345
-        """
+        """Get amenity details by ID"""
         # Retrieve the amenity by ID using the facade
         amenity = facade.get_amenity(amenity_id)
 
@@ -127,19 +82,7 @@ class AmenityResource(Resource):
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
     def put(self, amenity_id):
-        """
-        Update an amenity's information by ID.
-
-        Expects JSON data that contains the "name" field as required by the `amenity_model`.
-
-        Args:
-            amenity_id (str): ID of the amenity to update.
-
-        Returns:
-            - 200 status code with success message if update is successful.
-            - 400 status code if input data is invalid.
-            - 404 status code if the amenity is not found.
-        """
+        """Update an amenity's information"""
         # Retrieve the amenity by ID to update it
         amenity = facade.get_amenity(amenity_id)
 
