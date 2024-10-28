@@ -120,6 +120,10 @@ Organize the project into a modular architecture with clear separation of concer
     │   ├── persistence/
     │       ├── __init__.py
     │       ├── repository.py
+    │
+    ├── Tests/
+    │   ├── Test_ok/ ....
+    │
     ├── run.py
     ├── config.py
     ├── requirements.txt
@@ -140,7 +144,7 @@ Similarly, other __init__.py files can remain empty or include initialization co
 
 ### 3. Setting Up the Flask Application with Placeholders
 
-Initialize the Flask application within app/__init__.py:
+Initialize the Flask application within app/__init__.py at the start....
 
 ```python
 # hbnb/app/__init__.py
@@ -180,7 +184,7 @@ def create_app(config_name=None):
 
 The in-memory repository handles object storage and provides an interface that can later be replaced with a database-backed solution.
 
-app/persistence/repository.py
+app/persistence/repository.py  at the start....
 
 ```python
 # hbnb/app/persistence/repository.py
@@ -254,7 +258,7 @@ class InMemoryRepository(Repository):
 ### 5. Planning for the Facade Pattern
 
 Implement the Facade pattern to simplify communication between the Presentation and Business Logic layers.
-app/services/facade.py
+app/services/facade.py at the start....
 
 ```python
 # hbnb/app/services/facade.py
@@ -371,38 +375,6 @@ class HBnBFacade:
             review.delete_review()
 ```
 
-```python
-```
-
-
-```python
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # HBnB API Testing and Validation
 
 ## Validation
@@ -421,7 +393,7 @@ Each endpoint includes validation checks for attributes to ensure data integrity
 ```bash
 curl -X POST http://localhost:5000/api/v1/users/ \
      -H "Content-Type: application/json" \
-     -d '{"first_name": "John", "last_name": "Doe", "email": "john.doe@example.com", "password": "secure123"}'
+     -d '{"first_name": "John", "last_name": "Doe", "email": "john.doe@example.com"}'
 ```
 ### Get All Users
 ```bash
@@ -444,7 +416,7 @@ curl -X PUT http://localhost:5000/api/v1/users/<user_id> \
 ```bash
 curl -X POST http://localhost:5000/api/v1/amenities/ \
      -H "Content-Type: application/json" \
-     -d '{"name": "Wi-Fi", "description": "High-speed wireless internet"}'
+     -d '{"name": "Wi-Fi", "description": "Frigo"}'
 ```
 
 ### Create a Place
@@ -462,6 +434,8 @@ curl -X POST http://localhost:5000/api/v1/places/ \
          }'
 ```
 
+
+
 ### Create a Review
 ```bash
 curl -X POST http://localhost:5000/api/v1/reviews/ \
@@ -474,12 +448,184 @@ curl -X POST http://localhost:5000/api/v1/reviews/ \
          }'
 ```
 
+### Get all Review with review ID
+```bash
+curl -X GET http://localhost:5000/api/v1/reviews/
+```
+
+### Get Review with review ID
+```bash
+curl -X GET http://localhost:5000/api/v1/reviews/<review_id>/
+```
+
+### Update a Review with review ID
+```bash
+curl -X PUT http://localhost:5000/api/v1/reviews/<review_id>/ \
+     -H "Content-Type: application/json" \
+     -d '{
+           "text": "Updated review text!",
+           "rating": 4
+         }'
+```
+
 ### Automated Testing
 Implement unit tests using unittest or pytest to automate testing of business logic and API endpoints.
 
-Example: Testing User Creation
+Script for test for create a place automatiquely on terminal commande:
+```python
+#!/usr/bin/python3
+
+import subprocess
+import json
+
+# Fonction pour exécuter une commande curl et retourner la sortie
+def run_curl(command):
+    result = subprocess.run(command, capture_output=True, text=True)
+    return result.stdout
+
+# Étape 1 : Créer un utilisateur
+user_command = [
+    'curl', '-X', 'POST',
+    'http://localhost:5000/api/v1/users/',
+    '-H', 'accept: application/json',
+    '-H', 'Content-Type: application/json',
+    '-d', json.dumps({
+        "email": "user@example.com",
+        "first_name": "John",
+        "last_name": "Doe"
+    })
+]
+
+user_response = run_curl(user_command)
+print("Response from creating USER:", user_response)
+user_data = json.loads(user_response)
+
+# Étape 2 : Créer la première amenity
+amenity_command_1 = [
+    'curl', '-X', 'POST',
+    'http://localhost:5000/api/v1/amenities/',
+    '-H', 'accept: application/json',
+    '-H', 'Content-Type: application/json',
+    '-d', json.dumps({
+        "name": "Wi-Fi_test"  # Première amenity
+    })
+]
+
+amenity_response_1 = run_curl(amenity_command_1)
+print("Response from creating AMENITY 1:", amenity_response_1)
+amenity_data_1 = json.loads(amenity_response_1)
+
+# Étape 2 : Créer la deuxième amenity
+amenity_command_2 = [
+    'curl', '-X', 'POST',
+    'http://localhost:5000/api/v1/amenities/',
+    '-H', 'accept: application/json',
+    '-H', 'Content-Type: application/json',
+    '-d', json.dumps({
+        "name": "Air Conditioning_test"  # Deuxième amenity
+    })
+]
+
+amenity_response_2 = run_curl(amenity_command_2)
+print("Response from creating AMENITY 2:", amenity_response_2)
+amenity_data_2 = json.loads(amenity_response_2)
+
+# Étape 3 : Créer une place en utilisant l'ID de l'amenity et de l'utilisateur créés
+place_command = [
+    'curl', '-X', 'POST',
+    'http://localhost:5000/api/v1/places/',
+    '-H', 'accept: application/json',
+    '-H', 'Content-Type: application/json',
+    '-d', json.dumps({
+        "title": "Maison Rennes",
+        "description": "Un chalet Rennais au soleil",
+        "price": 120,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "owner_id": user_data['id'],  # Utilisation de l'ID de l'utilisateur
+        "amenities": [amenity_data_1['id'], amenity_data_2['id']]  # Utilisation des IDs des amenities
+    })
+]
+
+place_response = run_curl(place_command)
+print("Response from creating a place:", place_response)
+print("Raw response from creating a place:", place_response)
+
+# place_data = json.loads(place_response) if place_response else {}
+
+try:
+    place_data = json.loads(place_response)
+except json.JSONDecodeError as e:
+    print("JSON decoding error:", e)
+    place_data = {}
+
+
+# Résumé final des IDs créés
+print("\n=== Résumé de la création ===")
+print(f"ID Utilisateur : {user_data.get('id', 'Non créé')}")
+print(f"ID Amenity 1 : {amenity_data_1.get('id', 'Non créé')}")
+print(f"ID Amenity 2 : {amenity_data_2.get('id', 'Non créé')}")
+print(f"ID Place : {place_data.get('id', 'Non créé')}")
+
+```
+
+With this Script, I obtain this résults when the place is create with ID User / ID amenity1 / ID amenity2 and ID place for Place own User:
 ```bash
-# hbnb/tests/test_user.py
+Response from creating USER: {
+    "id": "862f2b99-c601-49de-9a0f-5991140f0671",
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "user@example.com"
+}
+
+Response from creating AMENITY 1: {
+    "id": "0e914fb1-a538-44f0-a91e-0add21ad0a1d",
+    "name": "Wi-Fi_test",
+    "created_at": "2024-10-28T15:16:44.233077",
+    "updated_at": "2024-10-28T15:16:44.233077"
+}
+
+Response from creating AMENITY 2: {
+    "id": "7b0e131c-3b7f-4281-bdf0-2028e8d3c108",
+    "name": "Air Conditioning_test",
+    "created_at": "2024-10-28T15:16:44.243959",
+    "updated_at": "2024-10-28T15:16:44.243959"
+}
+
+Response from creating a place: {
+    "id": "8e21a226-0d4a-4484-9cf4-e67ab3ea46b8",
+    "title": "Maison Rennes",
+    "description": "Un chalet Rennais au soleil",
+    "price": 120.0,
+    "latitude": 37.7749,
+    "longitude": -122.4194,
+    "owner_id": "862f2b99-c601-49de-9a0f-5991140f0671"
+}
+
+Raw response from creating a place: {
+    "id": "8e21a226-0d4a-4484-9cf4-e67ab3ea46b8",
+    "title": "Maison Rennes",
+    "description": "Un chalet Rennais au soleil",
+    "price": 120.0,
+    "latitude": 37.7749,
+    "longitude": -122.4194,
+    "owner_id": "862f2b99-c601-49de-9a0f-5991140f0671"
+}
+
+
+=== Résumé de la création ===
+ID Utilisateur : 862f2b99-c601-49de-9a0f-5991140f0671
+ID Amenity 1 : 0e914fb1-a538-44f0-a91e-0add21ad0a1d
+ID Amenity 2 : 7b0e131c-3b7f-4281-bdf0-2028e8d3c108
+ID Place : 8e21a226-0d4a-4484-9cf4-e67ab3ea46b8
+```
+
+Example: Testing User Creation with invalid password in exemple
+```python
+#!/usr/bin/python3
+
+import unittest
+import requests
 
 from app.models.user import User, ValidationError
 
@@ -512,6 +658,254 @@ if __name__ == "__main__":
     test_user_short_password()
 ```
 
+Test requirement User for the Part2 HBnB
+```bash
+python3 -m unittest app.tests.test_ok.test_user2
+```
+
+```python
+#!/usr/bin/python3
+
+# python3 -m unittest app.tests.test_ok.test_user2
+
+import sys
+import os
+import unittest
+import requests  # Ajout de l'import manquant
+from datetime import datetime
+from app.models.user import User, ValidationError
+
+BASE_URL = "http://localhost:5000/api/v1/users/"  # Remplacez par l'URL de votre API
+
+# Append the project's root directory to the system path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+class TestUser(unittest.TestCase):
+    email_counter = 1
+
+    def get_unique_email(self):
+        """Generate a unique email address for testing."""
+        email = f"test_user_{TestUser.email_counter}@example.com"
+        TestUser.email_counter += 1
+        return email
+
+    def setUp(self):
+        """Create a default user for tests."""
+        self.default_email = self.get_unique_email()
+        self.user = User(first_name="John", last_name="Doe", email=self.default_email)
+
+    def test_user_creation(self):
+        """Test successful user creation."""
+        self.assertEqual(self.user.first_name, "John")
+        self.assertEqual(self.user.last_name, "Doe")
+        self.assertEqual(self.user.email, self.default_email)
+        self.assertFalse(self.user.is_admin)  # Default value
+        self.assertIsInstance(self.user.created_at, datetime)
+        self.assertIsInstance(self.user.updated_at, datetime)
+
+    def test_user_invalid_email(self):
+        """Test user creation with an invalid email."""
+        with self.assertRaises(ValidationError):
+            User(first_name="Jane", last_name="Doe", email="invalidemail")
+
+    def test_user_missing_first_name(self):
+        """Test user creation with a missing first name."""
+        with self.assertRaises(ValidationError):
+            User(first_name="", last_name="Doe", email=self.get_unique_email())
+
+    def test_user_missing_last_name(self):
+        """Test user creation with a missing last name."""
+        with self.assertRaises(ValidationError):
+            User(first_name="Jane", last_name="", email=self.get_unique_email())
+
+    def test_user_unique_email(self):
+        """Test that email must be unique."""
+        User(first_name="John", last_name="Doe", email=self.get_unique_email())
+        with self.assertRaises(ValidationError):
+            User(first_name="Jane", last_name="Smith", email=self.user.email)
+
+    def test_user_first_name_length(self):
+        """Test user creation with a first name exceeding maximum length."""
+        with self.assertRaises(ValidationError):
+            User(first_name="A" * 51, last_name="Doe", email=self.get_unique_email())
+
+    def test_user_last_name_length(self):
+        """Test user creation with a last name exceeding maximum length."""
+        with self.assertRaises(ValidationError):
+            User(first_name="John", last_name="D" * 51, email=self.get_unique_email())
+
+    def test_user_id_type(self):
+        """Test that the user id is of the correct type."""
+        self.assertIsInstance(self.user.id, str)
+
+    def test_user_is_admin_default(self):
+        """Test that the default value for is_admin is False."""
+        self.assertFalse(self.user.is_admin)
+
+    def test_user_update(self):
+        """Test updating user information and ensuring updated_at changes."""
+        old_updated_at = self.user.updated_at
+        # Pause to ensure timestamp difference
+        self.user.first_name = "Jane"
+        self.user.last_name = "Smith"
+        self.user.email = self.get_unique_email()
+
+        # Assuming your User model has a method to save the updated user
+        self.user.save()
+
+        # Check if the values have been updated
+        self.assertEqual(self.user.first_name, "Jane")
+        self.assertEqual(self.user.last_name, "Smith")
+        self.assertNotEqual(self.user.email, self.default_email)
+
+        # Check if updated_at has changed
+        self.assertGreater(self.user.updated_at, old_updated_at)
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+Result test requirement User:
+```bash
+root@UI:# python3 -m unittest app.tests.test_ok.test_user2
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.002s
+
+OK
+```
+
+Test all endpoint User for the Part2 HBnB
+```bash
+python3 -m unittest app.tests.test_ok.test_user_task2
+```
+
+```python
+#!/usr/bin/python3
+
+# python3 -m unittest app.tests.test_ok.test_user_task2
+
+import sys
+import os
+import time
+import unittest
+import requests  # Ajout de l'import manquant
+from datetime import datetime
+from app.models.user import User, ValidationError
+import logging
+
+BASE_URL = "http://localhost:5000/api/v1/users/"  # Remplacez par l'URL de votre API
+
+# Append the project's root directory to the system path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+class TestUser(unittest.TestCase):
+    email_counter = 1
+
+    def get_unique_email(self):
+        """Generate a unique email address for testing."""
+        email = f"test_user_{TestUser.email_counter}@example.com"
+        TestUser.email_counter += 1
+        return email
+
+    def setUp(self):
+        """Create a default user for tests."""
+        self.default_email = self.get_unique_email()
+        self.user = User(first_name="John", last_name="Doe", email=self.default_email)
+
+    # Test avec toute les sorties d'erreur possible pour l'USER
+    def test_create_user(self):
+        """Test successful user creation and error handling."""
+        # Cas de succès
+        user_data = {
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john.doe@example.com"
+        }
+        response = requests.post(BASE_URL, json=user_data)
+        self.assertEqual(response.status_code, 201, f"Expected 201, got {response.status_code}")
+        self.assertIn("id", response.json(), "User ID not found in response")
+
+        # Cas d'échec : email déjà enregistré
+        response = requests.post(BASE_URL, json=user_data)
+        self.assertEqual(response.status_code, 400, f"Expected 400, got {response.status_code}")
+        print(f"Error message: {response.json().get('error')}")  # Affichage du message d'erreur
+
+        # Cas d'échec : données invalides (email manquant)
+        invalid_user_data = {
+            "first_name": "Jane",
+            "last_name": "Doe"
+        }
+        response = requests.post(BASE_URL, json=invalid_user_data)
+        self.assertEqual(response.status_code, 400, f"Expected 400, got {response.status_code}")
+        print(f"Error message: {response.json().get('error')}")  # Affichage du message d'erreur
+
+    def test_get_user_by_id(self):
+        """Test retrieving a user by ID and handle errors."""
+        # Créer un utilisateur avant de tester la récupération par ID
+        user_data = {
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john.doe@example2.com"
+        }
+        create_response = requests.post(BASE_URL, json=user_data)
+        user_id = create_response.json().get("id")
+
+        # Maintenant, testez la récupération par ID
+        response = requests.get(f"{BASE_URL}{user_id}")
+        self.assertEqual(response.status_code, 200, f"Expected 200, got {response.status_code}")
+
+    def test_list_users(self):
+        """Test retrieving the list of users."""
+        response = requests.get(BASE_URL)
+        self.assertEqual(response.status_code, 200, f"Expected 200, got {response.status_code}")
+        users = response.json()
+        self.assertIsInstance(users, list, "Expected a list of users")
+
+    def test_update_user(self):
+        """Test updating a user and handle errors."""
+        # Create a user for testing
+        user_data = {
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": self.get_unique_email()
+        }
+        create_response = requests.post(BASE_URL, json=user_data)
+        self.assertEqual(create_response.status_code, 201, "Failed to create user")
+        print(f"Create response: {create_response.json()}")  # Debugging
+
+        user_id = create_response.json().get("id")
+
+        # Now test updating this user
+        updated_data = {
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "email": "jane.doe@example.com"
+            # "email": self.get_unique_email()
+        }
+         # Updated URL to include user_id in the path
+        response = requests.put(f"{BASE_URL}{user_id}", json=updated_data)
+        print(f"Update response: {response.json()}")  # Add more detailed debug output
+        self.assertEqual(response.status_code, 200, f"Expected 200, got {response.status_code}")
+        # print(response.json())  # Print the JSON response for debugging
+        print(f"Update response: {response.json()}")  # Debugging output
+
+if __name__ == "__main__":
+    unittest.main()
+```
+Result test all endpoint User:
+```bash
+root@UI:# python3 -m unittest app.tests.test_ok.test_user_task2
+...Create response: {'id': '492f28f9-c8a3-4c2f-aa44-5ee0ecd4e647', 'first_name': 'John', 'last_name': 'Doe', 'email': 'test_user_5@example.com'}
+Update response: {'id': '492f28f9-c8a3-4c2f-aa44-5ee0ecd4e647', 'first_name': 'Jane', 'last_name': 'Doe', 'email': 'jane.doe@example.com'}
+Update response: {'id': '492f28f9-c8a3-4c2f-aa44-5ee0ecd4e647', 'first_name': 'Jane', 'last_name': 'Doe', 'email': 'jane.doe@example.com'}
+.
+----------------------------------------------------------------------
+Ran 4 tests in 0.037s
+
+OK
+```
+
 # Resources
 
 ## Flask and Flask-RESTx Documentation
@@ -542,38 +936,3 @@ if __name__ == "__main__":
 - Stéphane Dinahet
 - Henri Milles
 
-
-###
-```bash
-
-```
-
-###
-```bash
-
-```
-
-###
-```bash
-
-```
-
-###
-```bash
-
-```
-
-###
-```bash
-
-```
-
-###
-```bash
-
-```
-
-###
-```bash
-
-```

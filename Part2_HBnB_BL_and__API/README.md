@@ -109,6 +109,7 @@ Although the Persistence layer will be fully implemented in Part 3, this task in
     │   ├── persistence/
     │       ├── __init__.py
     │       ├── repository.py
+    │
     ├── run.py
     ├── config.py
     ├── requirements.txt
