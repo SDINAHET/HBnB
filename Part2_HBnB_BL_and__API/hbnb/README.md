@@ -388,37 +388,110 @@ Each endpoint includes validation checks for attributes to ensure data integrity
 - **Flask-RESTx Swagger Documentation**: Automatically generated documentation available at [http://localhost:5000/api/v1/](http://localhost:5000/api/v1/) to visually confirm the API structure.
 
 ## Example cURL Commands
-### Create a User
+
+## USER OPERATION
+
+### Create/Post a User
 ```bash
 curl -X POST http://localhost:5000/api/v1/users/ \
      -H "Content-Type: application/json" \
      -d '{"first_name": "John", "last_name": "Doe", "email": "john.doe@example.com"}'
 ```
+
+```jsonc
+Possible Status Codes Endpoint:
+// `201 OK Created`: When the user is successfully created.
+// `400 Bad Request`: If the email is already registered or input data is invalid.
+```
+
 ### Get All Users
 ```bash
 curl http://localhost:5000/api/v1/users/
 ```
 
-### Get a Specific User
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: When the list of users is successfully retrieved.
+```
+
+### Get a Specific User ID
 ```bash
 curl http://localhost:5000/api/v1/users/<user_id>
 ```
 
-### Update a User
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: When the user is successfully retrieved.
+// `404 Not Found`: If the user does not exist.
+```
+
+### Update/Put a User
 ```bash
 curl -X PUT http://localhost:5000/api/v1/users/<user_id> \
      -H "Content-Type: application/json" \
      -d '{"first_name": "Jane", "email": "jane.doe@example.com"}'
 ```
 
-### Create an Amenity
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: When the user is successfully updated.
+// `404 Not Found`: If the user does not exist.
+// `400 Bad Request`: If input data is invalid.
+```
+
+## AMENITY OPERATION
+
+### Create/Post an Amenity
 ```bash
 curl -X POST http://localhost:5000/api/v1/amenities/ \
      -H "Content-Type: application/json" \
-     -d '{"name": "Wi-Fi", "description": "Frigo"}'
+     -d '{"name": "Wi-Fi"}'
 ```
 
-### Create a Place
+```jsonc
+Possible Status Codes Endpoint:
+// `201 Created`: When the amenity is successfully created.
+// `400 Bad Request`: If input data is invalid.
+```
+
+### Get All Amenity
+```bash
+curl http://localhost:5000/api/v1/amenity/
+```
+
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: List of amenities retrieved successfully.
+```
+
+### Get a Specific Amenity ID
+```bash
+curl http://localhost:5000/api/v1/amenity/<amenity_id>
+```
+
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: When the amenity is successfully retrieved.
+// `404 Not Found`: If the amenity does not exist.
+```
+
+### Update/Put a Amenity
+```bash
+curl -X PUT http://localhost:5000/api/v1/amenity/<amenity_id> \
+     -H "Content-Type: application/json" \
+     -d  '{"name": "Wi-Fi"}'
+```
+
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: When the amenity is successfully updated.
+// `404 Not Found`: If the amenity does not exist.
+// `400 Bad Request`: If input data is invalid.
+```
+
+## PLACE OPERATION
+
+### Create/Post a Place
 ```bash
 curl -X POST http://localhost:5000/api/v1/places/ \
      -H "Content-Type: application/json" \
@@ -433,9 +506,56 @@ curl -X POST http://localhost:5000/api/v1/places/ \
          }'
 ```
 
+```jsonc
+Possible Status Codes Endpoint:
+// `201 Created`: When the place is successfully created.
+// `400 Bad Request`: If input data is invalid.
+```
 
+### Get All Place
+```bash
+curl http://localhost:5000/api/v1/places/
+```
 
-### Create a Review
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: List of places retrieved successfully.
+```
+
+### Get a Specific Place
+```bash
+curl http://localhost:5000/api/v1/places/<place_id>
+```
+
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: When the place and its associated owner and amenities are successfully retrieved.
+// `404 Not Found`: If the place does not exist.
+```
+
+### Update/Put a Place
+```bash
+curl -X PUT http://localhost:5000/api/v1/places/<place_id> \
+     -H "Content-Type: application/json" \
+     -d '{
+           "title": "Updated Cozy Apartment",
+           "description": "An updated nice place to stay",
+           "price": 120.0,
+           "latitude": 37.7749,
+           "longitude": -122.4194
+         }'
+```
+
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: When the place is successfully updated.
+// `404 Not Found`: If the place does not exist.
+// `400 Bad Request`: If input data is invalid.
+```
+
+## REVIEW OPERATION
+
+### Create/Post a Review
 ```bash
 curl -X POST http://localhost:5000/api/v1/reviews/ \
      -H "Content-Type: application/json" \
@@ -447,9 +567,20 @@ curl -X POST http://localhost:5000/api/v1/reviews/ \
          }'
 ```
 
+```jsonc
+Possible Status Codes Endpoint:
+// `201 Created`: When the review is successfully created.
+// `400 Bad Request`: If input data is invalid.
+```
+
 ### Get all Review with review ID
 ```bash
 curl -X GET http://localhost:5000/api/v1/reviews/
+```
+
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: List of reviews retrieved successfully.
 ```
 
 ### Get Review with review ID
@@ -457,7 +588,13 @@ curl -X GET http://localhost:5000/api/v1/reviews/
 curl -X GET http://localhost:5000/api/v1/reviews/<review_id>/
 ```
 
-### Update a Review with review ID
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: When the review is successfully retrieved.
+// `404 Not Found`: If the review does not exist.
+```
+
+### Update/Put a Review with review ID
 ```bash
 curl -X PUT http://localhost:5000/api/v1/reviews/<review_id>/ \
      -H "Content-Type: application/json" \
@@ -465,6 +602,38 @@ curl -X PUT http://localhost:5000/api/v1/reviews/<review_id>/ \
            "text": "Updated review text!",
            "rating": 4
          }'
+```
+
+```jsonc
+Possible Status Codes Endpoint:
+// `200 OK`: When the review is successfully updated.
+// `404 Not Found`: If the review does not exist.
+// `400 Bad Request`: If input data is invalid.
+```
+
+### Dell a Review with review ID
+```bash
+curl -X DELETE http://localhost:5000/api/v1/reviews/<review_id>
+```
+
+```jsonc
+Possible Status Codes Endpoint:
+// Created: When the user is successfully created.
+// Bad Request: If the email is already registered or input data is invalid.
+```
+
+## In exemple Sequence Diagram: Visualizing the Flow of User Registration
+
+```mermaid
+sequenceDiagram
+    participant API
+    participant Facade
+    participant User
+
+    API->>+Facade: create_user(user_data)
+    Facade->>+User: create_instance(user_data)
+    User-->>-Facade: user_instance
+    Facade-->>-API: user_created_response
 ```
 
 ### Automated Testing
