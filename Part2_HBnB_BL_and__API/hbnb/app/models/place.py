@@ -1,4 +1,22 @@
 #!/usr/bin/python3
+"""
+Module pour la gestion des entités de type 'Place' dans une application de location.
+
+Ce module définit la classe `Place`, qui représente un lieu disponible à la location ou à la visite.
+La classe hérite de `BaseEntity`, et inclut des méthodes pour valider les attributs, ajouter des avis,
+ajouter des équipements et obtenir une représentation sous forme de dictionnaire de l'instance.
+
+Classes:
+    - Place: Représente un lieu avec des détails tels que le titre, la description, le prix, la latitude,
+      la longitude, le propriétaire, les avis et les équipements.
+
+Fonctions:
+    - validate_title(title: str) -> str: Valide le titre du lieu.
+    - validate_price(price: float) -> float: Valide le prix du lieu.
+    - validate_latitude(latitude: float) -> float: Valide la latitude du lieu.
+    - validate_longitude(longitude: float) -> float: Valide la longitude du lieu.
+    - validate_owner(owner: User) -> User: Valide que le propriétaire est une instance de `User`.
+"""
 
 from __future__ import annotations  # Doit être la première ligne
 from .base_entity import BaseEntity

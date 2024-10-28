@@ -1,5 +1,17 @@
 #!/usr/bin/python3
 
+"""
+Module : review
+
+Ce module définit la classe Review, qui représente une évaluation d'un
+lieu par un utilisateur. La classe hérite de BaseEntity et fournit
+des méthodes pour valider et gérer les évaluations associées à des
+utilisateurs et des lieux.
+
+Classes :
+    Review : Représente une évaluation d'un lieu par un utilisateur.
+"""
+
 from __future__ import annotations  # Doit être la première ligne
 from .base_entity import BaseEntity
 from app.models.user import User
@@ -11,7 +23,25 @@ if TYPE_CHECKING:
     from .place import Place
 
 class Review(BaseEntity):
+    """Classe représentant une évaluation d'un lieu.
+
+    Attributs :
+        comment (str) : Commentaire de l'évaluation, doit être une chaîne non vide.
+        rating (int) : Note de l'évaluation, doit être un entier entre 1 et 5.
+        user_id (str) : Identifiant de l'utilisateur ayant laissé l'évaluation.
+        place_id (str) : Identifiant du lieu évalué.
+    """
     def __init__(self, comment: str, rating: int, user: User, place: Place):
+        """Initialise une instance de Review.
+
+        Args :
+            comment (str) : Commentaire de l'évaluation.
+            rating (int) : Note de l'évaluation (entre 1 et 5).
+            user (User) : Instance de l'utilisateur ayant laissé l'évaluation.
+            place (Place) : Instance du lieu évalué.
+
+        Lève une ValueError si les attributs ne sont pas valides.
+        """
         super().__init__()
         self.comment = comment
         self.rating = rating
