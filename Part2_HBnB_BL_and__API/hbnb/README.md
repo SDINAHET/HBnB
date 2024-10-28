@@ -118,12 +118,11 @@ Organize the project into a modular architecture with clear separation of concer
     │   │   ├── __init__.py
     │   │   ├── facade.py
     │   ├── persistence/
-    │       ├── __init__.py
-    │       ├── repository.py
-    │
-    ├── Tests/
-    │   ├── Test_ok/ ....
-    │
+    │   │   ├── __init__.py
+    │   │   ├── repository.py
+    │   │
+    │   ├── tests/
+    │       ├── test_ok/ ....
     ├── run.py
     ├── config.py
     ├── requirements.txt
