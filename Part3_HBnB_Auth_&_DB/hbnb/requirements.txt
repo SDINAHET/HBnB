@@ -3,3 +3,4 @@ flask-restx
 marshmallow
 requests
 flask-bcrypt
+flask-jwt-extended
