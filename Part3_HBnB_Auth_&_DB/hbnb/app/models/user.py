@@ -24,10 +24,12 @@ Méthodes:
     - get_reviews(): Renvoie la liste des avis écrits par l'utilisateur.
 """
 
+from app.extension import bcrypt
 from marshmallow import ValidationError
 import re
 from typing import List, Dict
 from app.models.base_entity import BaseEntity
+
 
 class User(BaseEntity):
 
