@@ -29,12 +29,11 @@ import re
 from typing import List, Dict
 from app.models.base_entity import BaseEntity
 
-
 class User(BaseEntity):
 
     users: Dict[str, 'User'] = {} # Class-level storage for users
 
-    def __init__(self, first_name, last_name, email, is_admin=False):
+    def __init__(self, first_name, last_name, email, password, is_admin=False):
         """
         Initialise une instance de `User`.
 
@@ -52,9 +51,20 @@ class User(BaseEntity):
         self.last_name = self.validate_last_name(last_name)
         self.email = self.validate_email(email)
         self.is_admin = is_admin  # Ajoutez cet attribut si nécessaire
+        self.password = None
+        self.hash_password(password)
         self.places: List['Place'] = []  # Places owned by the user
         self.reviews: List['Review'] = []  # Reviews written by the user
         self.register_user()  # ajout
+
+    def hash_password(self, password):
+        """
+        Hashes the password using bcrypt and stores it.
+        """
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
 
     def validate_first_name(self, first_name):
         """
