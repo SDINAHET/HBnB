@@ -28,9 +28,6 @@ from marshmallow import ValidationError
 import re
 from typing import List, Dict
 from app.models.base_entity import BaseEntity
-from flask_bcrypt import Bcrypt
-from app import bcrypt
-
 
 class User(BaseEntity):
 
