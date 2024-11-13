@@ -23,7 +23,7 @@ user_model = api.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
     'email': fields.String(required=True, description='Email of the user'),
-    # 'isAdmin': fields.Boolean(required=False, default=False, description='Is the user an admin')  # Ajout du champ isAdmin
+    'password': fields.String(required=True, description='Password of the user'),
     'is_admin': fields.Boolean(required=False, default=False, description='Is the user an admin')  # Ajout du champ isAdmin
     })
 
@@ -70,6 +70,7 @@ class UserList(Resource):
 
         try:
             new_user = facade.create_user(user_data)
+            new_user.hash_password(user_data['password'])
             return {
                 'id': new_user.id,
                 'first_name': new_user.first_name,
