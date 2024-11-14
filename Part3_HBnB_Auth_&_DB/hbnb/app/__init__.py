@@ -3,6 +3,7 @@
 from flask import Flask
 from flask_restx import Api
 from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 from app.extension import bcrypt, jwt
 from app.api.v1.users import api as users_ns
 from app.api.v1.auth import api as auth_ns
@@ -13,10 +14,12 @@ from app.api.v1.protected import api as protected_ns
 from config import config
 
 jwt = JWTManager()
+bcrypt = Bcrypt()
 
 def create_app(config_name="default"):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    app.config['JWT_SECRET_KEY'] = 'default_secret_key' #add SD
     #  app.config.from_object(config_class)
 
     bcrypt.init_app(app)

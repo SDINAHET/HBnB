@@ -4,7 +4,7 @@ import os
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
-    JWT_SECRET_KEY = SECRET_KEY  # add SD
+    # JWT_SECRET_KEY = SECRET_KEY  # add SD
     DEBUG = False
 
 class DevelopmentConfig(Config):

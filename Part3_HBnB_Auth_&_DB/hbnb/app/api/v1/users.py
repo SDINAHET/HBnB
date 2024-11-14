@@ -212,8 +212,12 @@ class UserResource(Resource):
         """
         current_user = get_jwt_identity() # add SD
         logging.info(f"JWT Identity: {current_user}, User ID: {user_id}") #add SD
-        if current_user != user_id: # add SD
-            return {'error': 'Unauthorized action'}, 403 # add SD
+
+        # if str(current_user) != str(user_id):
+        if str(current_user['id']) != str(user_id):
+            # logging.warning(f"Unauthorized action: current_user ({current_user}) != user_id ({user_id})")
+            logging.warning(f"Unauthorized action: current_user ({current_user['id']}) != user_id ({user_id})")
+            return {'error': 'Unauthorized action', 'message': 'You are not authorized to perform this action'}, 403
 
         # Récupérer les données envoyées dans la requête
         user_data = api.payload

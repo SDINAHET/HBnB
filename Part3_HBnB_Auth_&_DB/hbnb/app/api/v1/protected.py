@@ -12,7 +12,7 @@ class ProtectedResource(Resource):
     @jwt_required()  # Protects this route with JWT authentication
     @api.doc(description='A protected endpoint that requires a valid JWT token')
     @api.doc(security='Bearer Auth')
-    @api.doc(params={'Authorization': 'A valid JWT token'})
+    @api.doc(params={'Authorization': 'A valid JWT token    --> input here: Bearer <token>'})
     @api.response(200, 'Success')
     @api.response(401, 'Unauthorized')
     def get(self):
