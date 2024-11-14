@@ -49,23 +49,33 @@ class ReviewList(Resource):
         get: Retrieves a list of all reviews.
     """
 
+    @api.doc(description='Register a new review')
+    # @api.doc(params={'review': 'The review details'})
     @api.expect(review_model)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
         """
         Register a new review.
+        ----------------------
 
         Parameters:
-            self: The instance of the Resource class.
+        -----------
+        `self`: The instance of the Resource class.
 
         Returns:
-            tuple: A tuple containing:
-                - dict: Newly created review details.
-                - int: HTTP status code (201) for successful creation.
+        --------
+        tuple: A tuple containing:
+            - dict: Newly created review details.
+                - `text` (str): Text of the review.
+                - `rating` (int): Rating of the place (1-5).
+                - `user_id` (str): ID of the user who created the review.
+                - `place_id` (str): ID of the place being reviewed.
+            - int: HTTP status code (201) for successful creation.
 
         Raises:
-            400: If the input data is invalid.
+        -------
+        400: If the input data is invalid.
         """
 
         data = api.payload
@@ -87,18 +97,30 @@ class ReviewList(Resource):
 
         return new_review.to_dict(), 201
 
+    @api.doc(description='Retrieve a list of all reviews')
+    # @api.doc(params={'place_id': 'The ID of the place to retrieve reviews for'})
     @api.response(200, 'List of reviews retrieved successfully')
     def get(self):
         """
         Retrieve a list of all reviews.
+        -------------------------------
 
         Parameters:
-            self: The instance of the Resource class.
+        -----------
+        `self`: The instance of the Resource class.
 
         Returns:
-            tuple: A tuple containing:
-                - List[dict]: List of all reviews.
-                - int: HTTP status code (200) for successful retrieval.
+        --------
+        tuple: A tuple containing:
+            - List[dict]: List of all reviews.
+                - `text` (str): Text of the review.
+                - `rating` (int): Rating of the place (1-5).
+                - `user_id` (str): ID of the user who created the review.
+                - `place_id` (str): ID of the place being reviewed.
+            - int: HTTP status code (200) for successful retrieval.
+
+        Raises:
+        -------
         """
 
         reviews = facade.get_all_reviews()
@@ -116,23 +138,33 @@ class ReviewResource(Resource):
         delete: Deletes review by review ID.
     """
 
+    @api.doc(description='Retrieve review details by ID')
+    @api.doc(params={'review_id': 'The ID of the review to retrieve'})
     @api.response(200, 'Review details retrieved successfully')
     @api.response(404, 'Review not found')
     def get(self, review_id):
         """
         Get review details by ID.
+        -------------------------
 
         Parameters:
-            self: The instance of the Resource class.
-            review_id (str): The ID of the review to retrieve.
+        ----------
+        `self`: The instance of the Resource class.
+        `review_id` (str): The ID of the review to retrieve.
 
         Returns:
-            tuple: A tuple containing:
-                - dict: Review details.
-                - int: HTTP status code (200) for successful retrieval.
+        --------
+        tuple: A tuple containing:
+            - dict: Review details.
+                -text (str): Text of the review.
+                -rating (int): Rating of the place (1-5).
+                -user_id (str): ID of the user who created the review.
+                -place_id (str): ID of the place being reviewed.
+            - int: HTTP status code (200) for successful retrieval.
 
         Raises:
-            404: If the review is not found.
+        -------
+        404: If the review is not found.
         """
 
         review = facade.get_review_by_id(review_id)
@@ -141,6 +173,8 @@ class ReviewResource(Resource):
 
         return review.to_dict(), 200
 
+    @api.doc(description='Update review details by ID')
+    @api.doc(params={'review_id': 'The ID of the review to update'})
     @api.expect(review_model)
     @api.response(200, 'Review updated successfully')
     @api.response(404, 'Review not found')
@@ -148,19 +182,27 @@ class ReviewResource(Resource):
     def put(self, review_id):
         """
         Update a review's information.
+        ------------------------------
 
         Parameters:
-            self: The instance of the Resource class.
-            review_id (str): The ID of the review to update.
+        ----------
+        `self`: The instance of the Resource class.
+        `review_id` (str): The ID of the review to update.
 
         Returns:
-            tuple: A tuple containing:
-                - dict: Updated review details.
-                - int: HTTP status code (200) for successful update.
+        ---------
+        tuple: A tuple containing:
+            - dict: Updated review details
+                - `text` (str): Text of the review
+                - `rating` (int): Rating of the place (1-5)
+                - `user_id` (str): ID of the user.
+                - `place_id` (str): ID of the place.
+            - int: HTTP status code (200) for successful update.
 
         Raises:
-            404: If the review is not found.
-            400: If the input data is invalid.
+        --------
+        404: If the review is not found.
+        400: If the input data is invalid.
         """
 
         review = facade.get_review_by_id(review_id)
@@ -179,23 +221,29 @@ class ReviewResource(Resource):
         updated_review = facade.update_review(review)
         return updated_review.to_dict(), 200
 
+    @api.doc(description='Delete a review by ID')
+    @api.doc(params={'review_id': 'The ID of the review to delete'})
     @api.response(204, 'Review deleted successfully')
     @api.response(404, 'Review not found')
     def delete(self, review_id):
         """
         Delete a review.
+        ----------------
 
         Parameters:
-            self: The instance of the Resource class.
-            review_id (str): The ID of the review to delete.
+        ----------
+        `self`: The instance of the Resource class.
+        `review_id` (str): The ID of the review to delete.
 
         Returns:
-            tuple: A tuple containing:
-                - str: Empty string indicating success.
-                - int: HTTP status code (204) for successful deletion.
+        --------
+        tuple: A tuple containing:
+            - `str`: Empty string indicating success.
+            - int: HTTP status code (204) for successful deletion.
 
         Raises:
-            404: If the review is not found.
+        -------
+        404: If the review is not found.
         """
 
         review = facade.get_review_by_id(review_id)
@@ -214,23 +262,33 @@ class PlaceReviewList(Resource):
         get: Retrieves all reviews associated with a specific place by place ID.
     """
 
+    @api.doc(description='Retrieve all reviews for a specific place')
+    @api.doc(params={'place_id': 'The ID of the place to retrieve reviews for'})
     @api.response(200, 'List of reviews for the place retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """
         Get all reviews for a specific place.
+        -------------------------------------
 
         Parameters:
-            self: The instance of the Resource class.
-            place_id (str): The ID of the place to retrieve reviews for.
+        ----------
+        `self`: The instance of the Resource class.
+        `place_id` (str): The ID of the place to retrieve reviews for.
 
         Returns:
-            tuple: A tuple containing:
-                - List[dict]: List of reviews for the specified place.
-                - int: HTTP status code (200) for successful retrieval.
+        --------
+        tuple: A tuple containing:
+            - List[dict]: List of reviews for the specified place.
+                - `text` (str): Text of the review.
+                - `rating` (int): Rating of the place (1-5).
+                - `user_id` (str): ID of the user who created the review.
+                - `place_id` (str): ID of the place being reviewed
+            - int: HTTP status code (200) for successful retrieval.
 
         Raises:
-            404: If the place is not found or has no reviews.
+        -------
+        404: If the place is not found or has no reviews.
         """
 
         reviews = facade.get_reviews_by_place_id(place_id)

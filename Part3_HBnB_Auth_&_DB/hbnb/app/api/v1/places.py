@@ -76,40 +76,47 @@ class PlaceList(Resource):
     Resource for handling requests to list all places or to create a new place.
     """
 
+    @api.doc(description='Register a new place')
+    # @api.doc(params={'place_data': 'Data of the place to register'})
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
         """
         Register a new place.
+        ----------------------
 
         Parameters:
-            - `self`: Reference to the instance of the resource class.
+        -----------
+        - `self`: Reference to the instance of the resource class.
 
         Expects:
-            - JSON payload matching the place_model, with fields such as:
-              - `title` (str): Title of the place.
-              - `description` (str): Description of the place.
-              - `price` (float): Price per night.
-              - `latitude` (float): Latitude of the place.
-              - `longitude` (float): Longitude of the place.
-              - `owner_id` (str): ID of the owner.
-              - `amenities` (list): List of amenities ID's.
+        --------
+        - JSON payload matching the place_model, with fields such as:
+            - `title` (str): Title of the place.
+            - `description` (str): Description of the place.
+            - `price` (float): Price per night.
+            - `latitude` (float): Latitude of the place.
+            - `longitude` (float): Longitude of the place.
+            - `owner_id` (str): ID of the owner.
+            - `amenities` (list): List of amenities ID's.
 
         Returns:
-            - (dict): JSON response with the details of the created place, including:
-              - `id` (str): Unique identifier of the created place.
-              - `title` (str): Title of the created place.
-              - `description` (str): Description of the created place.
-              - `price` (float): Price per night of the created place.
-              - `latitude` (float): Latitude of the created place.
-              - `longitude` (float): Longitude of the created place.
-              - `owner_id` (str): ID of the owner of the created place.
-            - Status code 201 if successful.
-            - Status code 400 if data is invalid.
+        --------
+        - (dict): JSON response with the details of the created place, including:
+            - `id` (str): Unique identifier of the created place.
+            - `title` (str): Title of the created place.
+            - `description` (str): Description of the created place.
+            - `price` (float): Price per night of the created place.
+            - `latitude` (float): Latitude of the created place.
+            - `longitude` (float): Longitude of the created place.
+            - `owner_id` (str): ID of the owner of the created place.
+        - Status code 201 if successful.
+        - Status code 400 if data is invalid.
 
         Raises:
-            - `ValueError`: If input data is invalid or required fields are missing.
+        -------
+        - `ValueError`: If input data is invalid or required fields are missing.
         """
 
         data = api.payload
@@ -135,24 +142,30 @@ class PlaceList(Resource):
         except ValueError as err:
             api.abort(400, str(err))
 
+    @api.doc(description='Retrieve the list of all places')
+    # @api.doc(params={'place_id': 'The ID of the place to retrieve'})
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
         """
         Retrieve a list of all places.
+        -------------------------------
 
         Parameters:
-            - `self`: Reference to the instance of the resource class.
+        ----------
+        - `self`: Reference to the instance of the resource class.
 
         Expects:
-            - No additional parameters.
+        --------
+        - No additional parameters.
 
         Returns:
-            - (list): A list of places, each represented as a dictionary containing:
-              - `id` (str): Unique identifier of the place.
-              - `title` (str): Title of the place.
-              - `latitude` (float): Latitude of the place.
-              - `longitude` (float): Longitude of the place.
-            - Status code 200 upon success.
+        --------
+        - (list): A list of places, each represented as a dictionary containing:
+            - `id` (str): Unique identifier of the place.
+            - `title` (str): Title of the place.
+            - `latitude` (float): Latitude of the place.
+            - `longitude` (float): Longitude of the place.
+        - Status code 200 upon success.
         """
 
         places = facade.get_all_places()
@@ -169,37 +182,38 @@ class PlaceResource(Resource):
     Resource for handling requests for a specific place by its ID.
     """
 
+    @api.doc(description='Retrieve details of a specific place by ID')
+    @api.doc(params={'place_id': 'The ID of the place to retrieve'})
     @api.response(200, 'Place details retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """
         Get the details of a place by its ID.
+        --------------------------------------
 
         Parameters:
-            - `self`: Reference to the instance of the resource class.
-            - `place_id` (str): The unique identifier for the place.
+        -----------
+        - `self`: Reference to the instance of the resource class.
+        - `place_id` (str): The unique identifier for the place.
 
         Expects:
-            - No additional parameters.
+        --------
+        - No additional parameters.
 
         Returns:
-            - (dict): Detailed information about the place, including:
-              - `id` (str): Unique identifier of the place.
-              - `title` (str): Title of the place.
-              - `description` (str): Description of the place.
-              - `latitude` (float): Latitude of the place.
-              - `longitude` (float): Longitude of the place.
-              - `owner` (dict): Information about the owner, including:
-                - `id` (str): Owner ID.
-                - `first_name` (str): First name of the owner.
-                - `last_name` (str): Last name of the owner.
-                - `email` (str): Email of the owner.
-              - `amenities` (list): List of associated amenities.
-            - Status code 200 if the place exists.
-            - Status code 404 if the place is not found.
+        --------
+        - (dict): Detailed information about the place, including:
+            - `id` (str): Unique identifier of the place.
+            - `title` (str): Title of the place.
+            - `description` (str): Description of the place.
+            - `latitude` (float): Latitude of the place.
+            - `longitude` (float): Longitude of the place.
+            - `owner` (dict): Information about the owner, including:
+        - Status code 200 if the place exists.
+        - Status code 404 if the place is not found.
 
         Raises:
-            - `ValueError`: If an unexpected error occurs while retrieving the place.
+        - `ValueError`: If an unexpected error occurs while retrieving the place.
         """
 
         # Logic to retrieve a place by ID, including owner and amenities
@@ -235,6 +249,8 @@ class PlaceResource(Resource):
             'amenities': amenities_info
         }, 200
 
+    @api.doc(description='Update a specific place by ID')
+    @api.doc(params={'place_id': 'The ID of the place to update'})
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
@@ -242,28 +258,33 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """
         Update the information of a specific place.
+        -------------------------------------------
 
         Parameters:
-            - `self`: Reference to the instance of the resource class.
-            - `place_id` (str): The unique identifier of the place to update.
+        -----------
+        - `self`: Reference to the instance of the resource class.
+        - `place_id` (str): The unique identifier of the place to update.
 
         Expects:
-            - JSON payload with updated fields matching the place_model, including:
-              - `title` (str): Updated title of the place.
-              - `description` (str): Updated description of the place.
-              - `price` (float): Updated price per night.
-              - `latitude` (float): Updated latitude of the place.
-              - `longitude` (float): Updated longitude of the place.
+        --------
+        - JSON payload with updated fields matching the place_model, including:
+            - `title` (str): Updated title of the place.
+            - `description` (str): Updated description of the place.
+            - `price` (float): Updated price per night.
+            - `latitude` (float): Updated latitude of the place.
+            - `longitude` (float): Updated longitude of the place.
 
         Returns:
-            - (dict): Success message indicating the place was updated successfully.
-            - Status code 200 if updated successfully.
-            - Status code 400 if data is invalid.
-            - Status code 404 if the place is not found.
+        --------
+        - (dict): Success message indicating the place was updated successfully.
+        - Status code 200 if updated successfully.
+        - Status code 400 if data is invalid.
+        - Status code 404 if the place is not found.
 
         Raises:
-            - `ValueError`: If input data is invalid or required fields are missing.
-            - `KeyError`: If the specified place ID does not correspond to an existing place.
+        -------
+        - `ValueError`: If input data is invalid or required fields are missing.
+        - `KeyError`: If the specified place ID does not correspond to an existing place.
         """
         # data = api.payload
         # # Validate input data here

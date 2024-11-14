@@ -41,24 +41,33 @@ class UserList(Resource):
     """
 
     @api.expect(user_model, validate=True)
+    @api.doc(description='Register a new user')  # Description de l'action dans Swagger
+    # @api.doc(params={'user_data': 'Data of the user to register'})
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
     def post(self):
         """
         Register a new user.
+        -------------------
 
-        This method handles the registration of a new user, checks for email uniqueness,
-        and returns the user details if successfully created.
+        This method handles the registration of a new user, checks for email uniqueness, and returns the user details if successfully created.
+        --------------------------------------------------------------------------------
 
         Returns:
-            tuple: A tuple containing:
-                - dict: A dictionary with the new user's details.
-                - int: The HTTP status code (201 on success, 400 on failure).
+        --------
+        tuple: A tuple containing:
+            - dict: A dictionary with the new user's details.
+                - `id` (str): The user's ID.
+                - `first_name` (str): The user's first name.
+                - `last_name` (str): The user's last name.
+                - `email` (str): The user's email.
+            - int: The HTTP status code (201 on success, 400 on failure).
 
         Raises:
-            ValidationError: If input data fails validation checks.
-            ValueError: If the email is already registered.
+        -------
+        ValidationError: If input data fails validation checks.
+        ValueError: If the email is already registered.
         """
 
         user_data = api.payload
@@ -82,18 +91,27 @@ class UserList(Resource):
         except Exception as e:
             return {'error': str(e)}, 400
 
+    @api.doc(description='Retrieve the list of all users.')
+    # @api.doc(params={'user_id': 'The ID of the user to retrieve'})
     @api.response(200, 'List of users retrieved successfully')
     @api.response(404, 'No users found')
     def get(self):
         """
         Retrieve the list of all users.
+        -------------------------------
 
         This method retrieves all registered users. If no users are found, a 404 error is returned.
+        --------------------------------------------------------------------------------------------
 
         Returns:
-            tuple: A tuple containing:
-                - list: A list of dictionaries with user details.
-                - int: The HTTP status code (200 on success, 404 on failure).
+        --------
+        tuple: A tuple containing:
+            - list: A list of dictionaries with user details.
+                - `id` (str): The user's ID.
+                - `first_name` (str): The user's first name.
+                - `last_name` (str): The user's last name.
+                - `email` (str): The user's email.
+            - int: The HTTP status code (200 on success, 404 on failure).
         """
         users = facade.get_all_users()
         if not users:
@@ -116,21 +134,35 @@ class UserResource(Resource):
         put: Updates a user's information.
     """
 
+    @api.doc(description='Retrieve a user''s details by ID.')
+    @api.doc(params={'user_id': 'The ID of the user to retrieve'})
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
     def get(self, user_id):
         """
         Retrieve a user's details by ID.
+        ----------------------------------
 
         This method retrieves the details of a user with the given user_id. If the user is not found, a 404 error is returned.
+        ----------------------------------------------------------------------------------------------------------------------
 
         Args:
-            user_id (str): The ID of the user to retrieve.
+        -----
+        `user_id` (str): The ID of the user to retrieve.
 
         Returns:
-            tuple: A tuple containing:
-                - dict: A dictionary with the user's details.
-                - int: The HTTP status code (200 on success, 404 on failure).
+        --------
+        tuple: A tuple containing:
+            - dict: A dictionary with the user's details.
+                - `id` (str): The user's ID.
+                - `first_name` (str): The user's first name.
+                - `last_name` (str): The user's last name.
+                - `email` (str): The user's email.
+            - int: The HTTP status code (200 on success, 404 on failure).
+
+        Raises:
+        -------
+        404 Exception: For any other unexpected errors.
         """
 
         user = facade.get_user(user_id)
@@ -143,6 +175,8 @@ class UserResource(Resource):
             'email': user.email,
             }, 200
 
+    @api.doc(description='Update a user''s details by ID.')
+    @api.doc(params={'user_id': 'The ID of the user to update'})
     @api.expect(user_model, validate=True)
     @api.response(200, 'User successfully updated')
     @api.response(404, 'User not found')
@@ -150,20 +184,29 @@ class UserResource(Resource):
     def put(self, user_id):
         """
         Update a user's details by ID.
+        -------------------------------
 
         This method updates the details of a user with the given user_id. If the user is not found, a 404 error is returned.
+        --------------------------------------------------------------------------------------------------------------------
 
         Args:
-            user_id (str): The ID of the user to update.
+        -----
+        `user_id` (str): The ID of the user to update.
 
         Returns:
-            tuple: A tuple containing:
-                - dict: A dictionary with the updated user's details.
-                - int: The HTTP status code (200 on success, 404 on failure).
+        --------
+        tuple: A tuple containing:
+            - dict: A dictionary with the updated user's details.
+                - `id` (str): The user's ID.
+                - `first_name` (str): The user's first name.
+                - `last_name` (str): The user's last name.
+                - `email` (str): The user's email.
+            - int: The HTTP status code (200 on success, 404 on failure).
 
         Raises:
-            ValueError: If required fields are missing or the email format is invalid.
-            Exception: For any other unexpected errors.
+        -------
+        `ValueError`: If required fields are missing or the email format is invalid.
+        `Exception`: For any other unexpected errors.
         """
 
         # Récupérer les données envoyées dans la requête
