@@ -25,6 +25,7 @@ Models:
 import logging
 from marshmallow import fields, ValidationError
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity # add SD
 from typing import List
 from app.services import facade
 
@@ -51,6 +52,7 @@ class ReviewList(Resource):
 
     @api.doc(description='Register a new review')
     # @api.doc(params={'review': 'The review details'})
+    @jwt_required()
     @api.expect(review_model)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
@@ -77,7 +79,7 @@ class ReviewList(Resource):
         -------
         400: If the input data is invalid.
         """
-
+        current_user = get_jwt_identity() # add SD
         data = api.payload
         if not data:
             api.abort(400, 'Invalid input data')
@@ -96,6 +98,15 @@ class ReviewList(Resource):
         )
 
         return new_review.to_dict(), 201
+
+        # place_id = data.get('place_id')
+        # place = facade.get_place(place_id)
+        # if place.owner_id == current_user:
+        #     return {'error': 'You cannot review your own place'}, 400
+        # if facade.user_has_reviewed_place(current_user, place_id):
+        #     return {'error': 'You have already reviewed this place'}, 400
+        # review = facade.create_review(user_id=current_user, **data)
+        # return review, 201
 
     @api.doc(description='Retrieve a list of all reviews')
     # @api.doc(params={'place_id': 'The ID of the place to retrieve reviews for'})
@@ -175,6 +186,7 @@ class ReviewResource(Resource):
 
     @api.doc(description='Update review details by ID')
     @api.doc(params={'review_id': 'The ID of the review to update'})
+    @jwt_required() # add SD
     @api.expect(review_model)
     @api.response(200, 'Review updated successfully')
     @api.response(404, 'Review not found')
@@ -204,7 +216,7 @@ class ReviewResource(Resource):
         404: If the review is not found.
         400: If the input data is invalid.
         """
-
+        current_user = get_jwt_identity() # add SD
         review = facade.get_review_by_id(review_id)
         if review is None:
             api.abort(404, 'Review not found')
@@ -220,6 +232,12 @@ class ReviewResource(Resource):
 
         updated_review = facade.update_review(review)
         return updated_review.to_dict(), 200
+
+        # if review.user_id != current_user:
+        #     return {'error': 'Unauthorized action'}, 403
+        # data = api.payload
+        # updated_review = facade.update_review(review_id, **data)
+        # return updated_review, 200
 
     @api.doc(description='Delete a review by ID')
     @api.doc(params={'review_id': 'The ID of the review to delete'})
@@ -252,6 +270,13 @@ class ReviewResource(Resource):
 
         facade.delete_review(review_id)
         return '', 204
+
+        # current_user = get_jwt_identity()
+        # review = facade.get_review(review_id)
+        # if review.user_id != current_user:
+        #     return {'error': 'Unauthorized action'}, 403
+        # facade.delete_review(review_id)
+        # return '', 204
 
 @api.route('/places/<place_id>/reviews')
 class PlaceReviewList(Resource):

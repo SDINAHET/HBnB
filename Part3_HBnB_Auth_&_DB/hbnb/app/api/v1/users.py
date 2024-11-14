@@ -13,6 +13,7 @@ Routes:
 import logging
 from marshmallow import fields, ValidationError
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity #add SD
 from app.services import facade
 import re  # Add this for email validation
 
@@ -86,7 +87,7 @@ class UserList(Resource):
                 'last_name': new_user.last_name,
                 'email': new_user.email,
             }, 201
-        except ValidationError as ve:
+        except ValidationError as ve:  # a modifié except ValueError as e:
             return {'error': ve.messages}, 400
         except Exception as e:
             return {'error': str(e)}, 400
@@ -177,6 +178,7 @@ class UserResource(Resource):
 
     @api.doc(description='Update a user''s details by ID.')
     @api.doc(params={'user_id': 'The ID of the user to update'})
+    @jwt_required() # add SD
     @api.expect(user_model, validate=True)
     @api.response(200, 'User successfully updated')
     @api.response(404, 'User not found')
@@ -208,6 +210,10 @@ class UserResource(Resource):
         `ValueError`: If required fields are missing or the email format is invalid.
         `Exception`: For any other unexpected errors.
         """
+        current_user = get_jwt_identity() # add SD
+        logging.info(f"JWT Identity: {current_user}, User ID: {user_id}") #add SD
+        if current_user != user_id: # add SD
+            return {'error': 'Unauthorized action'}, 403 # add SD
 
         # Récupérer les données envoyées dans la requête
         user_data = api.payload
@@ -226,6 +232,7 @@ class UserResource(Resource):
 
             # Tentez de mettre à jour l'utilisateur dans le système
             updated_user = facade.update_user(user_id, user_data)
+            # updated_user = facade.update_user(user_id, **data) # add SD
 
             # Vérifier si l'utilisateur a été trouvé
             if not updated_user:
@@ -239,6 +246,17 @@ class UserResource(Resource):
                 'email': updated_user.email,
             }, 200
 
+        except ValueError as e: # add SD
+            return {'error': str(e)}, 400 # add SD
         except Exception as e:
             logging.error(f"Unexpected error during updating user: {str(e)}")
             return {'error': 'An unexpected error occurred. Please try again later.'}, 500
+
+        # current_user = get_jwt_identity()
+        # if current_user != user_id:
+        #     return {'error': 'Unauthorized action'}, 403
+        # data = api.payload
+        # if 'email' in data or 'password' in data:
+        #     return {'error': 'You cannot change email or password'}, 400
+        # updated_user = facade.update_user(user_id, **data)
+        # return updated_user, 200

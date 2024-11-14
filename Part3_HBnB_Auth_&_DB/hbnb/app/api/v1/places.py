@@ -38,6 +38,7 @@ Error Handling:
 """
 
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity # add SD
 from app.services import facade
 from app.api.v1.users import api as users_ns  # Import the users namespace
 from app.api.v1.users import user_model  # Import user_model directly
@@ -78,6 +79,7 @@ class PlaceList(Resource):
 
     @api.doc(description='Register a new place')
     # @api.doc(params={'place_data': 'Data of the place to register'})
+    @jwt_required() # add SD
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
@@ -118,7 +120,7 @@ class PlaceList(Resource):
         -------
         - `ValueError`: If input data is invalid or required fields are missing.
         """
-
+        current_user = get_jwt_identity() # add SD
         data = api.payload
 
        # Vérifiez les données d'entrée
@@ -128,8 +130,9 @@ class PlaceList(Resource):
                 api.abort(400, f'Missing required field: {field}')
 
         try:
-            new_place = facade.create_place(data)
-            # new_place = facade.create_place(place_data)
+            # new_place = facade.create_place(data) # old
+            # new_place = facade.create_place(place_data) #ne pas utiloiser
+            new_place = facade.create_place(owner_id=current_user, **data) # add SD
             return {
                 'id': new_place.id,
                 'title': new_place.title,
@@ -251,6 +254,7 @@ class PlaceResource(Resource):
 
     @api.doc(description='Update a specific place by ID')
     @api.doc(params={'place_id': 'The ID of the place to update'})
+    @jwt_required() # add SD
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
@@ -300,6 +304,11 @@ class PlaceResource(Resource):
         #     api.abort(400, str(err))
         # except KeyError:
         #     api.abort(404, 'Place not found')
+        current_user = get_jwt_identity() # add SD
+        place = facade.get_place(place_id) # add SD
+        if place.owner_id != current_user: # add SD
+            return {'error': 'Unauthorized action'}, 403 # add SD
+
         data = api.payload
 
         # Validate input data here
@@ -322,7 +331,8 @@ class PlaceResource(Resource):
             api.abort(400, 'Longitude must be a number between -180 and 180.')
 
         try:
-            updated_place = facade.update_place(place_id, data)
+            updated_place = facade.update_place(place_id, data) # old
+            updated_place = facade.update_place(place_id, **data) # add SD
             if updated_place is None:
                 api.abort(404, 'Place not found')
 
