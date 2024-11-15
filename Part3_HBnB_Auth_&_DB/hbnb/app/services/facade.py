@@ -178,6 +178,7 @@ class HBnBFacade:
         Returns:
             Place: The newly created place object.
         """
+        owner_id = place_data['owner_id']
         owner = self.user_repo.get(place_data['owner_id'])
         if not owner:
             raise ValueError("Owner not found")

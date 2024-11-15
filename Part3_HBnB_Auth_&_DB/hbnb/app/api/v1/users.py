@@ -181,7 +181,10 @@ class UserResource(Resource):
     @jwt_required() # add SD
     @api.expect(user_model, validate=True)
     @api.response(200, 'User successfully updated')
+    @api.response(403, 'Unauthorized action')
     @api.response(404, 'User not found')
+    @api.response(401, 'Missing Authorization Header')
+    @api.response(400, 'You cannot change email or password')
     @api.response(400, 'Invalid input data')
     def put(self, user_id):
         """
@@ -222,6 +225,19 @@ class UserResource(Resource):
         # Récupérer les données envoyées dans la requête
         user_data = api.payload
 
+        # # Empêcher la modification de l'email ou du mot de passe
+        # if 'email' in user_data or 'password' in user_data:
+        #     logging.warning("Tentative de modification de l'email ou du mot de passe")
+        #     return {'error': 'You cannot modify email or password.'}, 400
+
+        # Liste des champs protégés
+        protected_fields = {'email', 'password'}
+
+        # Empêcher la modification de champs sensibles
+        # if protected_fields.intersection(user_data):
+        #     logging.warning("Tentative de modification d'un champ protégé (email ou mot de passe)")
+        #     return {'error': 'You cannot modify email or password.'}, 400
+
         # Essayer de mettre à jour l'utilisateur
         try:
             if not user_data.get('first_name'):
@@ -229,10 +245,15 @@ class UserResource(Resource):
             if not user_data.get('last_name'):
                 raise ValueError("Last name is required.")
 
-            # Optional: Validate email format
-            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-            if 'email' in user_data and not re.match(email_pattern, user_data['email']):
-                raise ValueError("Invalid email format.")
+            # Empêcher la modification de champs sensibles
+            # if protected_fields.intersection(user_data):
+            #     logging.warning("Tentative de modification d'un champ protégé (email ou mot de passe)")
+            #     return {'error': 'You cannot modify email or password.'}, 400
+
+            # # Optional: Validate email format
+            # email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            # if 'email' in user_data and not re.match(email_pattern, user_data['email']):
+            #     raise ValueError("Invalid email format.")
 
             # Tentez de mettre à jour l'utilisateur dans le système
             updated_user = facade.update_user(user_id, user_data)
@@ -240,6 +261,7 @@ class UserResource(Resource):
 
             # Vérifier si l'utilisateur a été trouvé
             if not updated_user:
+                logging.warning(f"Update failed - User {user_id} not found")
                 return {'error': 'User not found'}, 404
 
             # Si l'utilisateur a été mis à jour avec succès, renvoyez les détails
@@ -247,10 +269,11 @@ class UserResource(Resource):
                 'id': updated_user.id,
                 'first_name': updated_user.first_name,
                 'last_name': updated_user.last_name,
-                'email': updated_user.email,
+                'email': updated_user.email, # Note : affichage seulement, pas modifiable
             }, 200
 
         except ValueError as e: # add SD
+            logging.error(f"Validation error during user update - {str(e)}")
             return {'error': str(e)}, 400 # add SD
         except Exception as e:
             logging.error(f"Unexpected error during updating user: {str(e)}")

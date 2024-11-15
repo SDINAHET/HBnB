@@ -83,6 +83,7 @@ class PlaceList(Resource):
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    @api.response(401, 'Missing Authorization Header')
     def post(self):
         """
         Register a new place.
@@ -122,6 +123,7 @@ class PlaceList(Resource):
         """
         current_user = get_jwt_identity() # add SD
         data = api.payload
+        # data['owner_id'] = current_user  # Ajoutez cette ligne pour définir owner_id
 
        # Vérifiez les données d'entrée
         required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
@@ -131,8 +133,9 @@ class PlaceList(Resource):
 
         try:
             # new_place = facade.create_place(data) # old
-            # new_place = facade.create_place(place_data) #ne pas utiloiser
-            new_place = facade.create_place(owner_id=current_user, **data) # add SD
+            # new_place = facade.create_place(place_data) #ne pas utiliser
+            # new_place = facade.create_place(owner_id=current_user, **data) # add SD
+            new_place = facade.create_place(data)
             return {
                 'id': new_place.id,
                 'title': new_place.title,
@@ -140,7 +143,8 @@ class PlaceList(Resource):
                 'price': new_place.price,
                 'latitude': new_place.latitude,
                 'longitude': new_place.longitude,
-                'owner_id': new_place.owner_id
+                'owner_id': new_place.owner_id,
+                'amenities': [amenity.id for amenity in new_place.amenities]
             }, 201
         except ValueError as err:
             api.abort(400, str(err))
@@ -172,6 +176,8 @@ class PlaceList(Resource):
         """
 
         places = facade.get_all_places()
+        if not places: # add SD
+            return {'error': 'No places found'}, 404 # add SD
         return [{
             'id': place.id,
             'title': place.title,
@@ -257,6 +263,8 @@ class PlaceResource(Resource):
     @jwt_required() # add SD
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
+    @api.response(401, 'Missing Authorization Header')
+    @api.response(403, 'Unauthorized action')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
@@ -290,26 +298,15 @@ class PlaceResource(Resource):
         - `ValueError`: If input data is invalid or required fields are missing.
         - `KeyError`: If the specified place ID does not correspond to an existing place.
         """
-        # data = api.payload
-        # # Validate input data here
-        # required_fields = ['title', 'description', 'price', 'latitude', 'longitude']
-        # for field in required_fields:
-        #     if field not in data:
-        #         api.abort(400, f'Missing required field: {field}')
-
-        # try:
-        #     updated_place = facade.update_place(place_id, data)
-        #     return {'message': 'Place updated successfully'}, 200
-        # except ValueError as err:
-        #     api.abort(400, str(err))
-        # except KeyError:
-        #     api.abort(404, 'Place not found')
-        current_user = get_jwt_identity() # add SD
-        place = facade.get_place(place_id) # add SD
-        if place.owner_id != current_user: # add SD
-            return {'error': 'Unauthorized action'}, 403 # add SD
-
+        current_user = get_jwt_identity()
         data = api.payload
+
+        place = facade.get_place(place_id)
+        if not place:
+            return {'error': 'Place not found'}, 404
+
+        if place.owner_id != current_user:
+            return {'error': 'Unauthorized action'}, 403
 
         # Validate input data here
         required_fields = ['title', 'description', 'price', 'latitude', 'longitude']
@@ -331,7 +328,7 @@ class PlaceResource(Resource):
             api.abort(400, 'Longitude must be a number between -180 and 180.')
 
         try:
-            updated_place = facade.update_place(place_id, data) # old
+           # updated_place = facade.update_place(place_id, data) # old
             updated_place = facade.update_place(place_id, **data) # add SD
             if updated_place is None:
                 api.abort(404, 'Place not found')
