@@ -22,12 +22,13 @@ Models:
     - User: Represents the user who created the review.
     - Place: Represents the place being reviewed.
 """
-import logging
+
 from marshmallow import fields, ValidationError
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity # add SD
 from typing import List
 from app.services import facade
+import logging
 
 api = Namespace('reviews', description='Review operations')
 
@@ -102,15 +103,19 @@ class ReviewList(Resource):
         if facade.user_has_reviewed_place(current_user, place_id): # add SD
             return {'error': 'You have already reviewed this place'}, 400 # add SD
 
-        # Create a new review instance
-        new_review = facade.create_review(
-            text=text,
-            rating=rating,
-            user_id=user_id,
-            place_id=place_id
-        )
-
-        return new_review.to_dict(), 201
+        try:
+            # Create a new review instance
+            review = facade.create_review(data)
+            # new_review = facade.create_review(
+            #     text=text,
+            #     rating=rating,
+            #     user_id=user_id,
+            #     place_id=place_id
+            # )
+            return review.to_dict(), 201
+        except Exception as e: #add SD
+            logging.error(f"Error creating review: {e}") #add SD
+            api.abort(500, 'Internal Server Error') #add SD
 
         # place_id = data.get('place_id')
         # place = facade.get_place(place_id)
@@ -120,6 +125,9 @@ class ReviewList(Resource):
         #     return {'error': 'You have already reviewed this place'}, 400
         # review = facade.create_review(user_id=current_user, **data)
         # return review, 201
+
+        #ari code
+        
 
     @api.doc(description='Retrieve a list of all reviews')
     # @api.doc(params={'place_id': 'The ID of the place to retrieve reviews for'})
@@ -249,9 +257,14 @@ class ReviewResource(Resource):
             review.text = data['text']
         if 'rating' in data:
             review.rating = data['rating']
-
-        updated_review = facade.update_review(review)
-        return updated_review.to_dict(), 200
+        try:
+            updated_review = facade.update_review(review)
+            return updated_review.to_dict(), 200
+        except ValueError as e:
+            api.abort(400, str(e))
+        except Exception as e:
+            logging.error(f"Error updating review: {e}")
+            api.abort(500, 'Internal Server Error')
 
         # if review.user_id != current_user:
         #     return {'error': 'Unauthorized action'}, 403
@@ -383,3 +396,15 @@ class PlaceReviewList(Resource):
             api.abort(404, 'Place not found or no reviews for this place')
 
         return [review.to_dict() for review in reviews], 200
+
+@api.route('/places/<string:place_id>/reviews')
+@api.param('place_id', 'The place identifier')
+class PlaceReviews(Resource):
+    @api.doc('get_place_reviews')
+    @api.marshal_list_with(review_model)
+    def get(self, place_id):
+        """Get all reviews for a specific place - Public endpoint"""
+        place = facade.get_place(place_id)
+        if not place:
+            api.abort(404, "Place not found")
+        return facade.get_reviews_by_place(place_id)

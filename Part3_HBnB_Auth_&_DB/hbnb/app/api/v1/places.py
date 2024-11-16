@@ -59,6 +59,14 @@ user_model = api.model('PlaceUser', {
     'email': fields.String(description='Email of the owner')
 })
 
+# Adding the review model
+review_model = api.model('PlaceReview', {
+    'id': fields.String(description='Review ID'),
+    'text': fields.String(description='Text of the review'),
+    'rating': fields.Integer(description='Rating of the place (1-5)'),
+    'user_id': fields.String(description='ID of the user')
+})
+
 # Define the place model for input validation and documentation
 place_model = api.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
@@ -328,11 +336,10 @@ class PlaceResource(Resource):
             api.abort(400, 'Longitude must be a number between -180 and 180.')
 
         try:
-           # updated_place = facade.update_place(place_id, data) # old
-            updated_place = facade.update_place(place_id, **data) # add SD
-            if updated_place is None:
-                api.abort(404, 'Place not found')
-
+            updated_place = facade.update_place(place_id, data) # old
+            # updated_place = facade.update_place(place_id, **data) # add SD
+            # if updated_place is None:
+            #     api.abort(404, 'Place not found')
             return {'message': 'Place updated successfully'}, 200
         except ValueError as err:
             api.abort(400, str(err))

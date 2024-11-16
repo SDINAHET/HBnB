@@ -17,6 +17,7 @@ Models:
 from flask_restx import Namespace, Resource, fields
 from typing import List
 from app.services import facade
+import logging
 
 api = Namespace('amenities', description='Amenity operations')
 
@@ -196,8 +197,13 @@ class AmenityResource(Resource):
             api.abort(404, 'Amenity not found')
         # Get the input data sent in the request
         data = api.payload
-        # Validate that input data is provided
-        if not data or 'name' not in data or data['name'].strip() == "":
-            api.abort(400, 'Invalid input data: non-empty name is required.')
-        facade.update_amenity(amenity_id, data)
+        # if not data or 'name' not in data or data['name'].strip() == "":
+        # if not data or 'name' not in data:
+        #     api.abort(400, 'Invalid input data: non-empty name is required.')
+        # try:
+        updated_amenity = facade.update_amenity(amenity_id, data) # add SD
+            # facade.update_amenity(amenity_id, data)
         return {'message': 'Amenity updated successfully'}, 200
+        # except Exception as e:
+        #     logging.error(f"Error updating amenity: {e}")
+        #     api.abort(500, 'Internal Server Error')
