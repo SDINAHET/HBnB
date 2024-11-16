@@ -313,6 +313,7 @@ class HBnBFacade:
         #     return place
         # logger.warning(f"No place found with ID: {place_id} to update.")
         # return None
+        logger.info(f"Updating place with ID: {place_id}")
         try:
             # Obtenir le place par ID
             place = self.place_repo.get(place_id)

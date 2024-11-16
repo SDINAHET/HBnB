@@ -277,7 +277,7 @@ class PlaceResource(Resource):
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
         """
-        Update the information of a specific place.
+        Update the information of a specific place / Update a place - Owner only.
         -------------------------------------------
 
         Parameters:
@@ -307,9 +307,10 @@ class PlaceResource(Resource):
         - `KeyError`: If the specified place ID does not correspond to an existing place.
         """
         current_user = get_jwt_identity()
-        data = api.payload
+        # data = api.payload
 
         place = facade.get_place(place_id)
+
         if not place:
             return {'error': 'Place not found'}, 404
 
@@ -343,3 +344,47 @@ class PlaceResource(Resource):
             return {'message': 'Place updated successfully'}, 200
         except ValueError as err:
             api.abort(400, str(err))
+
+
+        # try:
+        #     current_user = get_jwt_identity()
+        #     place = facade.get_place(place_id)
+
+        #     if not place:
+        #         api.abort(404, "Place not found")
+
+        #     # Vérifier que l'utilisateur est le propriétaire
+        #     if str(place.owner_id) != str(current_user):
+        #         api.abort(403, "Unauthorized action")
+
+        #     updated_place = facade.update_place(place_id, data)
+        #     return updated_place.to_dict()
+
+        # except ValueError as e:
+        #     api.abort(400, str(e))
+        # except Exception as e:
+        #     logging.error(f"Error updating place: {e}")
+        #     api.abort(500, 'Internal Server Error')
+
+    @api.doc('delete_place')
+    @api.response(204, 'Place deleted')
+    @jwt_required()
+    def delete(self, place_id):
+        """Delete a place - Owner only"""
+        try:
+            current_user = get_jwt_identity()
+            place = facade.get_place(place_id)
+
+            if not place:
+                api.abort(404, "Place not found")
+
+            # Vérifier que l'utilisateur est le propriétaire
+            if str(place.owner_id) != str(current_user):
+                api.abort(403, "Unauthorized action")
+
+            facade.delete_place(place_id)
+            return '', 204
+
+        except Exception as e:
+            logging.error(f"Error deleting place: {e}")
+            api.abort(500, 'Internal Server Error')
