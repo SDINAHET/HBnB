@@ -1,0 +1,140 @@
+# -----------------------------------
+# Général
+# -----------------------------------
+# Ignorer les fichiers de log
+*.log
+
+# Ignorer les fichiers temporaires
+*.tmp
+*.swp
+*.swo
+
+# Ignorer les fichiers de cache
+*.cache
+
+# -----------------------------------
+# Système
+# -----------------------------------
+# Ignorer les fichiers de la corbeille
+*.Trash-*
+
+# -----------------------------------
+# Éditeurs de texte
+# -----------------------------------
+# Ignorer les fichiers de Visual Studio Code
+.vscode/
+.vscode
+
+# Ignorer les fichiers de JetBrains IDEs (comme IntelliJ IDEA, PyCharm, WebStorm)
+.idea/
+
+# -----------------------------------
+# Environnements virtuels et bibliothèques
+# -----------------------------------
+# Ignorer les environnements virtuels Python
+venv/
+env/
+*.venv
+
+# Ignorer les bibliothèques Node.js
+node_modules/
+
+# Ignorer les bibliothèques Ruby
+.bundle/
+
+# -----------------------------------
+# Compilation
+# -----------------------------------
+# Ignorer les fichiers binaires et d'objets
+*.o
+*.obj
+*.exe
+*.out
+*.a
+
+# Ignorer les fichiers de compilation Java
+*.class
+
+# Ignorer les répertoires de build
+build/
+dist/
+out/
+
+# -----------------------------------
+# Déploiement
+# -----------------------------------
+# Ignorer les fichiers temporaires de déploiement
+deploy/
+tmp/
+
+# -----------------------------------
+# Autres
+# -----------------------------------
+# Ignorer les fichiers de configuration de l'éditeur
+*.sublime-project
+*.sublime-workspace
+
+# Ignorer les fichiers de configuration de Docker
+docker-compose.override.yml
+Dockerfile.local
+
+# -----------------------------------
+# Spécifique à certains projets
+# -----------------------------------
+# Ignorer les fichiers de configuration de compilateur
+*.dSYM
+
+# Ignorer les fichiers générés par les tests
+*.test
+
+# -----------------------------------
+# Fichiers sensibles
+# -----------------------------------
+# Ignorer les fichiers de clé privée
+*.pem
+*.key
+
+# Ignorer les fichiers de configuration avec des informations sensibles
+config/secrets.yml
+
+# Ignorer les fichiers créés par Visual Studio Code
+.vscode/
+ # Fichiers exécutables
+*.out
+*.exe
+*.bin
+*.dmg
+*.app
+
+# Fichiers objets
+*.o
+*.obj
+*.lo
+*.a
+*.lib
+
+# Fichiers de bibliothèque partagée
+*.so
+*.dll
+*.dylib
+
+# Fichiers temporaires générés par les compilateurs
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Répertoires de build
+build/
+bin/
+obj/
+debug/
+release/
+out/
+
+# Fichiers de configuration spécifiques aux outils de build
+*.ninja_deps
+*.ninja_log
+*.cmake
+Makefile
+hsh
