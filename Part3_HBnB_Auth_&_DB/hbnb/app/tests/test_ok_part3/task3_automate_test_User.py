@@ -8,7 +8,7 @@ USER_CREDENTIALS = {
     "last_name": "User",
     "email": "testuser@example.com",
     "password": "password123",
-    "is_admin": False
+    "is_admin": True
 }
 
 class APITestCase(unittest.TestCase):

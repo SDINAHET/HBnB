@@ -51,7 +51,7 @@ class ReviewList(Resource):
         get: Retrieves a list of all reviews.
     """
 
-    @api.doc(description='Register a new review')
+    @api.doc(description='Register a new review', security='BearerAuth')
     # @api.doc(params={'review': 'The review details'})
     @jwt_required()
     @api.expect(review_model)
@@ -127,7 +127,7 @@ class ReviewList(Resource):
         # return review, 201
 
         #ari code
-        
+
 
     @api.doc(description='Retrieve a list of all reviews')
     # @api.doc(params={'place_id': 'The ID of the place to retrieve reviews for'})
@@ -205,7 +205,7 @@ class ReviewResource(Resource):
 
         return review.to_dict(), 200
 
-    @api.doc(description='Update review details by ID')
+    @api.doc(description='Update review details by ID', security='BearerAuth')
     @api.doc(params={'review_id': 'The ID of the review to update'})
     @jwt_required() # add SD
     @api.expect(review_model)
