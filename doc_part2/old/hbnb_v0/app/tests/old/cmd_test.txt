@@ -1,0 +1,27 @@
+in folder hbnb
+
+not_ok
+python3 -m unittest app.tests.test_place
+python3 -m unittest app.tests.test_place_task4
+python3 -m unittest app.tests.test_review
+python3 -m unittest app.tests.test_review_task5
+
+
+
+test ok
+python3 -m unittest app.tests.test_ok.test_base_entity
+python3 -m unittest app.tests.test_ok.test_user2
+python3 -m unittest app.tests.test_ok.test_user_task2
+python3 -m unittest app.tests.test_ok.test_amenity
+python3 -m unittest app.tests.test_ok.test_amenity_task3
+pytest app/tests/testok/test_user_task2_pytest.py
+
+
+
+python3 -m unittest app.tests.test_all
+
+pytest app/tests/test_api_user_pytest.py
+pytest app/tests/test_user_task2_pytest.py---> not ok
+pytest app/tests/test_user_task2_pytest.py    -->ok
+
+

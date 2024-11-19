@@ -1,0 +1,19 @@
+Log
+"INFO:root:Creating User...
+INFO:root:Create User: 201 {'id': 'b47e5a06-544f-449f-9c9c-a96e61febcb0', 'first_name': 'Test', 'last_name': 'User', 'email': 'testuser@example.com'}
+INFO:root:Authenticating User...
+INFO:root:Authenticate User: 200 {'access_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMTg2OTI3NiwianRpIjoiYzc2MmEyOGMtN2E3My00YTljLThiOGMtYTk0ZTQ5NWE2ZWUxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJpZCI6ImI0N2U1YTA2LTU0NGYtNDQ5Zi05YzljLWE5NmU2MWZlYmNiMCIsImlzX2FkbWluIjp0cnVlfSwibmJmIjoxNzMxODY5Mjc2LCJjc3JmIjoiYjEyYjg4MGUtYzIyYS00YTgyLWI5ZmEtZDhlNTliNGRjZDQzIiwiZXhwIjoxNzMxODcwMTc2fQ.nVNOnEcsAJ49rVSQd6KpaoP5sNq9lyiawKZwqtc8Oew'}
+INFO:root:Creating Amenity WiFi...
+INFO:root:Create Amenity (WiFi): 201 {'id': '451a62b0-b7fc-4b67-84b6-6a9da936e409', 'name': 'WiFi', 'created_at': '2024-11-17T19:47:56.089799', 'updated_at': '2024-11-17T19:47:56.089799'}
+INFO:root:Creating Amenity Pool...
+INFO:root:Create Amenity (Pool): 201 {'id': '4f0aa192-1ee7-49cb-8f9c-50cd017a9dbd', 'name': 'Pool', 'created_at': '2024-11-17T19:47:56.092633', 'updated_at': '2024-11-17T19:47:56.092633'}
+INFO:root:Creating Place...
+INFO:root:Create Place: 201 {'id': '65a6dfd6-b404-409f-a21f-85ac7cb12336', 'title': 'New Place', 'description': 'A nice place', 'price': 100.0, 'latitude': 37.7749, 'longitude': -122.4194, 'owner_id': 'b47e5a06-544f-449f-9c9c-a96e61febcb0', 'amenities': ['451a62b0-b7fc-4b67-84b6-6a9da936e409', '4f0aa192-1ee7-49cb-8f9c-50cd017a9dbd']}
+INFO:root:Test Get All Places: 200
+INFO:root:[{'id': '65a6dfd6-b404-409f-a21f-85ac7cb12336', 'title': 'New Place', 'latitude': 37.7749, 'longitude': -122.4194}]
+INFO:root:Test Get Place by ID: 200
+INFO:root:{'id': '65a6dfd6-b404-409f-a21f-85ac7cb12336', 'title': 'New Place', 'description': 'A nice place', 'latitude': 37.7749, 'longitude': -122.4194, 'owner': {'id': 'b47e5a06-544f-449f-9c9c-a96e61febcb0', 'first_name': 'Test', 'last_name': 'User', 'email': 'testuser@example.com'}, 'amenities': []}
+INFO:root:Test Place Creation: 201
+INFO:root:{'id': '282c50fc-0958-4608-ae24-245d09d5d425', 'title': 'New Place', 'description': 'A nice place', 'price': 100.0, 'latitude': 37.7749, 'longitude': -122.4194, 'owner_id': 'b47e5a06-544f-449f-9c9c-a96e61febcb0', 'amenities': ['451a62b0-b7fc-4b67-84b6-6a9da936e409', '4f0aa192-1ee7-49cb-8f9c-50cd017a9dbd']}
+INFO:root:Test Update Place: 403
+"

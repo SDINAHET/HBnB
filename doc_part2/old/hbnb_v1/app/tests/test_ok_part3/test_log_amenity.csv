@@ -1,0 +1,23 @@
+Log
+"INFO:root:Creating User...
+INFO:root:Create User: 201 {'id': '4726128d-f2b5-481a-b76a-4ba6d9d13bb7', 'first_name': 'Test', 'last_name': 'User', 'email': 'testuser@example.com'}
+INFO:root:Authenticating User...
+INFO:root:Authenticate User: 200 {'access_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMTg3MDQzNiwianRpIjoiNGE0ODI1OTktYTBkZC00ZDExLWExZWQtNmE2MTc2YTNiMWE0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJpZCI6IjQ3MjYxMjhkLWYyYjUtNDgxYS1iNzZhLTRiYTZkOWQxM2JiNyIsImlzX2FkbWluIjp0cnVlfSwibmJmIjoxNzMxODcwNDM2LCJjc3JmIjoiNDVhNDU4MjktNWUwMS00M2M5LWE2YTItNjQ3MDA4NGIwNjE0IiwiZXhwIjoxNzMxODcxMzM2fQ.xrBeRj2uGNWSpOBgCsSytK5Cgpgwc6RpA7AkZpvl52M'}
+INFO:root:Creating Amenity WiFi...
+INFO:root:Create Amenity (WiFi): 201 {'id': 'da60b693-26e2-4792-aab7-6084ba192a8f', 'name': 'WiFi', 'created_at': '2024-11-17T20:07:16.156127', 'updated_at': '2024-11-17T20:07:16.156127'}
+INFO:root:Creating Amenity Pool...
+INFO:root:Create Amenity (Pool): 201 {'id': '2fde7ded-7aac-48d7-ad3b-3b9f8c993454', 'name': 'Pool', 'created_at': '2024-11-17T20:07:16.158950', 'updated_at': '2024-11-17T20:07:16.158950'}
+INFO:root:Creating Place...
+INFO:root:Create Place: 201 {'id': '8cf05789-23a6-4d11-9136-b751e90ab7d1', 'title': 'New Place', 'description': 'A nice place', 'price': 100.0, 'latitude': 37.7749, 'longitude': -122.4194, 'owner_id': '4726128d-f2b5-481a-b76a-4ba6d9d13bb7', 'amenities': ['da60b693-26e2-4792-aab7-6084ba192a8f', '2fde7ded-7aac-48d7-ad3b-3b9f8c993454']}
+INFO:root:Test Create Amenity: 201
+INFO:root:{'id': '0da12218-301f-478a-b77d-97b85a3e1b8a', 'name': 'New Amenity', 'created_at': '2024-11-17T20:07:16.165900', 'updated_at': '2024-11-17T20:07:16.165900'}
+INFO:root:Test Get All Amenities: 200
+INFO:root:[{'id': 'da60b693-26e2-4792-aab7-6084ba192a8f', 'name': 'WiFi'}, {'id': '2fde7ded-7aac-48d7-ad3b-3b9f8c993454', 'name': 'Pool'}, {'id': '0da12218-301f-478a-b77d-97b85a3e1b8a', 'name': 'New Amenity'}]
+INFO:root:Test Get Amenity by ID: 200
+INFO:root:{'id': 'da60b693-26e2-4792-aab7-6084ba192a8f', 'name': 'WiFi'}
+INFO:root:Test Place Creation: 201
+INFO:root:{'id': '311adb68-5bbb-4b74-96bb-06f67f18368c', 'title': 'New Place', 'description': 'A nice place', 'price': 100.0, 'latitude': 37.7749, 'longitude': -122.4194, 'owner_id': '4726128d-f2b5-481a-b76a-4ba6d9d13bb7', 'amenities': ['da60b693-26e2-4792-aab7-6084ba192a8f', '2fde7ded-7aac-48d7-ad3b-3b9f8c993454']}
+INFO:root:Test Unauthorized Place Update: 403 {'error': 'Unauthorized action'}
+INFO:root:Test Update Amenity: 200
+INFO:root:{'message': 'Amenity updated successfully'}
+"

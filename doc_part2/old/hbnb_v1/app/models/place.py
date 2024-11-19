@@ -1,0 +1,1 @@
+# Placeholder for app/models/place.py
