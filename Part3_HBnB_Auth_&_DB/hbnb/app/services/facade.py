@@ -157,15 +157,32 @@ class HBnBFacade:
         Returns:
             Amenity: The updated amenity object, or None if not found.
         """
-        amenity = self.amenity_repo.get(amenity_id)
-        if amenity:
+        # amenity = self.amenity_repo.get(amenity_id)
+        # if amenity:
+        #     for key, value in amenity_data.items():
+        #         setattr(amenity, key, value)
+        #     # self.user_repo.update(amenity_id, amenity_data)  # Pass amenity_id and amenity_data
+        #     # amenity.update(**amenity_data)
+        #     self.amenity_repo.update(amenity_id, amenity_data)
+        #     return amenity
+        # return None
+
+        try:
+            # Obtenir l'amenity par ID
+            amenity = self.amenity_repo.get(amenity_id)
+            if not amenity:
+                raise ValueError("Amenity not found")
+
+            # Appliquer les modifications
             for key, value in amenity_data.items():
                 setattr(amenity, key, value)
-            # self.user_repo.update(amenity_id, amenity_data)  # Pass amenity_id and amenity_data
-            # amenity.update(**amenity_data)
+
+            # Sauvegarder les modifications dans la base de données
             self.amenity_repo.update(amenity_id, amenity_data)
             return amenity
-        return None
+        except Exception as e:
+            logging.error(f"Error in update_amenity: {e}")
+            raise
 
     # Place_service_facade
     def create_place(self, place_data):
@@ -178,6 +195,7 @@ class HBnBFacade:
         Returns:
             Place: The newly created place object.
         """
+        owner_id = place_data['owner_id']
         owner = self.user_repo.get(place_data['owner_id'])
         if not owner:
             raise ValueError("Owner not found")
@@ -190,7 +208,7 @@ class HBnBFacade:
             amenities = [amenity for amenity in amenities if amenity is not None]
 
         # Créer une nouvelle instance de Place
-        new_place = Place(
+        place = Place(
             title=place_data['title'],
             description=place_data.get('description'),
             price=place_data['price'],
@@ -200,7 +218,7 @@ class HBnBFacade:
             owner=owner,   # Associate owner instance
             # amenities=place_data.get['amenities'],
             # amenities=place_data.get('amenities', []),
-            reviews=[],  # ou data.get('reviews', [])
+            # reviews=[],  # ou data.get('reviews', []) # **
             # amenities=[]  # ou data.get('amenities', [])
             amenities=amenities
             )
@@ -212,9 +230,9 @@ class HBnBFacade:
 
         try:
             # Ajouter la nouvelle place au repository
-            self.place_repo.add(new_place)
+            self.place_repo.add(place)
         # owner = self.user_repo.get(place_data['owner_id'])
-            logging.info(f"Successfully created place: {new_place}")
+            logging.info(f"Successfully created place: {place}")
 
         # # Ajoutez la place au dictionnaire
         # places_data[place_id] = new_place
@@ -224,7 +242,7 @@ class HBnBFacade:
             # Log the error or handle it as appropriate
             # print(f"Error creating place: {e}")
             # return None
-        return new_place
+        return place
 
     def get_place(self, place_id):
         """
@@ -285,16 +303,33 @@ class HBnBFacade:
             Place: The updated place object, or None if not found.
         """
         logger.info(f"Updating place with ID: {place_id}")
-        place = self.place_repo.get(place_id)
+        # place = self.place_repo.get(place_id)
 
-        if place:
+        # if place:
+        #     for key, value in place_data.items():
+        #         if value is not None:
+        #             setattr(place, key, value)
+        #     self.place_repo.update(place_id, place_data)
+        #     return place
+        # logger.warning(f"No place found with ID: {place_id} to update.")
+        # return None
+        logger.info(f"Updating place with ID: {place_id}")
+        try:
+            # Obtenir le place par ID
+            place = self.place_repo.get(place_id)
+            if not place:
+                raise ValueError("Place not found")
+
+            # Appliquer les modifications
             for key, value in place_data.items():
-                if value is not None:
-                    setattr(place, key, value)
+                setattr(place, key, value)
+
+            # Sauvegarder les modifications dans la base de données
             self.place_repo.update(place_id, place_data)
             return place
-        logger.warning(f"No place found with ID: {place_id} to update.")
-        return None
+        except Exception as e:
+            logging.error(f"Error in update_place: {e}")
+            raise
 
     def check_owner_exists(self, owner_id):
         # Implémentez la logique pour vérifier si l'owner existe
@@ -306,8 +341,18 @@ class HBnBFacade:
         amenity = get_amenity_by_id(amenity_id)  # Récupérez l'amenity par ID
         return amenity is not None
 
+    def user_has_reviewed_place(self, user_id, place_id):
+        reviews = self.review_repo.get_by_attribute('user_id', user_id)
+        if reviews is None:
+            return False
+        for review in reviews:
+            if review.place_id == place_id:
+                return True
+        return False
+
     # Review_service_facade
     def create_review(self, review_data):
+    # def create_review(self, text, rating, user_id, place_id):
         """
         Create a new review and add it to the repository.
 
@@ -317,9 +362,43 @@ class HBnBFacade:
         Returns:
             Review: The newly created review object.
         """
-        new_review = Review(**review_data)
-        self.review_repo.add(new_review)
-        return new_review
+        # new_review = Review(review_data)
+        # self.review_repo.add(new_review)
+        # return new_review
+
+        # try:
+        #     review = Review(
+        #         text=review_data['text'],
+        #         rating=review_data['rating'],
+        #         user_id=review_data['user_id'],
+        #         place_id=review_data['place_id']
+        #     )
+        #     self.review_repo.add(review)
+        #     return review
+        # except Exception as e:
+        #     logging.error(f"Error in create_review: {e}")
+        #     raise
+
+        #code ari
+        user_id = review_data.get('user_id')
+        place_id = review_data.get('place_id')
+
+        place = self.get_place(place_id)
+        if not place:
+            raise ValueError("Place not found")
+
+        if str(place.owner_id) == str(user_id):
+            raise ValueError("Cannot review your own place")
+
+        existing_reviews = self.review_repo.get_by_attribute('user_id', user_id)
+        for review in existing_reviews:
+            if review.place_id == place_id:
+                raise ValueError("Already reviewed this place")
+
+        review = Review(**review_data)
+        review.validate()
+        self.review_repo.add(review)
+        return review
 
     def get_review(self, review_id):
         """

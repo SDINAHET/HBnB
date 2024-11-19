@@ -44,7 +44,7 @@
 
 
 
-# HBnB Application - Part 2: Implementation of Business Logic and API Endpoints
+# HBnB Application - Part 3: Implementation of Business Logic and API Endpoints
 
 ## Overview
 

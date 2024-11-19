@@ -13,8 +13,8 @@ class Amenity(BaseEntity):
 
     def validate(self):
         """Validate the attributes of the amenity."""
-        if not isinstance(self.name, str) or not self.name:
-            raise ValidationError("Name must be a non-empty string.")
+        # if not isinstance(self.name, str) or not self.name:
+        #     raise ValidationError("Name must be a non-empty string.")
         if len(self.name) > 50:
             raise ValidationError("Name must not exceed 50 characters.")
         # if not isinstance(self.description, str):
