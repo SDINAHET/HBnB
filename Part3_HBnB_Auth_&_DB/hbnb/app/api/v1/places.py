@@ -80,7 +80,7 @@ class PlaceList(Resource):
     Resource for handling requests to list all places or to create a new place.
     """
 
-    @api.doc(description='Register a new place', security='BearerAuth')
+    @api.doc(description='Register a new place') #, security='BearerAuth')
     @jwt_required()
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
@@ -125,7 +125,8 @@ class PlaceList(Resource):
         """
         current_user = get_jwt_identity()
         data = api.payload
-        data['owner_id'] = current_user
+        # data['owner_id'] = current_user
+        data['owner_id'] = current_user['id'] # add SD
 
         required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
         for field in required_fields:
