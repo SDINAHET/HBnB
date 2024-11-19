@@ -4,7 +4,8 @@ This module defines the API endpoints for managing amenities in the HBnB applica
 It implements the routes for creating, retrieving, and updating amenities.
 
 Routes:
-    POST /api/v1/amenities/ : Create a new amenity.
+    POST /api/v1/amenities/ : Add a new amenity (Admin only).
+    PUT /api/v1/amenities/<amenity_id> : Modify the details of an amenity (Admin only).
     GET /api/v1/amenities/ : Get the list of all amenities.
     GET /api/v1/amenities/<amenity_id> : Get a specific amenity by ID.
     PUT /api/v1/amenities/<amenity_id> : Update an amenity's information.
@@ -27,18 +28,24 @@ amenity_update_model = api.model('AmenityUpdate', {
     'name': fields.String(description='Updated name of the amenity'),
 })
 
-# -------------------------- Create a New Amenity --------------------------
+# -------------------------- Create a New Amenity (Admin Only) --------------------------
 @api.route('/')
 class AmenityCreate(Resource):
+    @jwt_required()  # L'authentification est requise
     @api.expect(amenity_model, validate=True)
-    @api.doc(description='Register a new amenity.')
+    @api.doc(description='Admin: Register a new amenity.')
     @api.response(201, 'Amenity successfully created')
+    @api.response(403, 'Admin privileges required')
     @api.response(400, 'Invalid input data')
     def post(self):
         """
         Create a new amenity.
         This route allows anyone to create a new amenity.
         """
+        current_user = get_jwt_identity()
+        if not current_user.get('is_admin'):
+            raise Forbidden('Admin privileges required')
+
         amenity_data = request.json
         if not amenity_data.get('name'):
             raise BadRequest('Amenity name is required.')
@@ -51,28 +58,6 @@ class AmenityCreate(Resource):
             }, 201
         except Exception as e:
             raise BadRequest(f'An error occurred while creating the amenity: {str(e)}')
-
-# -------------------------- Retrieve All Amenities --------------------------
-@api.route('/list')
-class AmenityList(Resource):
-    @api.doc(description='Retrieve a list of all amenities.')
-    @api.response(200, 'List of amenities retrieved successfully')
-    def get(self):
-        """
-        Get a list of all amenities.
-        This route retrieves all amenities available in the system.
-        """
-        amenities = facade.get_all_amenities()
-        if not amenities:
-            raise NotFound('No amenities found.')
-
-        return [
-            {
-                'id': amenity.id,
-                'name': amenity.name,
-            }
-            for amenity in amenities
-        ], 200
 
 # -------------------------- Retrieve Amenity by ID --------------------------
 
@@ -99,19 +84,26 @@ class AmenityResource(Resource):
 
 @api.route('/<amenity_id>')
 class AmenityUpdate(Resource):
+    @jwt_required()  # L'authentification est requise
     @api.expect(amenity_update_model, validate=True)
-    @api.doc(description='Update an amenity by ID.')
+    @api.doc(description='Admin: Update an amenity by ID.')
     @api.response(200, 'Amenity updated successfully')
+    @api.response(403, 'Admin privileges required')
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
     def put(self, amenity_id):
         """
         Update an amenity's details by ID.
+        This route allows only admins to update an amenity.
         """
-        amenity = facade.get_amenity(amenity_id)
+        current_user = get_jwt_identity()
+        if not current_user.get('is_admin'):
+            raise Forbidden('Admin privileges required')
 
+        amenity = facade.get_amenity(amenity_id)
         if not amenity:
             raise NotFound('Amenity not found')
+
         updated_data = request.json
         if 'name' not in updated_data:
             raise BadRequest('Name field is required.')
