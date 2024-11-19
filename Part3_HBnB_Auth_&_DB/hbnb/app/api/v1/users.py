@@ -9,6 +9,7 @@ Routes:
     GET /api/v1/users/<user_id> : Get a specific user by ID.
     PUT /api/v1/users/<user_id> : Update a user's information.
     GET /api/v1/admin/users/ : Get the list of all users (Admin only).
+    GET /api/v1/users/email/<email> : Get a user by their email (Non-admin).
 """
 
 
@@ -28,6 +29,13 @@ user_model = api.model('User', {
     'password': fields.String(required=True, description='Password of the user'),
     'is_admin': fields.Boolean(required=False, default=False, description='Is the user an admin')  # Ajout du champ isAdmin
     })
+
+user_update_model = api.model('UserUpdate', {
+    'first_name': fields.String(description='First name of the user'),
+    'last_name': fields.String(description='Last name of the user'),
+    'email': fields.String(description='Email of the user (unique)'),
+    'password': fields.String(description='New password for the user'),
+})
 
 # -------------------------- Non-Admin User Creation --------------------------
 
@@ -55,6 +63,28 @@ class UserCreate(Resource):
             }, 201
         except Exception as e:
             return {'error': 'An unexpected error occurred. Please try again later.'}, 500
+
+# -------------------------- Retrieve User by Email --------------------------
+
+@api.route('/users/email/<email>')
+class UserByEmail(Resource):
+    @api.doc(description='Retrieve a user\'s details by email.')
+    @api.doc(params={'email': 'The email of the user to retrieve'})
+    @api.response(200, 'User details retrieved successfully')
+    @api.response(404, 'User not found')
+    def get(self, email):
+        """
+        Retrieve a user's details by email.
+        """
+        user = facade.get_user_by_email(email)
+        if not user:
+            return {'error': 'User not found'}, 404
+        return {
+            'id': user.id,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+        }, 200
 
 # -------------------------- Admin Routes --------------------------
 
@@ -87,6 +117,11 @@ class AdminUserCreate(Resource):
 @api.route('/admin/users/<user_id>')
 class AdminUserModify(Resource):
     @jwt_required()
+    @api.expect(user_update_model, validate=True)
+    @api.doc(description='Modify an existing user (Admin only).', params={'user_id': 'The ID of the user to modify'})
+    @api.response(200, 'User successfully updated')
+    @api.response(400, 'Email already in use')
+    @api.response(403, 'Admin privileges required')
     def put(self, user_id):
         """
         Modify an existing user's data (Admin only).
@@ -110,14 +145,6 @@ class AdminUserModify(Resource):
 
 @api.route('/users/<user_id>')
 class UserResource(Resource):
-    """
-    Resource class for handling individual user operations: retrieval and update.
-
-    Methods:
-        get: Retrieves a specific user by their ID.
-        put: Updates a user's information.
-    """
-
     @api.doc(description='Retrieve a user''s details by ID.')
     @api.doc(params={'user_id': 'The ID of the user to retrieve'})
     @api.response(200, 'User details retrieved successfully')
@@ -142,7 +169,6 @@ class UserResource(Resource):
     @api.expect(user_model, validate=True)
     @api.response(200, 'User successfully updated')
     @api.response(403, 'Unauthorized action')
-    @api.response(404, 'User not found')
     @api.response(400, 'Invalid input data')
     def put(self, user_id):
         """
@@ -170,8 +196,8 @@ class UserResource(Resource):
                 'email': updated_user.email,
             }, 200
 
-        except ValueError as e: # add SD
-            return {'error': str(e)}, 400 # add SD
+        except ValueError as e:
+            return {'error': str(e)}, 400
         except Exception as e:
             return {'error': 'An unexpected error occurred. Please try again later.'}, 500
 
@@ -180,6 +206,9 @@ class UserResource(Resource):
 @api.route('/admin/users')
 class AdminUserList(Resource):
     @jwt_required()
+    @api.doc(description='Get a list of all users (Admin only).')
+    @api.response(200, 'List of users retrieved successfully')
+    @api.response(403, 'Admin privileges required')
     def get(self):
         """
         Get a list of all users (Admin only).
@@ -193,12 +222,7 @@ class AdminUserList(Resource):
         if not users:
             return {'error': 'No users found'}, 404
 
-        return [{
-            'id': user.id,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-        } for user in users], 200
+        return [user.to_dict() for user in users], 200
 
 
 # @api.route('/')
