@@ -1,1 +1,0 @@
-# Placeholder for app/persistence/repository.py

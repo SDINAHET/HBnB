@@ -1,1 +1,0 @@
-# Placeholder for app/models/base_entity.py
