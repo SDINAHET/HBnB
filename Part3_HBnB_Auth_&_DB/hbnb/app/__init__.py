@@ -12,9 +12,11 @@ from app.api.v1.places import api as places_ns
 from app.api.v1.amenities import api as amenities_ns
 from app.api.v1.protected import api as protected_ns
 from config import config
+from flask_sqlalchemy import SQLAlchemy
 
 jwt = JWTManager()
 bcrypt = Bcrypt()
+db = SQLAlchemy()
 
 def create_app(config_name="default"):
     app = Flask(__name__)
@@ -24,6 +26,7 @@ def create_app(config_name="default"):
 
     bcrypt.init_app(app)
     jwt.init_app(app)
+    db.init_app(app)
 
     api = Api(app, version='1.0',
             title='HBnB API',
