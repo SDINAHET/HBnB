@@ -165,3 +165,8 @@ class User(BaseEntity):
             List[Review]: Liste des avis associés à l'utilisateur.
         """
         return self.reviews
+
+    @staticmethod
+    def get_by_id(user_id: str) -> 'User':
+        # Assuming repository is a dictionary or database handler
+        return User.repository.get(user_id)

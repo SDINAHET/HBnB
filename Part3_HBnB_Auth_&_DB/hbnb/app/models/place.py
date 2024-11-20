@@ -37,7 +37,7 @@ class Place(BaseEntity):
         reviews (List[Review]): List of associated reviews.
         amenities (List[Amenity]): List of associated amenities.
     """
-
+    # repository = InMemoryRepository()  # Add this to manage Place instances
     # def __init__(self, title, description, price, latitude, longitude, owner):
     def __init__(self, title, description, price, latitude, longitude, owner_id, owner, reviews=None, amenities=None):
         """
@@ -221,3 +221,7 @@ class Place(BaseEntity):
     #     if 'owner' in kwargs:
     #         self.owner = self.validate_owner(kwargs['owner'])
     #     self.save()  # Update the updated_at timestamp
+    @staticmethod
+    def get_by_id(place_id: str) -> 'Place':
+        # Assuming there is some repository keeping track of Place instances
+        return Place.repository.get(place_id)
