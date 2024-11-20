@@ -30,19 +30,6 @@ review_update_model = api.model('ReviewUpdate', {
 
 @api.route('/')
 class ReviewList(Resource):
-<<<<<<< HEAD
-=======
-    """
-    Resource class for handling review creation and retrieval of all reviews.
-
-    Methods:
-        post: Registers a new review.
-        get: Retrieves a list of all reviews.
-    """
-
-    @api.doc(description='Register a new review', security='BearerAuth')
-    # @api.doc(params={'review': 'The review details'})
->>>>>>> 5f57229083636f648161e846b9da23cb00b89a45
     @jwt_required()
     @api.expect(review_model, validate=True)
     def post(self):
@@ -68,18 +55,9 @@ class ReviewList(Resource):
 
 # --------------------- Get All Reviews ---------------------
 
-<<<<<<< HEAD
 @api.route('/')
 class ReviewListAll(Resource):
     @jwt_required()
-=======
-        #ari code
-
-
-    @api.doc(description='Retrieve a list of all reviews')
-    # @api.doc(params={'place_id': 'The ID of the place to retrieve reviews for'})
-    @api.response(200, 'List of reviews retrieved successfully')
->>>>>>> 5f57229083636f648161e846b9da23cb00b89a45
     def get(self):
         """
         Get all reviews.
@@ -130,24 +108,10 @@ class ReviewByID(Resource):
 
 # --------------------- Modify a Review ---------------------
 
-<<<<<<< HEAD
 @api.route('/<review_id>')
 class ReviewModify(Resource):
     @jwt_required()
     @api.expect(review_update_model, validate=True)
-=======
-        return review.to_dict(), 200
-
-    @api.doc(description='Update review details by ID', security='BearerAuth')
-    @api.doc(params={'review_id': 'The ID of the review to update'})
-    @jwt_required() # add SD
-    @api.expect(review_model)
-    @api.response(200, 'Review updated successfully')
-    @api.response(404, 'Review not found')
-    @api.response(400, 'Invalid input data')
-    @api.response(401, 'Missing Authorization Header')
-    @api.response(403, 'Unauthorized action')
->>>>>>> 5f57229083636f648161e846b9da23cb00b89a45
     def put(self, review_id):
         """
         Modify a review.
