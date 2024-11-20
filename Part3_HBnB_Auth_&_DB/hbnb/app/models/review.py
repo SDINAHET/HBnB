@@ -51,14 +51,15 @@ class Review(BaseEntity):
         self.register_review(user, place)
 
     def validate(self):
-        """Validate the review attributes."""
         if not isinstance(self.comment, str) or not self.comment:
             raise ValueError('Comment must be a non-empty string.')
         if not isinstance(self.rating, int) or self.rating < 1 or self.rating > 5:
             raise ValueError('Rating must be an integer between 1 and 5.')
-        if not User.get_by_id(self.user_id):
+        user = User.get_by_id(self.user_id)
+        if not user:
             raise ValueError("User does not exist.")
-        if not Place.get_by_id(self.place_id):
+        place = Place.get_by_id(self.place_id)
+        if not place:
             raise ValueError("Place does not exist.")
 
     def register_review(self, user: User, place: Place):

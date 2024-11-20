@@ -379,26 +379,65 @@ class HBnBFacade:
         #     logging.error(f"Error in create_review: {e}")
         #     raise
 
-        #code ari
+        # #code ari
+        # user_id = review_data.get('user_id')
+        # place_id = review_data.get('place_id')
+
+        # place = self.get_place(place_id)
+        # if not place:
+        #     raise ValueError("Place not found")
+
+        # if str(place.owner_id) == str(user_id):
+        #     raise ValueError("Cannot review your own place")
+
+        # existing_reviews = self.review_repo.get_by_attribute('user_id', user_id)
+        # for review in existing_reviews:
+        #     if review.place_id == place_id:
+        #         raise ValueError("Already reviewed this place")
+
+        # review = Review(**review_data)
+        # review.validate()
+        # self.review_repo.add(review)
+        # return review
+
+        # Validation des données d'entrée
+
+
+        # Validation des données d'entrée
+        required_fields = ['user_id', 'place_id', 'text', 'rating']
+        for field in required_fields:
+            if field not in review_data:
+                raise ValueError(f"Missing required field: {field}")
+
         user_id = review_data.get('user_id')
         place_id = review_data.get('place_id')
 
+        # Vérifiez si le lieu existe
         place = self.get_place(place_id)
         if not place:
             raise ValueError("Place not found")
 
+        # Vérifiez si l'utilisateur est le propriétaire du lieu
         if str(place.owner_id) == str(user_id):
             raise ValueError("Cannot review your own place")
 
-        existing_reviews = self.review_repo.get_by_attribute('user_id', user_id)
+        # Vérifiez si l'utilisateur a déjà critiqué ce lieu
+        existing_reviews = self.review_repo.get_by_attribute('user_id', user_id) or []
         for review in existing_reviews:
             if review.place_id == place_id:
                 raise ValueError("Already reviewed this place")
 
-        review = Review(**review_data)
-        review.validate()
-        self.review_repo.add(review)
-        return review
+        # Création de la critique
+        try:
+            user = User.get_by_id(user_id)
+            review = Review(text=review_data['text'], rating=review_data['rating'], user=user, place=place)
+            review.validate()  # Validation de la critique
+            self.review_repo.add(review)
+            return review
+        except Exception as e:
+            logging.error(f"Error in create_review: {e}")
+            raise ValueError("An error occurred while creating the review")
+
 
     def get_review(self, review_id):
         """
