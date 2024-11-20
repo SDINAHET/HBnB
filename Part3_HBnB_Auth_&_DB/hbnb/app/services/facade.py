@@ -351,120 +351,234 @@ class HBnBFacade:
         return False
 
     # Review_service_facade
+    # def create_review(self, review_data):
+    # # def create_review(self, text, rating, user_id, place_id):
+    #     """
+    #     Create a new review and add it to the repository.
+
+    #     Args:
+    #         review_data (dict): A dictionary containing review details (e.g., place_id, user_id, text).
+
+    #     Returns:
+    #         Review: The newly created review object.
+    #     """
+    #     # new_review = Review(review_data)
+    #     # self.review_repo.add(new_review)
+    #     # return new_review
+
+    #     # try:
+    #     #     review = Review(
+    #     #         text=review_data['text'],
+    #     #         rating=review_data['rating'],
+    #     #         user_id=review_data['user_id'],
+    #     #         place_id=review_data['place_id']
+    #     #     )
+    #     #     self.review_repo.add(review)
+    #     #     return review
+    #     # except Exception as e:
+    #     #     logging.error(f"Error in create_review: {e}")
+    #     #     raise
+
+    #     # #code ari
+    #     # user_id = review_data.get('user_id')
+    #     # place_id = review_data.get('place_id')
+
+    #     # place = self.get_place(place_id)
+    #     # if not place:
+    #     #     raise ValueError("Place not found")
+
+    #     # if str(place.owner_id) == str(user_id):
+    #     #     raise ValueError("Cannot review your own place")
+
+    #     # existing_reviews = self.review_repo.get_by_attribute('user_id', user_id)
+    #     # for review in existing_reviews:
+    #     #     if review.place_id == place_id:
+    #     #         raise ValueError("Already reviewed this place")
+
+    #     # review = Review(**review_data)
+    #     # review.validate()
+    #     # self.review_repo.add(review)
+    #     # return review
+
+    #     # Validation des données d'entrée
+
+
+    #     # Validation des données d'entrée
+    #     required_fields = ['user_id', 'place_id', 'text', 'rating']
+    #     for field in required_fields:
+    #         if field not in review_data:
+    #             raise ValueError(f"Missing required field: {field}")
+
+    #     user_id = review_data.get('user_id')
+    #     place_id = review_data.get('place_id')
+
+    #     # Vérifiez si le lieu existe
+    #     place = self.get_place(place_id)
+    #     if not place:
+    #         raise ValueError("Place not found")
+
+    #     # Vérifiez si l'utilisateur est le propriétaire du lieu
+    #     if str(place.owner_id) == str(user_id):
+    #         raise ValueError("Cannot review your own place")
+
+    #     # Vérifiez si l'utilisateur a déjà critiqué ce lieu
+    #     existing_reviews = self.review_repo.get_by_attribute('user_id', user_id) or []
+    #     for review in existing_reviews:
+    #         if review.place_id == place_id:
+    #             raise ValueError("Already reviewed this place")
+
+    #     # Création de la critique
+    #     try:
+    #         user = User.get_by_id(user_id)
+    #         if not user:
+    #             raise ValueError("User not found")
+    #         review = Review(text=review_data['text'], rating=review_data['rating'], user=user, place=place)
+    #         review.validate()  # Validation de la critique
+    #         self.review_repo.add(review)
+    #         return review
+    #     except Exception as e:
+    #         logging.error(f"Error in create_review: {e}")
+    #         raise ValueError("An error occurred while creating the review")
+
+
+    # def get_review(self, review_id):
+    #     """
+    #     Retrieve a review by its ID.
+
+    #     Args:
+    #         review_id (str): The unique ID of the review.
+
+    #     Returns:
+    #         Review: The review object, or None if not found.
+    #     """
+    #     return self.review_repo.get(review_id)
+
+    # def get_all_reviews(self):
+    #     """
+    #     Retrieve all reviews from the repository.
+
+    #     Returns:
+    #         list: A list of all review objects.
+    #     """
+    #     return self.review_repo.get_all()
+
+    # def get_reviews_by_place(self, place_id):
+    #     """
+    #     Retrieve all reviews for a specific place.
+
+    #     Args:
+    #         place_id (str): The unique ID of the place.
+
+    #     Returns:
+    #         list: A list of review objects for the specified place.
+    #     """
+    #     return self.review_repo.get_by_attribute('place_id', place_id)
+
+    # def update_review(self, review_id, review_data):
+    #     """
+    #     Update the details of an existing review.
+
+    #     Args:
+    #         review_id (str): The unique ID of the review to update.
+    #         review_data (dict): A dictionary containing the updated review details.
+
+    #     Returns:
+    #         Review: The updated review object, or None if not found.
+    #     """
+    #     review = self.review_repo.get(review_id)
+    #     if review:
+    #         for key, value in review_data.items():
+    #             setattr(review, key, value)
+    #         self.review_repo.update(review_id, review_data) # Pass user_id and user_data
+    #         return review
+    #     return None
+
+    # def delete_review(self, review_id):
+    #     """
+    #     Delete a review by its ID.
+
+    #     Args:
+    #         review_id (str): The unique ID of the review to delete.
+
+    #     Returns:
+    #         bool: True if the review was deleted, False otherwise.
+    #     """
+    #     review = self.review_repo.get(review_id)
+    #     if review:
+    #         self.review_repo.delete(review_id)
+    #         return True
+    #     return False
+
     def create_review(self, review_data):
-    # def create_review(self, text, rating, user_id, place_id):
-        """
-        Create a new review and add it to the repository.
+        required_fields = ['user_id', 'place_id', 'text', 'rating']
+        for field in required_fields:
+            if field not in review_data:
+                raise ValueError(f"Missing required field: {field}")
 
-        Args:
-            review_data (dict): A dictionary containing review details (e.g., place_id, user_id, text).
+        user_id = review_data['user_id']
+        place_id = review_data['place_id']
 
-        Returns:
-            Review: The newly created review object.
-        """
-        # new_review = Review(review_data)
-        # self.review_repo.add(new_review)
-        # return new_review
-
-        # try:
-        #     review = Review(
-        #         text=review_data['text'],
-        #         rating=review_data['rating'],
-        #         user_id=review_data['user_id'],
-        #         place_id=review_data['place_id']
-        #     )
-        #     self.review_repo.add(review)
-        #     return review
-        # except Exception as e:
-        #     logging.error(f"Error in create_review: {e}")
-        #     raise
-
-        #code ari
-        user_id = review_data.get('user_id')
-        place_id = review_data.get('place_id')
-
-        place = self.get_place(place_id)
+        # Verify if the place exists
+        place = Place.get_by_id(place_id)
         if not place:
             raise ValueError("Place not found")
 
+        # Verify if the user exists
+        user = User.get_by_id(user_id)
+        if not user:
+            raise ValueError("User not found")
+
+        # Verify if the user is the owner of the place
         if str(place.owner_id) == str(user_id):
             raise ValueError("Cannot review your own place")
 
-        existing_reviews = self.review_repo.get_by_attribute('user_id', user_id)
+        # Verify if the user has already reviewed the place
+        existing_reviews = self.review_repo.get_by_attribute('user_id', user_id) or []
         for review in existing_reviews:
             if review.place_id == place_id:
                 raise ValueError("Already reviewed this place")
 
-        review = Review(**review_data)
-        review.validate()
-        self.review_repo.add(review)
-        return review
+        # Create the review
+        try:
+            review = Review(
+                comment=review_data['text'],
+                rating=review_data['rating'],
+                user=user,
+                place=place
+            )
+            self.review_repo.add(review)  # Add the review to the repository
+            return review
+
+        except Exception as e:
+            logging.error(f"Error in create_review: {e}")
+            raise ValueError("An error occurred while creating the review")
 
     def get_review(self, review_id):
-        """
-        Retrieve a review by its ID.
-
-        Args:
-            review_id (str): The unique ID of the review.
-
-        Returns:
-            Review: The review object, or None if not found.
-        """
+        """Retrieve a review by its ID."""
         return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
-        """
-        Retrieve all reviews from the repository.
-
-        Returns:
-            list: A list of all review objects.
-        """
+        """Retrieve all reviews from the repository."""
         return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-        """
-        Retrieve all reviews for a specific place.
-
-        Args:
-            place_id (str): The unique ID of the place.
-
-        Returns:
-            list: A list of review objects for the specified place.
-        """
+        """Retrieve all reviews for a specific place."""
         return self.review_repo.get_by_attribute('place_id', place_id)
 
     def update_review(self, review_id, review_data):
-        """
-        Update the details of an existing review.
-
-        Args:
-            review_id (str): The unique ID of the review to update.
-            review_data (dict): A dictionary containing the updated review details.
-
-        Returns:
-            Review: The updated review object, or None if not found.
-        """
+        """Update the details of an existing review."""
         review = self.review_repo.get(review_id)
         if review:
             for key, value in review_data.items():
                 setattr(review, key, value)
-            self.review_repo.update(review_id, review_data) # Pass user_id and user_data
+            self.review_repo.update(review_id, review_data)
             return review
         return None
 
     def delete_review(self, review_id):
-        """
-        Delete a review by its ID.
-
-        Args:
-            review_id (str): The unique ID of the review to delete.
-
-        Returns:
-            bool: True if the review was deleted, False otherwise.
-        """
+        """Delete a review by its ID."""
         review = self.review_repo.get(review_id)
         if review:
             self.review_repo.delete(review_id)
             return True
         return False
-

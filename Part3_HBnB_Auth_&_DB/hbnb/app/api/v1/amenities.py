@@ -33,7 +33,7 @@ amenity_update_model = api.model('AmenityUpdate', {
 class AmenityCreate(Resource):
     @jwt_required()  # L'authentification est requise
     @api.expect(amenity_model, validate=True)
-    @api.doc(description='Admin: Register a new amenity.')
+    @api.doc(description='Admin: Register a new amenity.', security='BearerAuth')
     @api.response(201, 'Amenity successfully created')
     @api.response(403, 'Admin privileges required')
     @api.response(400, 'Invalid input data')
@@ -74,7 +74,7 @@ class AmenityResource(Resource):
 
         if not amenity:
             raise NotFound('Amenity not found')
-        
+
         return {
             'id': amenity.id,
             'name': amenity.name
@@ -86,7 +86,7 @@ class AmenityResource(Resource):
 class AmenityUpdate(Resource):
     @jwt_required()  # L'authentification est requise
     @api.expect(amenity_update_model, validate=True)
-    @api.doc(description='Admin: Update an amenity by ID.')
+    @api.doc(description='Admin: Update an amenity by ID.', security='BearerAuth')
     @api.response(200, 'Amenity updated successfully')
     @api.response(403, 'Admin privileges required')
     @api.response(404, 'Amenity not found')
@@ -107,7 +107,7 @@ class AmenityUpdate(Resource):
         updated_data = request.json
         if 'name' not in updated_data:
             raise BadRequest('Name field is required.')
-        
+
         try:
             updated_amenity = facade.update_amenity(amenity_id, updated_data)
             return {
@@ -124,7 +124,7 @@ class AmenityUpdate(Resource):
 class AdminAmenityUpdate(Resource):
     @jwt_required()
     @api.expect(amenity_update_model, validate=True)
-    @api.doc(description='Admin: Update an amenity by ID.')
+    @api.doc(description='Admin: Update an amenity by ID.', security='BearerAuth')
     @api.response(200, 'Amenity updated successfully')
     @api.response(403, 'Admin privileges required')
     @api.response(404, 'Amenity not found')
@@ -161,7 +161,7 @@ class AdminAmenityUpdate(Resource):
 @api.route('/admin/')
 class AdminAmenityList(Resource):
     @jwt_required()
-    @api.doc(description='Admin: Get the list of all amenities.')
+    @api.doc(description='Admin: Get the list of all amenities.', security='BearerAuth')
     @api.response(200, 'List of amenities retrieved successfully')
     @api.response(403, 'Admin privileges required')
     def get(self):

@@ -80,7 +80,7 @@ class PlaceList(Resource):
     Resource for handling requests to list all places or to create a new place.
     """
 
-    @api.doc(description='Register a new place')
+    @api.doc(description='Register a new place') #, security='BearerAuth')
     @jwt_required()
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
@@ -125,7 +125,8 @@ class PlaceList(Resource):
         """
         current_user = get_jwt_identity()
         data = api.payload
-        data['owner_id'] = current_user
+        # data['owner_id'] = current_user
+        data['owner_id'] = current_user['id'] # add SD
 
         required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
         for field in required_fields:
@@ -253,7 +254,7 @@ class PlaceResource(Resource):
             } for review in place.reviews]
         }, 200
 
-    @api.doc(description='Update a specific place by ID')
+    @api.doc(description='Update a specific place by ID', security='BearerAuth')
     @api.doc(params={'place_id': 'The ID of the place to update'})
     @jwt_required()
     @api.expect(place_model)
@@ -320,7 +321,7 @@ class PlaceResource(Resource):
             api.abort(400, str(err))
 
 
-    @api.doc('delete_place')
+    @api.doc('delete_place', security='BearerAuth')
     @api.response(204, 'Place deleted')
     @api.response(401, 'Missing Authorization Header')
     @api.response(403, 'Unauthorized action')

@@ -118,6 +118,7 @@ class AdminUserCreate(Resource):
 @api.route('/admin/users/<user_id>')
 class AdminUserModify(Resource):
     @jwt_required()
+    @api.doc(description='Update User (admin)', security='BearerAuth')
     @api.expect(user_update_model, validate=True)
     @api.response(200, 'User successfully updated')
     @api.response(400, 'Email already in use')
@@ -144,6 +145,7 @@ class AdminUserModify(Resource):
 
 @api.route('/users/<user_id>')
 class UserResource(Resource):
+    @api.doc(description='Retrieve User by ID')
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
     def get(self, user_id):
@@ -161,6 +163,7 @@ class UserResource(Resource):
             }, 200
 
     @jwt_required() # add SD
+    @api.doc(description='Update User by ID', security='BearerAuth')
     @api.response(200, 'User successfully updated')
     @api.response(403, 'Unauthorized action')
     @api.response(400, 'Invalid input data')
@@ -193,6 +196,7 @@ class UserResource(Resource):
 @api.route('/admin/users')
 class AdminUserList(Resource):
     @jwt_required()
+    @api.doc(description='Retrieve all user (admin)', security='BearerAuth')
     @api.response(200, 'List of users retrieved successfully')
     @api.response(403, 'Admin privileges required')
     def get(self):
