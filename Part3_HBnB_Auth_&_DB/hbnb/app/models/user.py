@@ -31,7 +31,7 @@ from app.models.base_entity import BaseEntity
 from sqlalchemy import Column, String, Integer, DateTime, Boolean
 from datetime import datetime
 import uuid
-
+from flask import current_app
 
 class User(BaseEntity):
 
@@ -55,7 +55,7 @@ class User(BaseEntity):
         self.last_name = self.validate_last_name(last_name)
         self.email = self.validate_email(email)
         self.is_admin = is_admin  # Ajoutez cet attribut si nécessaire
-        self.hash_password(password)
+        self.password = password
         self.places = []  # List of places owned by the user (to be related later)
         self.reviews = []  # List of reviews written by the user (to be related later)
 
@@ -67,6 +67,8 @@ class User(BaseEntity):
 
     def verify_password(self, password):
         """Checks if the provided password matches the stored hash."""
+        current_app.logger.info(f"Hashed password: {self.password}")
+        current_app.logger.info(f"Plain-text password: {password}")
         return bcrypt.check_password_hash(self.password, password)
 
     def validate_first_name(self, first_name):

@@ -40,7 +40,7 @@ Error Handling:
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity # add SD
 from app.services import facade
-from flask import request
+from flask import request, jsonify
 
 api = Namespace('places', description='Place operations')
 
@@ -89,43 +89,18 @@ class PlaceList(Resource):
     def post(self):
         """
         Register a new place.
-        ----------------------
 
-        Parameters:
-        -----------
-        - `self`: Reference to the instance of the resource class.
-
-        Expects:
-        --------
-        - JSON payload matching the place_model, with fields such as:
-            - `title` (str): Title of the place.
-            - `description` (str): Description of the place.
-            - `price` (float): Price per night.
-            - `latitude` (float): Latitude of the place.
-            - `longitude` (float): Longitude of the place.
-            - `owner_id` (str): ID of the owner.
-            - `amenities` (list): List of amenities ID's.
-
-        Returns:
-        --------
-        - (dict): JSON response with the details of the created place, including:
-            - `id` (str): Unique identifier of the created place.
-            - `title` (str): Title of the created place.
-            - `description` (str): Description of the created place.
-            - `price` (float): Price per night of the created place.
-            - `latitude` (float): Latitude of the created place.
-            - `longitude` (float): Longitude of the created place.
-            - `owner_id` (str): ID of the owner of the created place.
-        - Status code 201 if successful.
-        - Status code 400 if data is invalid.
-
-        Raises:
-        -------
-        - `ValueError`: If input data is invalid or required fields are missing.
+        Expects a JSON payload matching the place_model, with fields such as:
+        - `title` (str): Title of the place.
+        - `description` (str): Description of the place.
+        - `price` (float): Price per night.
+        - `latitude` (float): Latitude of the place.
+        - `longitude` (float): Longitude of the place.
+        - `owner_id` (str): ID of the owner.
+        - `amenities` (list): List of amenities IDs.
         """
         current_user = get_jwt_identity()
         data = api.payload
-        # data['owner_id'] = current_user
         data['owner_id'] = current_user['id'] # add SD
 
         required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
@@ -134,7 +109,15 @@ class PlaceList(Resource):
                 api.abort(400, f'Missing required field: {field}')
 
         try:
-            new_place = facade.create_place(data)
+            new_place = facade.create_place(
+                title=data['title'],
+                description=data['description'],
+                price=data['price'],
+                latitude=data['latitude'],
+                longitude=data['longitude'],
+                owner_id=data['owner_id'],
+                amenities=data['amenities']
+            )
             return {
                 'id': new_place.id,
                 'title': new_place.title,
@@ -153,26 +136,7 @@ class PlaceList(Resource):
     def get(self):
         """
         Retrieve a list of all places.
-        -------------------------------
-
-        Parameters:
-        ----------
-        - `self`: Reference to the instance of the resource class.
-
-        Expects:
-        --------
-        - No additional parameters.
-
-        Returns:
-        --------
-        - (list): A list of places, each represented as a dictionary containing:
-            - `id` (str): Unique identifier of the place.
-            - `title` (str): Title of the place.
-            - `latitude` (float): Latitude of the place.
-            - `longitude` (float): Longitude of the place.
-        - Status code 200 upon success.
         """
-
         places = facade.get_all_places()
         if not places:
             return {'error': 'No places found'}, 404
@@ -196,31 +160,6 @@ class PlaceResource(Resource):
     def get(self, place_id):
         """
         Get the details of a place by its ID.
-        --------------------------------------
-
-        Parameters:
-        -----------
-        - `self`: Reference to the instance of the resource class.
-        - `place_id` (str): The unique identifier for the place.
-
-        Expects:
-        --------
-        - No additional parameters.
-
-        Returns:
-        --------
-        - (dict): Detailed information about the place, including:
-            - `id` (str): Unique identifier of the place.
-            - `title` (str): Title of the place.
-            - `description` (str): Description of the place.
-            - `latitude` (float): Latitude of the place.
-            - `longitude` (float): Longitude of the place.
-            - `owner` (dict): Information about the owner, including:
-        - Status code 200 if the place exists.
-        - Status code 404 if the place is not found.
-
-        Raises:
-        - `ValueError`: If an unexpected error occurs while retrieving the place.
         """
 
         place = facade.get_place(place_id)
@@ -264,34 +203,7 @@ class PlaceResource(Resource):
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
         """
-        Update the information of a specific place / Update a place - Owner only.
-        -------------------------------------------
-
-        Parameters:
-        -----------
-        - `self`: Reference to the instance of the resource class.
-        - `place_id` (str): The unique identifier of the place to update.
-
-        Expects:
-        --------
-        - JSON payload with updated fields matching the place_model, including:
-            - `title` (str): Updated title of the place.
-            - `description` (str): Updated description of the place.
-            - `price` (float): Updated price per night.
-            - `latitude` (float): Updated latitude of the place.
-            - `longitude` (float): Updated longitude of the place.
-
-        Returns:
-        --------
-        - (dict): Success message indicating the place was updated successfully.
-        - Status code 200 if updated successfully.
-        - Status code 400 if data is invalid.
-        - Status code 404 if the place is not found.
-
-        Raises:
-        -------
-        - `ValueError`: If input data is invalid or required fields are missing.
-        - `KeyError`: If the specified place ID does not correspond to an existing place.
+        Update the information of a specific place.
         """
         current_user = get_jwt_identity()
 

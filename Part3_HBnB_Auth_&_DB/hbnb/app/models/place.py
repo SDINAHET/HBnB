@@ -21,24 +21,22 @@ Fonctions:
 from __future__ import annotations  # Doit être la première ligne
 from .base_entity import BaseEntity
 from app.models.user import User
-from typing import List
+from sqlalchemy import Column, Integer, String, Float
+from app.extension import db
 
 class Place(BaseEntity):
     """
-    Place entity representing a location available for rent or visit.
-
-    Attributes:
-        title (str): Title of the place.
-        description (str): Description of the place.
-        price (float): Price per unit (e.g., per night).
-        latitude (float): Geographical latitude of the place.
-        longitude (float): Geographical longitude of the place.
-        owner (User): User instance representing the owner of the place.
-        reviews (List[Review]): List of associated reviews.
-        amenities (List[Amenity]): List of associated amenities.
+    SQLAlchemy model for the Place entity.
     """
-    # repository = InMemoryRepository()  # Add this to manage Place instances
-    # def __init__(self, title, description, price, latitude, longitude, owner):
+    __tablename__ = 'places'
+
+    title = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+
     def __init__(self, title, description, price, latitude, longitude, owner_id, owner, reviews=None, amenities=None):
         """
         Initializes a Place object with provided information and validates it.
@@ -61,13 +59,9 @@ class Place(BaseEntity):
         self.latitude = self.validate_latitude(latitude)
         self.longitude = self.validate_longitude(longitude)
         self.owner_id = owner_id  # Ensure this is included
-        # self.owner = owner
         self.owner = self.validate_owner(owner)
-        # self.reviews: List['Review'] = []  # List to store related reviews
-        # self.amenities: List['Amenity'] = []  # List to store related amenities
         self.reviews = reviews if reviews is not None else []
         self.amenities = amenities if amenities is not None else []
-        # self.amenities = amenities or []
 
     @staticmethod
     def validate_title(title):

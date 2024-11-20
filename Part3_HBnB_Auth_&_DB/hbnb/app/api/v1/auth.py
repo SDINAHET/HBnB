@@ -3,6 +3,7 @@
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from app.services import facade
+from flask import current_app
 
 api = Namespace('auth', description='Authentication operations')
 
@@ -23,11 +24,14 @@ class Login(Resource):
         """
         credentials = api.payload
 
+        current_app.logger.info(f"User {credentials['email']} login attempt")
         user = facade.get_user_by_email(credentials['email'])
 
         if not user:
+            current_app.logger.error(f"User not found: {credentials['email']}")
             return {'error': 'User not found'}, 404
         if not user.verify_password(credentials['password']):
+            current_app.logger.error(f"Invalid credentials for user: {credentials['email']}")
             return {'error': 'Invalid credentials'}, 401
         
         access_token = create_access_token(identity={'id': str(user.id), 'is_admin': user.is_admin})
