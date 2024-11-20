@@ -18,6 +18,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import request
 from app.services import facade
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound
+from flask import current_app
 
 
 api = Namespace('users', description='User operations')
@@ -54,6 +55,8 @@ class UserCreate(Resource):
         """
         user_data = request.json
 
+        current_app.logger.info(f"Received user data: {user_data}")
+
         if facade.get_user_by_email(user_data['email']):
             raise BadRequest('Email already registered')
 
@@ -64,6 +67,7 @@ class UserCreate(Resource):
                 'user_id': new_user.id,
             }, 201
         except Exception as e:
+            current_app.logger.error(f"Error during user creation: {e}")
             raise BadRequest('An unexpected error occurred. Please try again later.')
 
 # -------------------------- Retrieve User by Email --------------------------

@@ -1,14 +1,19 @@
 #!/usr/bin/python3
 from app import db  # Assuming you have SQLAlchemy set up
-from app.persistence import Repository
 
-class SQLAlchemyRepository(Repository):
+from app.models.user import User
+
+class SQLAlchemyRepository:
     def __init__(self, model):
         self.model = model
 
     def add(self, obj):
-        db.session.add(obj)
-        db.session.commit()
+        try:
+            db.session.add(obj)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
 
     def get(self, obj_id):
         return self.model.query.get(obj_id)
@@ -31,3 +36,15 @@ class SQLAlchemyRepository(Repository):
 
     def get_by_attribute(self, attr_name, attr_value):
         return self.model.query.filter(getattr(self.model, attr_name) == attr_value).first()
+
+class UserRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(User)
+
+    def get_user_by_email(self, email):
+        """Fetch a user by their email address."""
+        return self.model.query.filter_by(email=email).first()
+
+    def get_user_by_username(self, username):
+        """Fetch a user by their username."""
+        return self.model.query.filter_by(username=username).first()

@@ -15,35 +15,36 @@ Classes :
     ValidationError : Exception personnalisée pour les erreurs de validation.
 """
 
-# app/models/base_entity.py
+from app.extension import db
 import uuid
 from datetime import datetime
 
-class BaseEntity:
-    """Classe de base pour les entités avec gestion d'identifiant et de timestamps.
+class BaseEntity(db.Model):
+    __abstract__ = True
 
-    Attributs :
-        id (str) : Identifiant unique de l'entité, généré lors de l'initialisation.
-        created_at (datetime) : Timestamp indiquant quand l'entité a été créée.
-        updated_at (datetime) : Timestamp indiquant la dernière mise à jour de l'entité.
-    """
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    def __init__(self):
-        """Initialise une instance de BaseEntity.
-
-        Génère un identifiant unique et initialise les timestamps de création
-        et de mise à jour.
-        """
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = self.created_at # Explicitement égal à created_at à l'initialisation
-
+    def __init__(self, **kwargs):
+        """Initializes a BaseModel instance with attributes, 
+        generating id and setting timestamps on creation."""
+        super().__init__(**kwargs)
+        if not self.id:
+            self.id = str(uuid.uuid4())  # Generate UUID if not provided
+        if not self.created_at:
+            self.created_at = datetime.utcnow()  # Default created_at to current time
+        if not self.updated_at:
+            self.updated_at = self.created_at  # Set updated_at to created_at initially
+            
     def save(self):
-        """Update the updated_at timestamp whenever the object is modified"""
-        self.updated_at = datetime.now()
+        """Updates the updated_at timestamp whenever the object is modified."""
+        self.updated_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
 
     def update(self, data):
-        """Update the attributes of the object based on the provided dictionary"""
+        """Updates the attributes of the object based on the provided dictionary."""
         for key, value in data.items():
             if hasattr(self, key):
                 try:
@@ -52,22 +53,14 @@ class BaseEntity:
                     print(f"Error setting attribute {key}: {e}")
             else:
                 print(f"Warning: {key} is not a valid attribute.")
-        self.save()  # Update the updated_at timestamp
+        self.save()  # Update the updated_at timestamp and save
+
+    def delete(self):
+        """Deletes the current object from the database."""
+        db.session.delete(self)
+        db.session.commit()
+
 
 class ValidationError(Exception):
     """Custom exception for validation errors."""
     pass
-
-    def some_method(self):
-        # Import seulement si nécessaire pour éviter les importations circulaires
-        from app.models.review import Review
-        from app.models.place import Place
-        from app.models.amenity import Amenity
-        from app.models.review import Review
-
-    # def some_method(self):
-    #     from app.models.base_entity import ValidationError
-    #     from app.models.review import Review  # Import déplacé ici
-    #     # from app.models.base_entity import BaseEntity
-    #     from app.models.place import Place
-    #     from app.models.amenity import Amenity  # Import déplacé ici

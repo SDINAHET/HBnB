@@ -8,12 +8,23 @@ entities by interacting with the underlying repository layer.
 """
 import logging
 
+from app.extension import db, bcrypt
 from marshmallow import ValidationError
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
+from app.persistence.sqlalchemy_repository import UserRepository
 from app.persistence.sqlalchemy_repository import SQLAlchemyRepository
+from werkzeug.exceptions import BadRequest, Forbidden, NotFound
+import re
+from flask import current_app
+from sqlalchemy.exc import IntegrityError
+
+
+class UserCreationError(Exception):
+    """Custom exception raised when user creation fails."""
+    pass
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)  # You can adjust the level as needed
@@ -29,25 +40,42 @@ class HBnBFacade:
     def __init__(self):
         """Initialize the HBnBFacade with repositories for users, places,
         reviews, and amenities."""
-        self.user_repository = SQLAlchemyRepository(User)  # Switched to SQLAlchemyRepository
+        self.user_repo = UserRepository() # Switched to SQLAlchemyRepository
         self.place_repository = SQLAlchemyRepository(Place)
         self.review_repository = SQLAlchemyRepository(Review)
         self.amenity_repository = SQLAlchemyRepository(Amenity)
 
+    def is_valid_email(self, email):
+        """
+        Validates the email format.
+        """
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        return re.match(email_regex, email) is not None
+
     # User_service_facade
     def create_user(self, user_data):
-        """
-        Create a new user and add it to the repository.
+        try:
+            self.validate_user_data(user_data)
 
-        Args:
-            user_data (dict): A dictionary containing user details (e.g., first name, last name, email).
+            # Ensure password is hashed
+            if 'password' in user_data:
+                user_data['password'] = bcrypt.generate_password_hash(user_data['password']).decode('utf-8')
 
-        Returns:
-            User: The newly created user object.
-        """
-        user = User(**user_data)
-        self.user_repo.add(user)
-        return user
+            user = User(**user_data)
+            db.session.add(user)
+            db.session.commit()
+            return user
+
+        except KeyError as e:
+            current_app.logger.error(f"Missing required field: {e}")
+            raise ValueError(f"Missing required field: {e}")
+        except IntegrityError as e:
+            current_app.logger.error(f"Integrity error: {str(e)}")
+            db.session.rollback()  # Rollback any changes on error
+            raise UserCreationError("Database integrity error. Please check the user data.")
+        except Exception as e:
+            current_app.logger.error(f"Unexpected error: {str(e)}")
+            raise UserCreationError(f"Error creating user: {str(e)}")
 
     def get_user(self, user_id):
         """
@@ -82,8 +110,7 @@ class HBnBFacade:
         """
         return self.user_repo.get_all()
 
-    def validate_user_data(user_data):
-        """Validate the incoming user data."""
+    def validate_user_data(self, user_data):
         if 'first_name' in user_data and not isinstance(user_data['first_name'], str):
             raise ValidationError("First name must be a string.")
         if 'last_name' in user_data and not isinstance(user_data['last_name'], str):
