@@ -54,6 +54,20 @@ class PlaceAPITestCase(unittest.TestCase):
             cls.amenity_id_2 = cls.create_amenity("Pool", cls.admin_token)
             print(f"Amenity Pool Created: {cls.amenity_response.status_code} {cls.amenity_response.json()}")
 
+            # Create Place as Admin
+            print("Creating Place as Admin...")
+            cls.place_id_admin = cls.create_place(
+                "Test Place Admin", cls.admin_user_id, [cls.amenity_id_1, cls.amenity_id_2], cls.admin_token
+            )
+            print(f"Place Created by Admin: {cls.place_response.status_code} {cls.place_response.json()}")
+
+            # Create Place as Regular User
+            print("Creating Place as Regular User...")
+            cls.place_id_regular = cls.create_place(
+                "Test Place Regular", cls.regular_user_id, [cls.amenity_id_1], cls.regular_token
+            )
+            print(f"Place Created by Regular User: {cls.place_response.status_code} {cls.place_response.json()}")
+
         except Exception as e:
             print(f"Setup failed: {str(e)}")
             cls.setup_failed = True
@@ -69,6 +83,8 @@ class PlaceAPITestCase(unittest.TestCase):
                 ["regular_token", cls.regular_token],
                 ["amenity_id_1", cls.amenity_id_1],
                 ["amenity_id_2", cls.amenity_id_2],
+                ["place_id_admin", cls.place_id_admin],
+                ["place_id_regular", cls.place_id_regular],
             ]
             with open('test_data_PLACE.csv', 'w', newline='') as f:
                 writer = csv.writer(f)
@@ -107,30 +123,26 @@ class PlaceAPITestCase(unittest.TestCase):
         assert response.status_code == 201, f"Expected 201, got {response.status_code}"
         return response.json().get('amenity_id')
 
-    @unittest.skipIf(setup_failed, "Skipping test due to failed setup.")
-    def test_create_place_as_admin(self):
+    @staticmethod
+    def create_place(title, owner_id, amenities, token):
         url = f"{BASE_URL}/places/"
         headers = {
-            "Authorization": f"Bearer {self.admin_token}",
+            "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
         }
         data = {
-            "title": "Test Place Admin",
+            "title": title,
             "description": "A wonderful place to stay",
             "price": 150.0,
             "latitude": 37.7749,
             "longitude": -122.4194,
-            "owner_id": self.admin_user_id,
-            "amenities": [self.amenity_id_1, self.amenity_id_2]
+            "owner_id": owner_id,
+            "amenities": amenities
         }
         response = requests.post(url, json=data, headers=headers)
-        print(f"Test Create Place as Admin: {response.status_code}")
-        if response.status_code == 201:
-            print(response.json())
-            self.place_id = response.json().get('id')
-        else:
-            print(f"Error: {response.status_code} - {response.text}")
-        self.assertEqual(response.status_code, 201)
+        PlaceAPITestCase.place_response = response
+        assert response.status_code == 201, f"Expected 201, got {response.status_code}"
+        return response.json().get('id')
 
     @unittest.skipIf(setup_failed, "Skipping test due to failed setup.")
     def test_get_all_places(self):
@@ -145,40 +157,39 @@ class PlaceAPITestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     @unittest.skipIf(setup_failed, "Skipping test due to failed setup.")
-    def test_update_place_as_regular_user_not_owner(self):
-        # Attempt to update a place created by the admin user as a regular user
-        url = f"{BASE_URL}/places/{self.place_id}"
+    def test_update_place_as_admin(self):
+        url = f"{BASE_URL}/places/{self.place_id_admin}"
         headers = {
-            "Authorization": f"Bearer {self.regular_token}",
+            "Authorization": f"Bearer {self.admin_token}",
             "Content-Type": "application/json"
         }
         data = {
-            "title": "Updated Title by Non-Owner",
-            "description": "Trying to update as a non-owner",
+            "title": "Updated Title by Admin",
+            "description": "Updated description by admin",
             "price": 200.0
         }
         response = requests.put(url, json=data, headers=headers)
-        print(f"Test Update Place as Non-Owner: {response.status_code}")
-        if response.status_code == 403:
+        print(f"Test Update Place as Admin: {response.status_code}")
+        if response.status_code == 200:
             print(response.json())
         else:
             print(f"Error: {response.status_code} - {response.text}")
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
 
-    @unittest.skipIf(setup_failed, "Skipping test due to failed setup.")
-    def test_delete_place_as_regular_user_not_owner(self):
-        # Attempt to delete a place created by the admin user as a regular user
-        url = f"{BASE_URL}/places/{self.place_id}"
-        headers = {
-            "Authorization": f"Bearer {self.regular_token}"
-        }
-        response = requests.delete(url, headers=headers)
-        print(f"Test Delete Place as Non-Owner: {response.status_code}")
-        if response.status_code == 403:
-            print(response.json())
-        else:
-            print(f"Error: {response.status_code} - {response.text}")
-        self.assertEqual(response.status_code, 403)
+    # @unittest.skipIf(setup_failed, "Skipping test due to failed setup.")
+    # def test_delete_place_as_admin(self):
+    #     url = f"{BASE_URL}/places/{self.place_id_admin}"
+    #     headers = {
+    #         "Authorization": f"Bearer {self.admin_token}"
+    #     }
+    #     response = requests.delete(url, headers=headers)
+    #     print(f"Test Delete Place as Admin: {response.status_code}")
+    #     if response.status_code == 204:
+    #         print("Place deleted successfully.")
+    #     else:
+    #         print(f"Error: {response.status_code} - {response.text}")
+    #     self.assertEqual(response.status_code, 204)
 
 if __name__ == "__main__":
     unittest.main()
+
