@@ -208,7 +208,10 @@ class AdminUserList(Resource):
         Get a list of all users (Admin only).
         Admins can view the list of all users.
         """
+        current_app.logger.info(f"Request headers: {request.headers}")
         current_user = get_jwt_identity()
+        current_app.logger.info(f"Current user: {current_user}")
+
         if not current_user.get('is_admin'):
             raise Forbidden('Admin privileges required')
 
