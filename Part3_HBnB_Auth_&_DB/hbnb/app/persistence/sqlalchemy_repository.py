@@ -4,6 +4,7 @@ from app import db  # Assuming you have SQLAlchemy set up
 from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
+from app.models.amenity import Amenity
 
 class SQLAlchemyRepository:
     def __init__(self, model):
@@ -120,3 +121,44 @@ class ReviewRepository(SQLAlchemyRepository):
             db.session.commit()
             return True
         return False
+
+class AmenityRepository(SQLAlchemyRepository):
+    def __init__(self):
+        # Appel du constructeur de SQLAlchemyRepository avec le modèle Amenity
+        super().__init__(Amenity)
+
+    def add(self, amenity):
+        """Ajoute une nouvelle amenité à la base de données."""
+        db.session.add(amenity)
+        db.session.commit()
+
+    def get(self, amenity_id):
+        """Récupère une amenité par son ID."""
+        return self.model.query.get(amenity_id)
+
+    def get_all(self):
+        """Récupère toutes les amenités."""
+        return self.model.query.all()
+
+    def update(self, amenity_id, data):
+        """Met à jour une amenité par son ID."""
+        amenity = self.get(amenity_id)
+        if amenity:
+            for key, value in data.items():
+                setattr(amenity, key, value)
+            db.session.commit()
+            return amenity
+        return None
+
+    def delete(self, amenity_id):
+        """Supprime une amenité par son ID."""
+        amenity = self.get(amenity_id)
+        if amenity:
+            db.session.delete(amenity)
+            db.session.commit()
+            return True
+        return False
+
+    def get_by_name(self, name):
+        """Récupère une amenité par son nom."""
+        return self.model.query.filter_by(name=name).first()

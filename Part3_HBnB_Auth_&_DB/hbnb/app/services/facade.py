@@ -14,7 +14,7 @@ from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
-from app.persistence.sqlalchemy_repository import UserRepository, PlaceRepository, ReviewRepository
+from app.persistence.sqlalchemy_repository import UserRepository, PlaceRepository, ReviewRepository, AmenityRepository
 from app.persistence.sqlalchemy_repository import SQLAlchemyRepository
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 import re
@@ -44,7 +44,7 @@ class HBnBFacade:
         self.user_repo = UserRepository() # Switched to SQLAlchemyRepository
         self.place_repository = PlaceRepository()
         self.review_repository = ReviewRepository()
-        self.amenity_repository = SQLAlchemyRepository(Amenity)
+        self.amenity_repository = AmenityRepository()
 
     def is_valid_email(self, email):
         """
@@ -82,33 +82,18 @@ class HBnBFacade:
     def get_user(self, user_id):
         """
         Retrieve a user by their ID.
-
-        Args:
-            user_id (str): The unique ID of the user.
-
-        Returns:
-            User: The user object, or None if the user is not found.
         """
         return self.user_repo.get(user_id)
 
     def get_user_by_email(self, email):
         """
-        Retrieve a user by their email.
-
-        Args:
-            email (str): The email of the user.
-
-        Returns:
-            User: The user object, or None if the user is not found.
+        Retrieve a user by their email..
         """
         return User.query.filter_by(email=email).first()
     
     def get_all_users(self):
         """
         Retrieve all users from the repository.
-
-        Returns:
-            list: A list of all user objects.
         """
         return self.user_repo.get_all()
 
@@ -123,13 +108,6 @@ class HBnBFacade:
     def update_user(self, user_id, user_data):
         """
         Update the details of an existing user.
-
-        Args:
-            user_id (str): The unique ID of the user to update.
-            user_data (dict): A dictionary containing the updated user details.
-
-        Returns:
-            User: The updated user object, or None if the user is not found.
         """
         user = self.user_repo.get(user_id)
         if user:
@@ -140,68 +118,51 @@ class HBnBFacade:
         return None
 
     # Amenity_service_facade
-    def create_amenity(self, amenity_data):
+    def create_amenity(self, data):
         """
         Create a new amenity and add it to the repository.
-
-        Args:
-            amenity_data (dict): A dictionary containing amenity details (e.g., name).
-
-        Returns:
-            Amenity: The newly created amenity object.
         """
-        new_amenity = Amenity(**amenity_data)
-        self.amenity_repo.add(new_amenity)
+        if not data.get('name'):
+            raise BadRequest("Amenity name is required.")
+        
+        existing_amenity = self.amenity_repository.get_by_name(data['name'])
+        if existing_amenity:
+            raise BadRequest(f"Amenity with name '{data['name']}' already exists.")
+        
+        new_amenity = Amenity(name=data['name'], description=data.get('description', ''))
+        self.amenity_repository.add(new_amenity)
         return new_amenity
 
     def get_amenity(self, amenity_id):
         """
         Retrieve an amenity by its ID.
-
-        Args:
-            amenity_id (str): The unique ID of the amenity.
-
-        Returns:
-            Amenity: The amenity object, or None if not found.
         """
-        return self.amenity_repo.get(amenity_id)
+        amenity = self.amenity_repository.get(amenity_id)
+        if not amenity:
+            raise NotFound(f"Amenity with ID {amenity_id} not found.")
+        return amenity
 
     def get_all_amenities(self):
         """
         Retrieve all amenities from the repository.
-
-        Returns:
-            list: A list of all amenity objects.
         """
-        return self.amenity_repo.get_all()
+        return self.amenity_repository.get_all()
 
-    def update_amenity(self, amenity_id, amenity_data):
+    def update_amenity(self, amenity_id, data):
         """
         Update the details of an existing amenity.
-
-        Args:
-            amenity_id (str): The unique ID of the amenity to update.
-            amenity_data (dict): A dictionary containing the updated amenity details.
-
-        Returns:
-            Amenity: The updated amenity object, or None if not found.
         """
-        try:
-            # Obtenir l'amenity par ID
-            amenity = self.amenity_repo.get(amenity_id)
-            if not amenity:
-                raise ValueError("Amenity not found")
+        updated_amenity = self.amenity_repository.update(amenity_id, data)
+        if not updated_amenity:
+            raise NotFound(f"Amenity with ID {amenity_id} not found.")
+        return updated_amenity
 
-            # Appliquer les modifications
-            for key, value in amenity_data.items():
-                setattr(amenity, key, value)
-
-            # Sauvegarder les modifications dans la base de données
-            self.amenity_repo.update(amenity_id, amenity_data)
-            return amenity
-        except Exception as e:
-            logging.error(f"Error in update_amenity: {e}")
-            raise
+    def delete_amenity(self, amenity_id):
+        """Delete amenity by id"""
+        result = self.amenity_repository.delete(amenity_id)
+        if not result:
+            raise NotFound(f"Amenity with ID {amenity_id} not found.")
+        return {"message": "Amenity deleted successfully."}
 
     @staticmethod
     def create_place(title, description, price, latitude, longitude, owner_id, amenities):
@@ -246,9 +207,6 @@ class HBnBFacade:
     def get_place_by_id(place_id):
         """
         Retrieves a single place by its ID from the database.
-
-        :param place_id: The ID of the place to retrieve (str)
-        :return: The Place object, or None if not found
         """
         try:
             return Place.query.get(place_id)
@@ -259,18 +217,12 @@ class HBnBFacade:
     def list_places():
         """
         Retrieves all places from the database.
-
-        :return: List of all Place objects
         """
         return Place.query.all()
 
     def update_place(self, place_id, data):
         """
         Updates the place with the given ID using the provided data.
-
-        :param place_id: The ID of the place to update (str)
-        :param data: A dictionary of fields to update in the place (dict)
-        :return: The updated Place object
         """
         place = Place.query.get(place_id)
         if not place:
@@ -305,9 +257,6 @@ class HBnBFacade:
     def delete_place(self, place_id):
         """
         Deletes the place with the given ID from the database.
-
-        :param place_id: The ID of the place to delete (str)
-        :return: None
         """
         place = Place.query.get(place_id)
         if place:
@@ -325,7 +274,7 @@ class HBnBFacade:
         return False
 
     def create_review(self, review_data):
-        """Crée un nouvel avis."""
+        """create new review"""
         review = Review(
             text=review_data['text'],
             rating=review_data['rating'],
