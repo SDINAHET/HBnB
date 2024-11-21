@@ -21,6 +21,8 @@ import re
 from flask import current_app
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
+from uuid import UUID
+
 
 
 class UserCreationError(Exception):
@@ -273,19 +275,29 @@ class HBnBFacade:
         return False
 
     def create_review(self, review_data):
-        """create new review"""
-        user = User.query.get(review_data['user_id'])  # Assuming the 'User' model has a 'query' method
-        place = Place.query.get(review_data['place_id'])  # Assuming the 'Place' model has a 'query' method
+        """Create a new review."""
+        try:
+            user_id = UUID(review_data['user_id'])
+            place_id = UUID(review_data['place_id'])
+        except ValueError:
+            raise ValueError("Invalid UUID format for user_id or place_id")
+
+        # Retrieve the User and Place instances using the UUIDs
+        user = User.query.filter_by(id=user_id).first()
+        place = Place.query.filter_by(id=place_id).first()
         
         if not user or not place:
             raise ValueError("Invalid user_id or place_id")
 
+        # Create the Review instance with the User and Place instances
         review = Review(
             comment=review_data['comment'],
             rating=review_data['rating'],
-            user=user,
-            place=place
+            user=user,  # Pass the User instance
+            place=place  # Pass the Place instance
         )
+
+        # Add the review to the repository
         self.review_repository.add(review)
         return review
 

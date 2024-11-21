@@ -18,6 +18,8 @@ from app.models.place import Place  # Uncommented to use Place class directly
 from typing import TYPE_CHECKING
 from app.extension import db
 from datetime import datetime
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 if TYPE_CHECKING:
     from .user import User
@@ -26,18 +28,18 @@ if TYPE_CHECKING:
 class Review(BaseEntity):
     __tablename__ = 'reviews'  # Define the table name once
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Auto-increment primary key
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     comment = db.Column(db.String(500), nullable=False)  # Review comment (max 500 characters)
     rating = db.Column(db.Integer, nullable=False)  # Review rating (1-5)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Creation timestamp
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Update timestamp
 
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)  # User ID (UUID)
-    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)  # Place ID (UUID)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+    place_id = db.Column(UUID(as_uuid=True), db.ForeignKey('places.id'), nullable=False)
 
     # Relationships
-    user = db.relationship('User', back_populates='reviews')  # Relation with User (one-to-many)
-    place = db.relationship('Place', back_populates='reviews')  # Relation with Place (one-to-many)
+    user = db.relationship('User', back_populates='reviews', lazy=True)  # Relation with User (one-to-many)
+    place = db.relationship('Place', back_populates='reviews', lazy=True)  # Relation with Place (one-to-many)
 
     def __init__(self, comment: str, rating: int, user: User, place: Place):
         """Initialise une instance de Review.
