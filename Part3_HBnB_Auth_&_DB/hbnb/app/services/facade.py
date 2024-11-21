@@ -274,11 +274,17 @@ class HBnBFacade:
 
     def create_review(self, review_data):
         """create new review"""
+        user = User.query.get(review_data['user_id'])  # Assuming the 'User' model has a 'query' method
+        place = Place.query.get(review_data['place_id'])  # Assuming the 'Place' model has a 'query' method
+        
+        if not user or not place:
+            raise ValueError("Invalid user_id or place_id")
+
         review = Review(
-            text=review_data['text'],
+            comment=review_data['comment'],
             rating=review_data['rating'],
-            user_id=review_data['user_id'],
-            place_id=review_data['place_id']
+            user=user,
+            place=place
         )
         self.review_repository.add(review)
         return review

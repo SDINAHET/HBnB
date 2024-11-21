@@ -15,7 +15,7 @@ api = Namespace('reviews', description='Review operations')
 
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
-    'text': fields.String(required=True, description='Text of the review'),
+    'comment': fields.String(required=True, description='The review comment'),
     'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
     'user_id': fields.String(required=True, description='ID of the user'),
     'place_id': fields.String(required=True, description='ID of the place')
@@ -28,7 +28,7 @@ review_update_model = api.model('ReviewUpdate', {
 
 # --------------------- Create a Review ---------------------
 
-@api.route('/')
+@api.route('/review')
 class ReviewList(Resource):
     @jwt_required()
     @api.expect(review_model, validate=True)
@@ -46,7 +46,7 @@ class ReviewList(Resource):
             return {
                 "message": "Review created successfully",
                 "review_id": new_review.id,
-                "content": new_review.content,
+                "content": new_review.comment,
                 "rating": new_review.rating,
                 "place_id": new_review.place_id,
             }, 201
