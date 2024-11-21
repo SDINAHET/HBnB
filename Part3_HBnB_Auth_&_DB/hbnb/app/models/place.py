@@ -21,8 +21,10 @@ Fonctions:
 from __future__ import annotations  # Doit être la première ligne
 from .base_entity import BaseEntity
 from app.models.user import User
-from sqlalchemy import Column, Integer, String, Float
 from app.extension import db
+
+from datetime import datetime
+
 
 class Place(BaseEntity):
     """
@@ -30,52 +32,40 @@ class Place(BaseEntity):
     """
     __tablename__ = 'places'
 
-    title = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.String(500), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    latitude = db.Column(db.Float, nullable=False)
-    longitude = db.Column(db.Float, nullable=False)
+    id = db.Column(db.String(36), primary_key=True)  # Use String(36) for UUID
+    title = db.Column(db.String(200), nullable=False)  # Title of the place
+    description = db.Column(db.String(1000), nullable=False)  # Description of the place
+    price = db.Column(db.Float, nullable=False)  # Price per night
+    latitude = db.Column(db.Float, nullable=False)  # Latitude of the place
+    longitude = db.Column(db.Float, nullable=False)  # Longitude of the place
     owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Creation timestamp
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Update timestamp
 
-    def __init__(self, title, description, price, latitude, longitude, owner_id, owner, reviews=None, amenities=None):
+    # Relationships
+    owner = db.relationship('User', back_populates='places')  # Relation with User
+    reviews = db.relationship('Review', back_populates='place')  # Relation with Review
+    amenities = db.relationship('Amenity', secondary='place_amenities', back_populates='places')  # Relation with Amenity
+
+    def __init__(self, title: str, description: str, price: float, latitude: float, longitude: float, owner_id: str):
         """
         Initializes a Place object with provided information and validates it.
-
-        Args:
-            title (str): The title of the place.
-            description (str): A description of the place.
-            price (float): The price for renting or visiting.
-            latitude (float): The latitude of the location.
-            longitude (float): The longitude of the location.
-            owner (User): The owner of the place.
-
-        Raises:
-            ValueError: If validation of any attribute fails.
         """
+        
+        if not owner_id:
+            raise ValueError("Owner must be provided")
         super().__init__()
-        self.title = self.validate_title(title)
+        self.title = title
         self.description = description
-        self.price = self.validate_price(price)
-        self.latitude = self.validate_latitude(latitude)
-        self.longitude = self.validate_longitude(longitude)
-        self.owner_id = owner_id  # Ensure this is included
-        self.owner = self.validate_owner(owner)
-        self.reviews = reviews if reviews is not None else []
-        self.amenities = amenities if amenities is not None else []
+        self.price = price
+        self.latitude = latitude
+        self.longitude = longitude
+        self.owner_id = owner_id
 
     @staticmethod
     def validate_title(title):
         """
         Validates that the title is a non-empty string of max 100 characters.
-
-        Args:
-            title (str): The title to validate.
-
-        Returns:
-            str: Validated title.
-
-        Raises:
-            ValueError: If title is empty or exceeds 100 characters.
         """
         if not isinstance(title, str) or len(title) == 0 or len(title) > 100:
             raise ValueError("Title must be a non-empty string with a maximum length of 100 characters")
@@ -85,15 +75,6 @@ class Place(BaseEntity):
     def validate_price(price):
         """
         Validates that the price is a positive float.
-
-        Args:
-            price (float): The price to validate.
-
-        Returns:
-            float: Validated price.
-
-        Raises:
-            ValueError: If price is not positive.
         """
         if not isinstance(price, (int, float)) or price <= 0:
             raise ValueError("Price must be a positive number")
@@ -103,15 +84,6 @@ class Place(BaseEntity):
     def validate_latitude(latitude):
         """
         Validates that latitude is between -90.0 and 90.0.
-
-        Args:
-            latitude (float): Latitude to validate.
-
-        Returns:
-            float: Validated latitude.
-
-        Raises:
-            ValueError: If latitude is out of range.
         """
         if not (-90.0 <= latitude <= 90.0):
             raise ValueError("Latitude must be between -90.0 and 90.0")
@@ -121,15 +93,6 @@ class Place(BaseEntity):
     def validate_longitude(longitude):
         """
         Validates that longitude is between -180.0 and 180.0.
-
-        Args:
-            longitude (float): Longitude to validate.
-
-        Returns:
-            float: Validated longitude.
-
-        Raises:
-            ValueError: If longitude is out of range.
         """
         if not (-180.0 <= longitude <= 180.0):
             raise ValueError("Longitude must be between -180.0 and 180.0")
@@ -139,15 +102,6 @@ class Place(BaseEntity):
     def validate_owner(owner):
         """
         Validates that the owner is a valid User instance.
-
-        Args:
-            owner (User): Owner to validate.
-
-        Returns:
-            User: Validated owner.
-
-        Raises:
-            ValueError: If owner is not an instance of User.
         """
         if not isinstance(owner, User):
             raise ValueError("Owner must be a valid User instance")
@@ -156,9 +110,6 @@ class Place(BaseEntity):
     def add_review(self, review: 'Review'):
         """
         Adds a review to the place and updates the timestamp.
-
-        Args:
-            review (Review): The review to add.
         """
         self.reviews.append(review)
         self.save()  # Update timestamp when modifying reviews
@@ -166,9 +117,6 @@ class Place(BaseEntity):
     def add_amenity(self, amenity: 'Amenity'):
         """
         Adds an amenity to the place and updates the timestamp.
-
-        Args:
-            amenity (Amenity): The amenity to add.
         """
         self.amenities.append(amenity)
         self.save()  # Update timestamp when modifying amenities
@@ -176,9 +124,6 @@ class Place(BaseEntity):
     def to_dict(self):
         """
         Returns a dictionary representation of the Place instance.
-
-        Returns:
-            dict: Dictionary with place details.
         """
         return {
             'id': self.id,  # Assuming BaseEntity provides an 'id' attribute
@@ -191,31 +136,3 @@ class Place(BaseEntity):
             'reviews': [review.to_dict() for review in self.reviews],
             'amenities': [amenity.to_dict() for amenity in self.amenities]
         }
-
-    # def update(self, **kwargs):
-    #     """
-    #     Updates the Place instance with new values, validating each updated field.
-
-    #     Args:
-    #         kwargs: Dictionary containing attributes to update.
-
-    #     Raises:
-    #         ValueError: If any updated field fails validation.
-    #     """
-    #     if 'title' in kwargs:
-    #         self.title = self.validate_title(kwargs['title'])
-    #     if 'description' in kwargs:
-    #         self.description = kwargs['description']
-    #     if 'price' in kwargs:
-    #         self.price = self.validate_price(kwargs['price'])
-    #     if 'latitude' in kwargs:
-    #         self.latitude = self.validate_latitude(kwargs['latitude'])
-    #     if 'longitude' in kwargs:
-    #         self.longitude = self.validate_longitude(kwargs['longitude'])
-    #     if 'owner' in kwargs:
-    #         self.owner = self.validate_owner(kwargs['owner'])
-    #     self.save()  # Update the updated_at timestamp
-    @staticmethod
-    def get_by_id(place_id: str) -> 'Place':
-        # Assuming there is some repository keeping track of Place instances
-        return Place.repository.get(place_id)

@@ -2,16 +2,22 @@
 
 from .base_entity import BaseEntity
 from marshmallow import ValidationError
-from sqlalchemy import Column, String, Integer
+from app.extension import db
+from datetime import datetime
+
 
 class Amenity(BaseEntity):
     __tablename__ = 'amenities'
     
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False, unique=True)  # 50 caractères max pour le nom
-    description = Column(String(255))  # Optionnel, maximum 255 caractères
+    id = db.Column(db.String(36), primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)  # 50 caractères max pour le nom
+    description = db.Column(db.String(255), default="")  # Optionnel, maximum 255 caractères
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Date de création
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Date de mise à jour
 
-    def __init__(self, name: str, description: str=''):
+    places = db.relationship('Place', secondary='place_amenities', back_populates='amenities')
+
+    def __init__(self, name: str, description: str = None):
         super().__init__()
         self.name = name
         self.description = description
@@ -21,6 +27,8 @@ class Amenity(BaseEntity):
         """Validate the attributes of the amenity."""
         if len(self.name) > 50:
             raise ValidationError("Name must not exceed 50 characters.")
+        if len(self.description) > 255:
+            raise ValidationError("Description must not exceed 255 characters.")
 
     def update(self, name: str = None, description: str = None):
         """Update the amenity's attributes."""
@@ -39,3 +47,8 @@ class Amenity(BaseEntity):
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
         }
+
+place_amenities = db.Table('place_amenities',
+    db.Column('place_id', db.Integer, db.ForeignKey('places.id'), primary_key=True),
+    db.Column('amenity_id', db.Integer, db.ForeignKey('amenities.id'), primary_key=True)
+)

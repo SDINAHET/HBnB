@@ -45,8 +45,11 @@ class User(BaseEntity):
     is_admin = db.Column(Boolean, default=False)
     created_at = db.Column(DateTime, default=datetime.utcnow)
     updated_at = db.Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    places = db.relationship('Place', back_populates='owner')  # Relation avec les lieux (Place)
+    reviews = db.relationship('Review', back_populates='user')  # Relation avec les avis (Review)
     
-    def __init__(self, first_name, last_name, email, password, is_admin=False):
+    def __init__(self, first_name: str, last_name: str, email: str, password: str, is_admin: bool = False):
         """
         Initializes a new user with the provided attributes.
         """
@@ -56,14 +59,12 @@ class User(BaseEntity):
         self.email = self.validate_email(email)
         self.is_admin = is_admin  # Ajoutez cet attribut si nécessaire
         self.password = password
-        self.places = []  # List of places owned by the user (to be related later)
-        self.reviews = []  # List of reviews written by the user (to be related later)
 
     def hash_password(self, password):
         """
         Hashes the password using bcrypt and stores it.
         """
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        return bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
         """Checks if the provided password matches the stored hash."""
@@ -93,6 +94,8 @@ class User(BaseEntity):
         """Validates and ensures email is unique."""
         if not self.is_valid_email(email):
             raise ValidationError("Invalid email format.")
+        if User.query.filter_by(email=email).first():  # Vérifie l'existence de l'email dans la DB
+            raise ValidationError("Email already exists.")
         return email
 
     def get_reviews(self):
@@ -103,4 +106,3 @@ class User(BaseEntity):
     def get_by_id(user_id: str) -> 'User':
         """Fetches a user by their ID."""
         return User.query.get(user_id)  # Using SQLAlchemy's query method
-    

@@ -31,53 +31,31 @@ class Review(BaseEntity):
     rating = db.Column(db.Integer, nullable=False)  # Note de l'avis (1-5)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Date de création
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Date de mise à jour
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)  # ID de l'utilisateur
+    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)  # ID du lieu
+
+    user = db.relationship('User', back_populates='reviews')  # Relation avec l'utilisateur (User)
+    place = db.relationship('Place', back_populates='reviews')  # Relation avec le lieu (Place)
 
     def __init__(self, comment: str, rating: int, user: User, place: Place):
         """Initialise une instance de Review.
-
-        Args :
-            comment (str) : Commentaire de l'évaluation.
-            rating (int) : Note de l'évaluation (entre 1 et 5).
-            user (User) : Instance de l'utilisateur ayant laissé l'évaluation.
-            place (Place) : Instance du lieu évalué.
-
-        Lève une ValueError si les attributs ne sont pas valides.
         """
         super().__init__()
         self.comment = comment
         self.rating = rating
-        self.user_id = user.id
-        self.place_id = place.id
+        self.user = user
+        self.place = place
         self.validate()
-        self.register_review(user, place)
 
     def validate(self):
         if not isinstance(self.comment, str) or not self.comment:
             raise ValueError('Comment must be a non-empty string.')
         if not isinstance(self.rating, int) or self.rating < 1 or self.rating > 5:
             raise ValueError('Rating must be an integer between 1 and 5.')
-        user = User.query.get(self.user_id)
-        place = Place.query.get(self.place_id)
-        if not user:
-            raise ValueError("User does not exist.")
-        if not place:
-            raise ValueError("Place does not exist.")
-
-
-    def register_review(self, user: User, place: Place):
-        """Link the review to the user and place."""
-        user.add_review(self)
-        place.add_review(self)
-
-    @staticmethod
-    def get_by_id(review_id: str) -> 'Review':
-        return Review.repository.get(review_id)
-
-    def get_user(self):
-        return User.get_by_id(self.user_id)
-
-    def get_place(self):
-        return Place.get_by_id(self.place_id)
+        if not isinstance(self.user, User):
+            raise ValueError('User must be an instance of User.')
+        if not isinstance(self.place, Place):
+            raise ValueError('Place must be an instance of Place.')
 
     def to_dict(self):
         """Return a dictionary representation of the Review instance."""
