@@ -3,6 +3,7 @@ from app import db  # Assuming you have SQLAlchemy set up
 
 from app.models.user import User
 from app.models.place import Place
+from app.models.review import Review
 
 class SQLAlchemyRepository:
     def __init__(self, model):
@@ -80,6 +81,42 @@ class PlaceRepository(SQLAlchemyRepository):
         place = self.get(place_id)
         if place:
             db.session.delete(place)
+            db.session.commit()
+            return True
+        return False
+
+class ReviewRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Review)
+
+    def add(self, review):
+        """Ajoute un nouvel avis à la base de données."""
+        db.session.add(review)
+        db.session.commit()
+
+    def get(self, review_id):
+        """Récupère un avis par son ID."""
+        return self.model.query.get(review_id)
+
+    def get_all(self):
+        """Récupère tous les avis."""
+        return self.model.query.all()
+
+    def update(self, review_id, data):
+        """Met à jour un avis existant."""
+        review = self.get(review_id)
+        if review:
+            for key, value in data.items():
+                setattr(review, key, value)
+            db.session.commit()
+            return review
+        return None
+
+    def delete(self, review_id):
+        """Supprime un avis."""
+        review = self.get(review_id)
+        if review:
+            db.session.delete(review)
             db.session.commit()
             return True
         return False

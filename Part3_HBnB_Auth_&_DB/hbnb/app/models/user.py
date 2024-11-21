@@ -83,13 +83,6 @@ class User(BaseEntity):
             raise ValidationError("Last name must be between 1 and 50 characters.")
         return last_name
 
-    def register_user(self):
-        """Registers the user, ensuring unique email."""
-        # Vérifie si un utilisateur avec cet email existe déjà
-        if any(user.email == self.email for user in User.users.values()):
-            raise ValidationError("An account with this email already exists.")
-        User.users[self.id] = self
-
     @staticmethod
     def is_valid_email(email):
         """Validates the email format using regex."""
