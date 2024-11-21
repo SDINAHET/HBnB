@@ -24,18 +24,20 @@ if TYPE_CHECKING:
     from .place import Place
 
 class Review(BaseEntity):
-    __tablename__ = 'reviews'
+    __tablename__ = 'reviews'  # Define the table name once
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    comment = db.Column(db.String(500), nullable=False)  # Texte de l'avis, limité à 500 caractères
-    rating = db.Column(db.Integer, nullable=False)  # Note de l'avis (1-5)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Date de création
-    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Date de mise à jour
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)  # ID de l'utilisateur
-    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)  # ID du lieu
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Auto-increment primary key
+    comment = db.Column(db.String(500), nullable=False)  # Review comment (max 500 characters)
+    rating = db.Column(db.Integer, nullable=False)  # Review rating (1-5)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Creation timestamp
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Update timestamp
 
-    user = db.relationship('User', back_populates='reviews')  # Relation avec l'utilisateur (User)
-    place = db.relationship('Place', back_populates='reviews')  # Relation avec le lieu (Place)
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)  # User ID (UUID)
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)  # Place ID (UUID)
+
+    # Relationships
+    user = db.relationship('User', back_populates='reviews')  # Relation with User (one-to-many)
+    place = db.relationship('Place', back_populates='reviews')  # Relation with Place (one-to-many)
 
     def __init__(self, comment: str, rating: int, user: User, place: Place):
         """Initialise une instance de Review.

@@ -15,7 +15,7 @@ class Amenity(BaseEntity):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Date de création
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Date de mise à jour
 
-    places = db.relationship('Place', secondary='place_amenities', back_populates='amenities')
+    places = db.relationship('Place', secondary='place_amenities', back_populates='amenities', lazy='subquery')
 
     def __init__(self, name: str, description: str = None):
         super().__init__()

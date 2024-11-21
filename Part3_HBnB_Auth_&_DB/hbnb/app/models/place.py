@@ -44,8 +44,8 @@ class Place(BaseEntity):
 
     # Relationships
     owner = db.relationship('User', back_populates='places')  # Relation with User
-    reviews = db.relationship('Review', back_populates='place')  # Relation with Review
-    amenities = db.relationship('Amenity', secondary='place_amenities', back_populates='places')  # Relation with Amenity
+    reviews = db.relationship('Review', back_populates='place', lazy=True)  # Relation with Review
+    amenities = db.relationship('Amenity', secondary='place_amenities', back_populates='places', lazy='subquery')  # Relation with Amenity
 
     def __init__(self, title: str, description: str, price: float, latitude: float, longitude: float, owner_id: str):
         """

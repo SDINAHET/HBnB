@@ -46,8 +46,8 @@ class User(BaseEntity):
     created_at = db.Column(DateTime, default=datetime.utcnow)
     updated_at = db.Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    places = db.relationship('Place', back_populates='owner')  # Relation avec les lieux (Place)
-    reviews = db.relationship('Review', back_populates='user')  # Relation avec les avis (Review)
+    places = db.relationship('Place', back_populates='owner', lazy=True)  # Relation avec les lieux (Place)
+    reviews = db.relationship('Review', back_populates='user', lazy=True)  # Relation avec les avis (Review)
     
     def __init__(self, first_name: str, last_name: str, email: str, password: str, is_admin: bool = False):
         """
