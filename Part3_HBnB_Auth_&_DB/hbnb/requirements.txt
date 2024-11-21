@@ -5,3 +5,5 @@ requests
 flask-bcrypt
 flask-jwt-extended
 pytest
+werkzeug
+unitest

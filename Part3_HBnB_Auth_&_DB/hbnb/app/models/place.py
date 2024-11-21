@@ -39,7 +39,7 @@ class Place(BaseEntity):
     """
     # repository = InMemoryRepository()  # Add this to manage Place instances
     # def __init__(self, title, description, price, latitude, longitude, owner):
-    def __init__(self, title, description, price, latitude, longitude, owner_id, owner, reviews=None, amenities=None):
+    def __init__(self, title, description, price, latitude, longitude, owner_id, owner, reviews=None, amenities=None, *args, **kwargs):
         """
         Initializes a Place object with provided information and validates it.
 
@@ -54,7 +54,7 @@ class Place(BaseEntity):
         Raises:
             ValueError: If validation of any attribute fails.
         """
-        super().__init__()
+        super().__init__(*args, **kwargs)
         self.title = self.validate_title(title)
         self.description = description
         self.price = self.validate_price(price)
@@ -63,11 +63,11 @@ class Place(BaseEntity):
         self.owner_id = owner_id  # Ensure this is included
         # self.owner = owner
         self.owner = self.validate_owner(owner)
-        # self.reviews: List['Review'] = []  # List to store related reviews
-        # self.amenities: List['Amenity'] = []  # List to store related amenities
-        self.reviews = reviews if reviews is not None else []
-        self.amenities = amenities if amenities is not None else []
-        # self.amenities = amenities or []
+        self.reviews: List['Review'] = []  # List to store related reviews
+        self.amenities: List['Amenity'] = []  # List to store related amenities
+        # # self.reviews = reviews if reviews is not None else []
+        # self.amenities = amenities if amenities is not None else []
+        # # self.amenities = amenities or []
 
     @staticmethod
     def validate_title(title):

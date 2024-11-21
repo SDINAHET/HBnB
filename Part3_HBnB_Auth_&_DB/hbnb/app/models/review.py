@@ -116,6 +116,7 @@ from app.models.user import User
 from app.models.place import Place  # Uncommented to use Place class directly
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from .user import User
     from .place import Place
@@ -130,7 +131,7 @@ class Review(BaseEntity):
         place_id (str) : Identifiant du lieu évalué.
     """
     # repository = InMemoryRepository()  # Add this to manage Place instances
-    def __init__(self, comment: str, rating: int, user: User, place: Place):
+    def __init__(self, text: str, rating: int, user: User, place: Place):
         """Initialise une instance de Review.
 
         Args :
@@ -142,7 +143,7 @@ class Review(BaseEntity):
         Lève une ValueError si les attributs ne sont pas valides.
         """
         super().__init__()
-        self.comment = comment
+        self.text = text
         self.rating = rating
         self.user_id = user.id
         self.place_id = place.id
@@ -150,8 +151,8 @@ class Review(BaseEntity):
         self.register_review(user, place)
 
     def validate(self):
-        if not isinstance(self.comment, str) or not self.comment:
-            raise ValueError('Comment must be a non-empty string.')
+        if not isinstance(self.text, str) or not self.text.strip():
+            raise ValueError('Text must be a non-empty string.')
         if not isinstance(self.rating, int) or self.rating < 1 or self.rating > 5:
             raise ValueError('Rating must be an integer between 1 and 5.')
         if not User.get_by_id(self.user_id):
@@ -179,7 +180,7 @@ class Review(BaseEntity):
         """Return a dictionary representation of the Review instance."""
         return {
             'id': self.id,
-            'comment': self.comment,
+            'text': self.text,
             'rating': self.rating,
             'user': self.get_user().to_dict() if self.get_user() else None,
             'place': self.get_place().to_dict() if self.get_place() else None,

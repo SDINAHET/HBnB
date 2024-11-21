@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+
 from .base_entity import BaseEntity
 from marshmallow import ValidationError
 

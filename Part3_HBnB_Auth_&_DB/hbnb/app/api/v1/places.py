@@ -346,3 +346,39 @@ class PlaceResource(Resource):
 
         except Exception:
             api.abort(500, 'Internal Server Error')
+
+
+
+
+
+
+
+# ---------------------------------------------------------------
+@api.route('/place/<place_id>')
+class ReviewsByPlace(Resource):
+    @jwt_required()
+    def get(self, place_id):
+        """
+        Get all reviews for a specific place by its ID.
+        Accessible to authenticated users only.
+        """
+        current_user = get_jwt_identity()
+
+        try:
+            # Appel au service pour récupérer les avis d'un lieu spécifique
+            reviews = facade.get_reviews_by_place(place_id)
+            if not reviews:
+                raise NotFound(f"No reviews found for place with ID {place_id}")
+
+            reviews_data = [{
+                "review_id": review.id,
+                "text": review.text,
+                "rating": review.rating,
+                "user_id": review.user_id,
+                "place_id": review.place_id,
+            } for review in reviews]
+
+            return {"reviews": reviews_data}, 200
+        except Exception as e:
+            # traceback.print_exc()
+            raise BadRequest(str(e))

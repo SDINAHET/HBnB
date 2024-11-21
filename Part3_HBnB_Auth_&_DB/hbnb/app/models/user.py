@@ -35,7 +35,7 @@ class User(BaseEntity):
 
     users: Dict[str, 'User'] = {} # Class-level storage for users
 
-    def __init__(self, first_name, last_name, email, password, is_admin=False):
+    def __init__(self, first_name, last_name, email, password, is_admin=False, *args, **kwargs):
         """
         Initialise une instance de `User`.
 
@@ -48,7 +48,7 @@ class User(BaseEntity):
         Raises:
             ValidationError: Si le prénom, le nom de famille ou l'email ne respectent pas les règles de validation.
         """
-        super().__init__() #appelle le constructeur de BaseEntity
+        super().__init__(*args, **kwargs) #appelle le constructeur de BaseEntity
         self.first_name = self.validate_first_name(first_name)
         self.last_name = self.validate_last_name(last_name)
         self.email = self.validate_email(email)
@@ -170,3 +170,13 @@ class User(BaseEntity):
     def get_by_id(user_id: str) -> 'User':
         # Assuming repository is a dictionary or database handler
         return User.repository.get(user_id)
+
+    def add_review(self, review: 'Review'):
+        """
+        Adds a review to the place and updates the timestamp.
+
+        Args:
+            review (Review): The review to add.
+        """
+        self.reviews.append(review)
+        self.save()  # Update timestamp when modifying reviews

@@ -12,7 +12,6 @@ Routes:
     GET /api/v1/users/email/<email> : Get a user by their email (Non-admin).
 """
 
-
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import request
@@ -118,7 +117,7 @@ class AdminUserCreate(Resource):
 @api.route('/admin/users/<user_id>')
 class AdminUserModify(Resource):
     @jwt_required()
-    @api.doc(description='Update User (admin)', security='BearerAuth')
+    @api.doc(description='Update User ', security='BearerAuth')
     @api.expect(user_update_model, validate=True)
     @api.response(200, 'User successfully updated')
     @api.response(400, 'Email already in use')
