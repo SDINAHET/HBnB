@@ -266,7 +266,7 @@ class HBnBFacade:
             raise ValueError("Place not found")
 
     def user_has_reviewed_place(self, user_id, place_id):
-        reviews = self.review_repo.get_by_attribute('user_id', user_id)
+        reviews = self.review_repository.get_by_attribute('user_id', user_id)
         if reviews is None:
             return False
         for review in reviews:
