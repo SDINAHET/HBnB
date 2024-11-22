@@ -7,3 +7,4 @@ flask-jwt-extended
 pytest
 sqlalchemy
 flask-sqlalchemy
+mailutils

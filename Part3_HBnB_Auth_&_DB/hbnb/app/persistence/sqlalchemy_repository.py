@@ -122,6 +122,10 @@ class ReviewRepository(SQLAlchemyRepository):
             return True
         return False
 
+    def get_by_attribute(self, attribute, value):
+        """Retrieve reviews by a specific attribute."""
+        return Review.query.filter_by(**{attribute: value}).all()
+
 class AmenityRepository(SQLAlchemyRepository):
     def __init__(self):
         # Appel du constructeur de SQLAlchemyRepository avec le modèle Amenity

@@ -37,21 +37,43 @@ class ReviewList(Resource):
         Create a new review.
         Accessible to authenticated users only.
         """
-        current_user = get_jwt_identity()
+        current_user = get_jwt_identity()  # Fetch user details from the JWT
         review_data = request.json
 
+        # Override user_id in payload with the one from the JWT
+        review_data['user_id'] = current_user.get('id')  # Ensures consistency
+
+        current_app.logger.info(f"JWT Identity: {current_user}")
+        current_app.logger.info(f"Review data received: {review_data}")
+
         try:
-            review_data['user_id'] = current_user.get('id')
             new_review = facade.create_review(review_data)
             return {
                 "message": "Review created successfully",
-                "review_id": new_review.id,
+                "review_id": str(new_review.id),
                 "content": new_review.comment,
                 "rating": new_review.rating,
-                "place_id": new_review.place_id,
+                "place_id": str(new_review.place_id),
             }, 201
         except Exception as e:
+            current_app.logger.error(f"Error creating review: {str(e)}")
             raise BadRequest(str(e))
+
+        # current_user = get_jwt_identity()
+        # review_data = request.json
+
+        # try:
+        #     review_data['user_id'] = current_user.get('id')
+        #     new_review = facade.create_review(review_data)
+        #     return {
+        #         "message": "Review created successfully",
+        #         "review_id": new_review.id,
+        #         "content": new_review.comment,
+        #         "rating": new_review.rating,
+        #         "place_id": new_review.place_id,
+        #     }, 201
+        # except Exception as e:
+        #     raise BadRequest(str(e))
 
 # --------------------- Get All Reviews ---------------------
 
@@ -64,7 +86,7 @@ class ReviewListAll(Resource):
         Accessible to authenticated users only.
         """
         current_user = get_jwt_identity()
-        
+
         try:
             reviews = facade.get_all_reviews()
             reviews_data = [{
@@ -74,7 +96,7 @@ class ReviewListAll(Resource):
                 "user_id": review.user_id,
                 "place_id": review.place_id,
             } for review in reviews]
-            
+
             return {"reviews": reviews_data}, 200
         except Exception as e:
             raise BadRequest(str(e))
@@ -90,12 +112,12 @@ class ReviewByID(Resource):
         Accessible to authenticated users only.
         """
         current_user = get_jwt_identity()
-        
+
         try:
             review = facade.get_review(review_id)
             if not review:
                 raise NotFound("Review not found")
-            
+
             return {
                 "review_id": review.id,
                 "content": review.content,

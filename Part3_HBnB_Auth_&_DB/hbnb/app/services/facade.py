@@ -45,6 +45,7 @@ class HBnBFacade:
         reviews, and amenities."""
         self.user_repo = UserRepository() # Switched to SQLAlchemyRepository
         self.place_repository = PlaceRepository()
+        # self.review_repo = ReviewRepository()  # Add this line
         self.review_repository = ReviewRepository()
         self.amenity_repository = AmenityRepository()
 
@@ -64,7 +65,7 @@ class HBnBFacade:
             if 'password' in user_data:
                 user_data['password'] = bcrypt.generate_password_hash(user_data['password']).decode('utf-8')
                 current_app.logger.info(f"Hashed password for {user_data['email']}: {user_data['password']}")  # Log hashed password
-            
+
             user = User(**user_data)
             db.session.add(user)
             db.session.commit()
@@ -92,7 +93,7 @@ class HBnBFacade:
         Retrieve a user by their email..
         """
         return User.query.filter_by(email=email).first()
-    
+
     def get_all_users(self):
         """
         Retrieve all users from the repository.
@@ -126,11 +127,11 @@ class HBnBFacade:
         """
         if not data.get('name'):
             raise BadRequest("Amenity name is required.")
-        
+
         existing_amenity = self.amenity_repository.get_by_name(data['name'])
         if existing_amenity:
             raise BadRequest(f"Amenity with name '{data['name']}' already exists.")
-        
+
         new_amenity = Amenity(name=data['name'], description=data.get('description', ''))
         self.amenity_repository.add(new_amenity)
         return new_amenity
@@ -173,7 +174,7 @@ class HBnBFacade:
         """
         if not title or not description or not price or not latitude or not longitude or not owner_id:
             raise ValueError("Missing required data to create place")
-    
+
         # Fetch the owner from the database
         owner = User.query.get(owner_id)
         if not owner:
@@ -275,31 +276,159 @@ class HBnBFacade:
         return False
 
     def create_review(self, review_data):
-        """Create a new review."""
+        # """Create a new review."""
+        # try:
+        #     user_id = UUID(review_data['user_id'])
+        #     place_id = UUID(review_data['place_id'])
+        # except ValueError:
+        #     raise ValueError("Invalid UUID format for user_id or place_id")
+
+        # # Retrieve the User and Place instances using the UUIDs
+        # user = User.query.filter_by(id=user_id).first()
+        # place = Place.query.filter_by(id=place_id).first()
+
+        # if not user or not place:
+        #     raise ValueError("Invalid user_id or place_id")
+
+        # # Vérifiez si l'utilisateur a déjà évalué le lieu
+        # if self.user_has_reviewed_place(user_id, place_id): # add SD
+        #     raise ValueError("User has already reviewed this place.") # add SD
+
+        # # Create the Review instance with the User and Place instances
+        # review = Review(
+        #     comment=review_data['comment'],
+        #     rating=review_data['rating'],
+        #     user=user,  # Pass the User instance
+        #     place=place  # Pass the Place instance
+        # )
+
+        # # Add the review to the repository
+        # self.review_repository.add(review)
+        # return review
+
+        # try:
+        #     # Validation des champs requis
+        #     if 'user_id' not in review_data or 'place_id' not in review_data:
+        #         raise ValueError("Missing required fields: 'user_id' or 'place_id'")
+        #     if 'comment' not in review_data or not review_data['comment']:
+        #         raise ValueError("Comment is required.")
+        #     if 'rating' not in review_data or not (1 <= review_data['rating'] <= 5):
+        #         raise ValueError("Rating must be between 1 and 5.")
+
+        #     # Conversion des UUID
+        #     try:
+        #         user_id = UUID(review_data['user_id'])
+        #         place_id = UUID(review_data['place_id'])
+        #     except ValueError:
+        #         raise ValueError("Invalid UUID format for 'user_id' or 'place_id'.")
+
+        #     # Vérification de l'existence de l'utilisateur et du lieu
+        #     # user = User.query.filter_by(id=user_id).first()
+        #     # place = Place.query.filter_by(id=place_id).first()
+        #      # Fetch User and Place instances using string IDs
+        #     user = User.query.filter_by(id=review_data['user_id']).first()
+        #     place = Place.query.filter_by(id=review_data['place_id']).first()
+        #     # if not user:
+        #     #     raise ValueError(f"User with ID {user_id} does not exist.")
+        #     # if not place:
+        #     #     raise ValueError(f"Place with ID {place_id} does not exist.")
+        #     if not user:
+        #         raise BadRequest(f"User with ID {review_data['user_id']} does not exist.")
+        #     if not place:
+        #         raise BadRequest(f"Place with ID {review_data['place_id']} does not exist.")
+
+
+        #     # Vérification si l'utilisateur a déjà évalué ce lieu (si nécessaire)
+        #     if self.user_has_reviewed_place(user_id, place_id):
+        #         raise ValueError("User has already reviewed this place.")
+
+        #     # Création de la review
+        #     review = Review(
+        #         comment=review_data['comment'],
+        #         rating=review_data['rating'],
+        #         user=user,
+        #         place=place
+        #     )
+
+        #     # Ajout à la base de données
+        #     self.review_repository.add(review)
+        #     return review
+
+        # except ValueError as e:
+        #     current_app.logger.error(f"Error creating review: {e}")
+        #     raise BadRequest(str(e))
+        # except IntegrityError as e:
+        #     db.session.rollback()
+        #     current_app.logger.error(f"Database error: {e}")
+        #     raise BadRequest("Database constraint violation. Check review data.")
+        # except Exception as e:
+        #     current_app.logger.error(f"Unexpected error: {e}")
+        #     raise BadRequest("An unexpected error occurred while creating the review.")
+
         try:
-            user_id = UUID(review_data['user_id'])
-            place_id = UUID(review_data['place_id'])
-        except ValueError:
-            raise ValueError("Invalid UUID format for user_id or place_id")
+            # Logging received data
+            current_app.logger.info(f"Creating review with data: {review_data}")
 
-        # Retrieve the User and Place instances using the UUIDs
-        user = User.query.filter_by(id=user_id).first()
-        place = Place.query.filter_by(id=place_id).first()
-        
-        if not user or not place:
-            raise ValueError("Invalid user_id or place_id")
+            # Validate required fields
+            if 'user_id' not in review_data or 'place_id' not in review_data:
+                current_app.logger.error("Missing user_id or place_id in review data.")
+                raise BadRequest("Missing required fields: 'user_id' or 'place_id'.")
+            if 'comment' not in review_data or not review_data['comment']:
+                raise BadRequest("Comment is required.")
+            if 'rating' not in review_data or not (1 <= review_data['rating'] <= 5):
+                raise BadRequest("Rating must be between 1 and 5.")
 
-        # Create the Review instance with the User and Place instances
-        review = Review(
-            comment=review_data['comment'],
-            rating=review_data['rating'],
-            user=user,  # Pass the User instance
-            place=place  # Pass the Place instance
-        )
+            # # Convert IDs to UUID and validate
+            # try:
+            #     user_id = UUID(review_data['user_id'], version=4)
+            #     place_id = UUID(review_data['place_id'], version=4)
+            # except ValueError as e:
+            #     current_app.logger.error(f"Invalid UUID format: {e}")
+            #     raise BadRequest("Invalid UUID format for 'user_id' or 'place_id'.")
 
-        # Add the review to the repository
-        self.review_repository.add(review)
-        return review
+            # Fetch User and Place instances
+            user = User.query.filter_by(id=user_id).first()
+            place = Place.query.filter_by(id=place_id).first()
+            if not user:
+                current_app.logger.error(f"User with ID {user_id} does not exist.")
+                raise NotFound(f"User with ID {user_id} does not exist.")
+            if not place:
+                current_app.logger.error(f"Place with ID {place_id} does not exist.")
+                raise NotFound(f"Place with ID {place_id} does not exist.")
+
+                    # Fetch User and Place instances
+            user = User.query.filter_by(id=user_id).first()
+            if not user:
+                current_app.logger.error(f"User with ID {user_id} does not exist in the database.")
+                raise NotFound(f"User with ID {user_id} does not exist.")
+
+            place = Place.query.filter_by(id=place_id).first()
+            if not place:
+                current_app.logger.error(f"Place with ID {place_id} does not exist in the database.")
+                raise NotFound(f"Place with ID {place_id} does not exist.")
+
+            # Check if user has already reviewed the place
+            if self.user_has_reviewed_place(user_id, place_id):
+                current_app.logger.error("User has already reviewed this place.")
+                raise BadRequest("User has already reviewed this place.")
+
+            # Create Review
+            review = Review(
+                comment=review_data['comment'],
+                rating=review_data['rating'],
+                user=user,
+                place=place
+            )
+
+            # Add to the database
+            self.review_repository.add(review)
+            current_app.logger.info(f"Review created successfully: {review.id}")
+            return review
+
+        except Exception as e:
+            current_app.logger.error(f"Unexpected error in create_review: {e}")
+            raise BadRequest("An unexpected error occurred while creating the review.")
+
 
     def get_review(self, review_id):
         """Retrieve a review by its ID."""
