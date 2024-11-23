@@ -7,19 +7,111 @@
 ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═══╝╚═════╝     ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═══╝╚═════╝     ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═══╝╚═════╝     ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═══╝╚═════╝
  | HBnB Part3 Logo  # C24              | HBnB Part3 Logo  # C24              | HBnB Part3 Logo  # C24              | HBnB Part3 Logo  # C24
 ```
+root@UID7E:/mnt/c/Users/steph/Documents/2ème trimestre holberton/HBnB/HBnB/Part3
+_HBnB_Auth_&_DB/hbnb/instance# sqlite3 development.db
+
+-- Table: users
+CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,           -- Identifiant unique
+    first_name TEXT NOT NULL,      -- Prénom
+    last_name TEXT NOT NULL,       -- Nom
+    email TEXT UNIQUE NOT NULL,    -- Email unique
+    password TEXT NOT NULL,        -- Mot de passe
+    is_admin BOOLEAN DEFAULT 0,    -- Statut admin (par défaut : non)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- Date de création
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP  -- Date de mise à jour
+);
+
+-- Table: amenities
+CREATE TABLE IF NOT EXISTS amenities (
+    id TEXT PRIMARY KEY,           -- Identifiant unique
+    name TEXT NOT NULL UNIQUE,     -- Nom unique de l'amenity
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- Date de création
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP  -- Date de mise à jour
+);
+
+-- Table: places
+CREATE TABLE IF NOT EXISTS places (
+    id TEXT PRIMARY KEY,           -- Identifiant unique
+    title TEXT NOT NULL,           -- Titre du lieu
+    description TEXT,              -- Description
+    price REAL NOT NULL,           -- Prix par nuit
+    latitude REAL NOT NULL,        -- Latitude
+    longitude REAL NOT NULL,       -- Longitude
+    owner_id TEXT NOT NULL,        -- Référence à l'utilisateur (propriétaire)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- Date de création
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- Date de mise à jour
+    FOREIGN KEY (owner_id) REFERENCES users (id)   -- Relation avec la table users
+);
+
+-- Table: reviews
+CREATE TABLE IF NOT EXISTS reviews (
+    id TEXT PRIMARY KEY,           -- Identifiant unique
+    text TEXT NOT NULL,            -- Texte de l'avis
+    rating INTEGER NOT NULL,       -- Note (1-5)
+    user_id TEXT NOT NULL,         -- Référence à l'utilisateur (auteur de l'avis)
+    place_id TEXT NOT NULL,        -- Référence au lieu (avis sur ce lieu)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- Date de création
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- Date de mise à jour
+    FOREIGN KEY (user_id) REFERENCES users (id),   -- Relation avec la table users
+    FOREIGN KEY (place_id) REFERENCES places (id), -- Relation avec la table places
+    UNIQUE (user_id, place_id)     -- Empêche les avis en double pour un même lieu
+);
+
+-- Table intermédiaire: place_amenities (relation N:N entre places et amenities)
+CREATE TABLE IF NOT EXISTS place_amenities (
+    place_id TEXT NOT NULL,        -- Référence au lieu
+    amenity_id TEXT NOT NULL,      -- Référence à l'amenity
+    FOREIGN KEY (place_id) REFERENCES places (id), -- Relation avec la table places
+    FOREIGN KEY (amenity_id) REFERENCES amenities (id), -- Relation avec la table amenities
+    PRIMARY KEY (place_id, amenity_id) -- Clé primaire composite pour éviter les doublons
+);
 
 
 
 
 
+-- Ajout d'un utilisateur
+INSERT INTO users (id, first_name, last_name, email, password) VALUES
+('user1', 'John', 'Doe', 'john.doe@example.com', 'securepassword');
+
+-- Ajout d'un amenity
+INSERT INTO amenities (id, name) VALUES
+('amenity1', 'Wi-Fi');
+
+-- Ajout d'un lieu
+INSERT INTO places (id, title, price, latitude, longitude, owner_id) VALUES
+('place1', 'Cozy Apartment', 75.0, 48.8566, 2.3522, 'user1');
+
+-- Ajout d'un avis
+INSERT INTO reviews (id, text, rating, user_id, place_id) VALUES
+('review1', 'Great stay!', 5, 'user1', 'place1');
+
+-- Ajout d'une relation entre place et amenity
+INSERT INTO place_amenities (place_id, amenity_id) VALUES
+('place1', 'amenity1');
 
 
 
+SELECT * FROM users;
+SELECT * FROM amenities;
+SELECT * FROM places;
+SELECT * FROM reviews;
+SELECT * FROM place_amenities;
 
-
-
-
-
+Flask==2.1.3
+flask-restx==0.5.1
+marshmallow==3.18.0
+requests==2.31.0
+flask-bcrypt==1.0.1
+flask-jwt-extended==4.4.4
+pytest==7.3.1
+sqlalchemy==1.4.47
+flask-sqlalchemy==2.5.1
+Werkzeug==2.1.2
+pytest
+pytest-flask
+pytest-cov
 
 
 
