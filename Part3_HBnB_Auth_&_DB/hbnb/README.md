@@ -157,7 +157,50 @@ curl http://127.0.0.1:5000/api/v1/amenities
 
 #### Database Schema
 <!-- [Insert Mermaid.js diagram here] -->
-Part3_HBnB_Auth_&_DB/hbnb/app/ER_diagrams.png
+<!-- Part3_HBnB_Auth_&_DB/hbnb/app/ER_diagrams.png -->
+```mermaid
+erDiagram
+    USER {
+        string id PK
+        string first_name
+        string last_name
+        string email
+        string password
+        boolean is_admin
+    }
+    PLACE {
+        string id PK
+        string title
+        string description
+        decimal price
+        float latitude
+        float longitude
+        string owner_id FK
+    }
+    REVIEW {
+        string id PK
+        string text
+        int rating
+        string user_id FK
+        string place_id FK
+    }
+    AMENITY {
+        string id PK
+        string name
+    }
+    PLACE_AMENITY {
+        string place_id PK, FK
+        string amenity_id PK, FK
+    }
+
+    %% Relationships
+    USER ||--o{ PLACE : "owns"
+    PLACE ||--o{ REVIEW : "has"
+    USER ||--o{ REVIEW : "writes"
+    %% USER ||--|| REVIEW : "writes"
+    PLACE ||--o{ PLACE_AMENITY : "has"
+    AMENITY ||--o{ PLACE_AMENITY : "belongs to"
+```
 
 #### Technologies Used
 Python: Programming language
