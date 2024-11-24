@@ -1,0 +1,6 @@
+pytest tests/
+pytest tests/test_users.py
+pytest tests/test_reviews.py
+pytest tests/test_places.py
+pytest tests/test_auth.py
+pytest tests/test_conftest.py
