@@ -13,6 +13,9 @@
 # HBnB Application - Part 3: Enhanced Backend with Authentication and Database Integration
 
 
+
+
+
 # HBnB Application - Part 2: Implementation of Business Logic and API Endpoints
 
 ## Overview
@@ -1111,3 +1114,79 @@ OK
 - Stéphane Dinahet
 - Henri Milles
 
+
+
+Étape 1 : Préparer l’environnement
+Assurez-vous que SQLite est installé : Vérifiez avec :
+
+bash
+Copier le code
+sqlite3 --version
+Si ce n’est pas le cas, installez SQLite (sous Ubuntu, par exemple) :
+
+bash
+Copier le code
+sudo apt install sqlite3
+Créez ou ouvrez le fichier development.db :
+
+bash
+Copier le code
+sqlite3 instance/development.db
+Activez les clés étrangères (important pour gérer les relations) :
+
+sql
+Copier le code
+PRAGMA foreign_keys = ON;
+Étape 2 : Coller et exécuter les commandes SQL
+Une fois dans l'interface SQLite, collez vos commandes SQL pour créer les tables.
+
+sql
+Copier le code
+-- Create User table
+CREATE TABLE users (
+    id CHAR(36) PRIMARY KEY,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE
+);
+
+-- Create Place table
+CREATE TABLE places (
+    id CHAR(36) PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    latitude FLOAT NOT NULL,
+    longitude FLOAT NOT NULL,
+    owner_id CHAR(36),
+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Create Review table
+CREATE TABLE reviews (
+    id CHAR(36) PRIMARY KEY,
+    text TEXT NOT NULL,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    user_id CHAR(36),
+    place_id CHAR(36),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE,
+    UNIQUE (user_id, place_id)
+);
+
+-- Create Amenity table
+CREATE TABLE amenities (
+    id CHAR(36) PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- Create Place_Amenity association table
+CREATE TABLE place_amenity (
+    place_id CHAR(36),
+    amenity_id CHAR(36),
+    PRIMARY KEY (place_id, amenity_id),
+    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE,
+    FOREIGN KEY (amenity_id) REFERENCES amenities(id) ON DELETE CASCADE
+);

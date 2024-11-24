@@ -11,3 +11,6 @@ Werkzeug==2.1.2
 pytest==7.3.1
 pytest-flask
 pytest-cov
+# Flask==2.2.5
+# Werkzeug==2.2.3
+# flask-restx==0.5.2
