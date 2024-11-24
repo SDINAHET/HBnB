@@ -118,11 +118,11 @@ UUID4_amenity: a12ef460-8e90-4e7a-8f43-1918a006078d
 name: WiFi
 
 Amenity2:
-UUID4_amenity:acbc951d-ef60-4486-84b9-87afc47d1eb2
+UUID4_amenity: acbc951d-ef60-4486-84b9-87afc47d1eb2
 name: Swimming Pool
 
 Amenity3:
-UUID4_amenity:6fac204d-90b6-40cc-a87a-dbbc0814745e
+UUID4_amenity: 6fac204d-90b6-40cc-a87a-dbbc0814745e
 name: Air Conditioning
 
 ### API Endpoints
