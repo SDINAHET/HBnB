@@ -1,4 +1,5 @@
-# Entity-Relationship Diagram for HBnB
+# Task 10. Generate Database Diagrams
+## Entity-Relationship Diagram for HBnB
 
 ```mermaid
 erDiagram
@@ -38,7 +39,8 @@ erDiagram
     %% Relationships
     USER ||--o{ PLACE : "owns"
     PLACE ||--o{ REVIEW : "has"
-    USER ||--o{ REVIEW : "writes"
+    %% USER ||--o{ REVIEW : "writes"
+    USER ||--|| REVIEW : "writes"
     PLACE ||--o{ PLACE_AMENITY : "has"
     AMENITY ||--o{ PLACE_AMENITY : "belongs to"
 ```
@@ -46,6 +48,7 @@ erDiagram
 
 https://mermaid.live/edit/erDiagram
 
+````plaintext
 erDiagram
     USER {
         string id PK
@@ -83,6 +86,8 @@ erDiagram
     %% Relationships
     USER ||--o{ PLACE : "owns"
     PLACE ||--o{ REVIEW : "has"
-    USER ||--o{ REVIEW : "writes"
+    %% USER ||--o{ REVIEW : "writes"
+    USER ||--|| REVIEW : "writes"
     PLACE ||--o{ PLACE_AMENITY : "has"
     AMENITY ||--o{ PLACE_AMENITY : "belongs to"
+```
