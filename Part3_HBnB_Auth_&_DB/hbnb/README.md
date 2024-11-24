@@ -9,7 +9,9 @@
 ```
 
 
-# HBnB Application - Part 3: Implementation of Business Logic and API Endpoints
+# HBnB Application - Part 3: Enhanced Backend with Authentication and Database Integration
+
+## HBnB Application - Part 2: Implementation of Business Logic and API Endpoints
 
 [![HBNB Tests](https://github.com/<SDINAHET>/<HBnB>/actions/workflows/test.yml/badge.svg)](https://github.com/<user>/<repo>/actions/workflows/test.yml)
 ## Overview
