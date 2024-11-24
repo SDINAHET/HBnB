@@ -85,6 +85,14 @@ venv\Scripts\activate  # For Windows
 pip install -r requirements.txt
 ```
 
+#### run hbnb:
+
+```Bash
+cd hbnb
+./run.py
+```
+
+
 #### Create the database:
 
 ```Bash
