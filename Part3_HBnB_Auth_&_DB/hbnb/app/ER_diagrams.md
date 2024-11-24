@@ -39,8 +39,8 @@ erDiagram
     %% Relationships
     USER ||--o{ PLACE : "owns"
     PLACE ||--o{ REVIEW : "has"
-    %% USER ||--o{ REVIEW : "writes"
-    USER ||--|| REVIEW : "writes"
+    USER ||--o{ REVIEW : "writes"
+    %% USER ||--|| REVIEW : "writes"
     PLACE ||--o{ PLACE_AMENITY : "has"
     AMENITY ||--o{ PLACE_AMENITY : "belongs to"
 ```
@@ -86,8 +86,8 @@ erDiagram
     %% Relationships
     USER ||--o{ PLACE : "owns"
     PLACE ||--o{ REVIEW : "has"
-    %% USER ||--o{ REVIEW : "writes"
-    USER ||--|| REVIEW : "writes"
+    USER ||--o{ REVIEW : "writes"
+    %% USER ||--|| REVIEW : "writes"
     PLACE ||--o{ PLACE_AMENITY : "has"
     AMENITY ||--o{ PLACE_AMENITY : "belongs to"
 ```
