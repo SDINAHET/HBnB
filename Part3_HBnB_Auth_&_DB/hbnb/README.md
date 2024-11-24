@@ -12,8 +12,45 @@
 
 # HBnB Application - Part 3: Enhanced Backend with Authentication and Database Integration
 
-
-
+Arborescence du projet HBnB
+```plaintext
+├── README.md                         # Documentation principale du projet
+├── app/                              # Dossier de l'application principale
+│   ├── __init__.py                   # Initialise l'application Flask
+│   ├── models/                       # Contient les modèles SQLAlchemy
+│   │   ├── __init__.py               # Initialise les modèles
+│   │   ├── user.py                   # Modèle pour les utilisateurs
+│   │   ├── place.py                  # Modèle pour les lieux
+│   │   ├── review.py                 # Modèle pour les avis
+│   │   ├── amenity.py                # Modèle pour les commodités
+│   │   ├── place_amenity.py          # Modèle pour l'association lieu-commodité
+│   ├── api/                          # Contient les routes API
+│   │   ├── __init__.py               # Initialise les routes API
+│   │   ├── v1/                       # Version 1 de l'API
+│   │       ├── __init__.py           # Initialise l'API v1
+│   │       ├── users.py              # Routes pour les utilisateurs
+│   │       ├── places.py             # Routes pour les lieux
+│   │       ├── reviews.py            # Routes pour les avis
+│   │       ├── amenities.py          # Routes pour les commodités
+│   ├── config.py                     # Configuration de Flask (base de données, secrets, etc.)
+│   ├── development.db                # Fichier SQLite contenant la base de données
+│   ├── templates/                    # Contient les templates HTML (si nécessaire)
+│   ├── static/                       # Contient les fichiers statiques (CSS, JS, images)
+├── requirements.txt                  # Liste des dépendances Python
+├── setup_db.py                       # Script pour initialiser la base de données et insérer les données initiales
+├── instance/                         # Dossier contenant les fichiers spécifiques à l'environnement
+│   ├── development.db                # Base de données pour le développement
+├── tests/                            # Dossier contenant les tests
+│   ├── __init__.py                   # Initialise les tests
+│   ├── test_users.py                 # Tests pour les utilisateurs
+│   ├── test_places.py                # Tests pour les lieux
+│   ├── test_reviews.py               # Tests pour les avis
+│   ├── test_amenities.py             # Tests pour les commodités
+├── run.py                            # Point d'entrée pour lancer l'application Flask
+└── .github/
+    ├── workflows/                    # Contient les fichiers GitHub Actions pour CI/CD
+    │   ├── test.yml                  # Workflow pour exécuter les tests automatiques
+```
 
 
 # HBnB Application - Part 2: Implementation of Business Logic and API Endpoints
