@@ -10,9 +10,14 @@ VALUES (
     TRUE
 );
 
-INSERT INTO amenities (id, name) VALUES ('amenity-uuid-1', 'WiFi');
-INSERT INTO amenities (id, name) VALUES ('amenity-uuid-2', 'Swimming Pool');
-INSERT INTO amenities (id, name) VALUES ('amenity-uuid-3', 'Air Conditioning');
+INSERT INTO amenities (id, name) VALUES ('a12ef460-8e90-4e7a-8f43-1918a006078d', 'WiFi');
+INSERT INTO amenities (id, name) VALUES ('acbc951d-ef60-4486-84b9-87afc47d1eb2', 'Swimming Pool');
+INSERT INTO amenities (id, name) VALUES ('6fac204d-90b6-40cc-a87a-dbbc0814745e', 'Air Conditioning');
+
+
+-- INSERT INTO amenities (id, name) VALUES ('amenity-uuid-1', 'WiFi');
+-- INSERT INTO amenities (id, name) VALUES ('amenity-uuid-2', 'Swimming Pool');
+-- INSERT INTO amenities (id, name) VALUES ('amenity-uuid-3', 'Air Conditioning');
 
 -- Insert initial amenities
 -- INSERT INTO amenities (id, name) VALUES (UUID(), 'WiFi');
