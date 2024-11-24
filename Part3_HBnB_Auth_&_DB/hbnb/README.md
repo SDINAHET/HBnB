@@ -11,6 +11,7 @@
 
 # HBnB Application - Part 3: Implementation of Business Logic and API Endpoints
 
+[![HBNB Tests](https://github.com/<SDINAHET>/<HBnB>/actions/workflows/test.yml/badge.svg)](https://github.com/<user>/<repo>/actions/workflows/test.yml)
 ## Overview
 
 In Part 2 of the HBnB Project, the focus shifts to the **Implementation Phase**. This phase involves building the **Presentation** and **Business Logic** layers of the application using Python and Flask. The core functionality is brought to life by defining the necessary classes, methods, and API endpoints that form the foundation of the HBnB application.
