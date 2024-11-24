@@ -105,6 +105,26 @@ Update the SQLALCHEMY_DATABASE_URI setting in your configuration file (e.g., con
 flask run
 ```
 
+### ADMINISTRATOR:
+Admin
+HBnB
+email:admin@hbnb.io
+password: admin1234
+hashed password: 2b$12$WZqhkmHErIMTl7YKJ/RdfXEbrNKg9XyFo7Csh5RgN5tQ8qGHyjfD2
+UUID4_user:36c9050e-ddd3-4c3b-9731-9f487208bbc1  (fix always)
+
+Amenity1:
+UUID4_amenity: a12ef460-8e90-4e7a-8f43-1918a006078d
+name: WiFi
+
+Amenity2:
+UUID4_amenity:acbc951d-ef60-4486-84b9-87afc47d1eb2
+name: Swimming Pool
+
+Amenity3:
+UUID4_amenity:6fac204d-90b6-40cc-a87a-dbbc0814745e
+name: Air Conditioning
+
 ### API Endpoints
 User Endpoints
 Create a user:
