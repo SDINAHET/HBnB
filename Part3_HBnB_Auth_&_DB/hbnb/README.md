@@ -52,6 +52,131 @@ Arborescence du projet HBnB
     │   ├── test.yml                  # Workflow pour exécuter les tests automatiques
 ```
 
+## HBnB Backend API
+
+### Overview
+This repository contains the backend API for the HBnB application. The API is built using Flask and SQLAlchemy and provides endpoints for managing users, places, reviews, and amenities.
+
+### Installation
+#### Prerequisites:
+
+Python (version 3.10)
+pip (Python package installer)
+A code editor (Visual Studio Code)
+
+#### Clone the repository:
+
+```Bash
+git clone https://github.com/SDINAHET/HBnB.git
+cd HBnB/Part3_HBnB_AUTH_&_DB/hbnb
+```
+
+#### Create a virtual environment:
+
+```Bash
+python -m venv venv
+source venv/bin/activate  # For Linux/macOS
+venv\Scripts\activate  # For Windows
+```
+
+#### Install dependencies:
+
+```Bash
+pip install -r requirements.txt
+```
+
+#### Create the database:
+
+```Bash
+flask shell
+from app import db
+db.create_all()
+```
+
+#### Configuration
+Environment variables:
+Set the FLASK_APP environment variable to app:app.
+Set the FLASK_ENV environment variable to development or production to enable debug mode.
+Database configuration:
+Update the SQLALCHEMY_DATABASE_URI setting in your configuration file (e.g., config.py) to match your database connection details.
+
+#### Running the application
+```Bash
+flask run
+```
+
+### API Endpoints
+User Endpoints
+Create a user:
+```Bash
+curl -X POST http://127.0.0.1:5000/api/v1/users/ -H "Content-Type: application/json" -d '{"first_name": "John", "last_name": "Doe", "email": "johndoe@example.com", "password": "password123"}'
+```
+
+Get a user:
+```Bash
+curl http://127.0.0.1:5000/api/v1/users/<user_id>
+```
+
+Update a user:
+```Bash
+curl -X PUT http://127.0.0.1:5000/api/v1/users/<user_id> -H "Content-Type: application/json" -d '{"first_name": "Jane"}'
+```
+
+Place Endpoints
+Create a place:
+```Bash
+# ... (similar to creating a user)
+```
+
+Get a place:
+```Bash
+# ... (similar to getting a user)
+```
+
+Get places with amenities:
+```Bash
+curl http://127.0.0.1:5000/api/v1/places?amenity=wifi&amenity=pool
+```
+
+Review Endpoints
+Create a review:
+```Bash
+# ... (similar to creating a user)
+```
+
+Get reviews for a place:
+```Bash
+curl http://127.0.0.1:5000/api/v1/places/<place_id>/reviews
+```
+
+Amenity Endpoints
+Get all amenities:
+```Bash
+curl http://127.0.0.1:5000/api/v1/amenities
+```
+
+#### Database Schema
+<!-- [Insert Mermaid.js diagram here] -->
+Part3_HBnB_Auth_&_DB/hbnb/app/ER_diagrams.png
+
+#### Technologies Used
+Python: Programming language
+Flask: Web framework
+SQLAlchemy: ORM for database interactions
+SQLite: Database (can be replaced with PostgreSQL, MySQL, etc.)
+Mermaid.js: For generating database diagrams
+
+#### Contributing (Dinahet Stéphane / Beaumois Louis / Henri Mille)
+Fork the repository
+Create a new branch
+Make your changes
+Commit and push
+Submit a pull request
+
+#### License
+[MIT]
+
+________________________________________________________________________________
 
 # HBnB Application - Part 2: Implementation of Business Logic and API Endpoints
 
