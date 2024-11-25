@@ -40,13 +40,10 @@ Error Handling:
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity # add SD
 from app.services import facade
-from app.api.v1.users import api as users_ns  # Import the users namespace
-from app.api.v1.users import user_model  # Import user_model directly
-
+from flask import request, jsonify
 
 api = Namespace('places', description='Place operations')
 
-# Define the models for related entities
 amenity_model = api.model('PlaceAmenity', {
     'id': fields.String(description='Amenity ID'),
     'name': fields.String(description='Name of the amenity')
@@ -59,7 +56,13 @@ user_model = api.model('PlaceUser', {
     'email': fields.String(description='Email of the owner')
 })
 
-# Define the place model for input validation and documentation
+review_model = api.model('PlaceReview', {
+    'id': fields.String(description='Review ID'),
+    'text': fields.String(description='Text of the review'),
+    'rating': fields.Integer(description='Rating of the place (1-5)'),
+    'user_id': fields.String(description='ID of the user')
+})
+
 place_model = api.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
@@ -77,62 +80,44 @@ class PlaceList(Resource):
     Resource for handling requests to list all places or to create a new place.
     """
 
-    @api.doc(description='Register a new place')
-    # @api.doc(params={'place_data': 'Data of the place to register'})
-    @jwt_required() # add SD
+    @api.doc(description='Register a new place') #, security='BearerAuth')
+    @jwt_required()
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    @api.response(401, 'Missing Authorization Header')
     def post(self):
         """
         Register a new place.
-        ----------------------
 
-        Parameters:
-        -----------
-        - `self`: Reference to the instance of the resource class.
-
-        Expects:
-        --------
-        - JSON payload matching the place_model, with fields such as:
-            - `title` (str): Title of the place.
-            - `description` (str): Description of the place.
-            - `price` (float): Price per night.
-            - `latitude` (float): Latitude of the place.
-            - `longitude` (float): Longitude of the place.
-            - `owner_id` (str): ID of the owner.
-            - `amenities` (list): List of amenities ID's.
-
-        Returns:
-        --------
-        - (dict): JSON response with the details of the created place, including:
-            - `id` (str): Unique identifier of the created place.
-            - `title` (str): Title of the created place.
-            - `description` (str): Description of the created place.
-            - `price` (float): Price per night of the created place.
-            - `latitude` (float): Latitude of the created place.
-            - `longitude` (float): Longitude of the created place.
-            - `owner_id` (str): ID of the owner of the created place.
-        - Status code 201 if successful.
-        - Status code 400 if data is invalid.
-
-        Raises:
-        -------
-        - `ValueError`: If input data is invalid or required fields are missing.
+        Expects a JSON payload matching the place_model, with fields such as:
+        - `title` (str): Title of the place.
+        - `description` (str): Description of the place.
+        - `price` (float): Price per night.
+        - `latitude` (float): Latitude of the place.
+        - `longitude` (float): Longitude of the place.
+        - `owner_id` (str): ID of the owner.
+        - `amenities` (list): List of amenities IDs.
         """
-        current_user = get_jwt_identity() # add SD
+        current_user = get_jwt_identity()
         data = api.payload
+        data['owner_id'] = current_user['id'] # add SD
 
-       # Vérifiez les données d'entrée
         required_fields = ['title', 'description', 'price', 'latitude', 'longitude', 'owner_id']
         for field in required_fields:
             if field not in data:
                 api.abort(400, f'Missing required field: {field}')
 
         try:
-            # new_place = facade.create_place(data) # old
-            # new_place = facade.create_place(place_data) #ne pas utiloiser
-            new_place = facade.create_place(owner_id=current_user, **data) # add SD
+            new_place = facade.create_place(
+                title=data['title'],
+                description=data['description'],
+                price=data['price'],
+                latitude=data['latitude'],
+                longitude=data['longitude'],
+                owner_id=data['owner_id'],
+                amenities=data['amenities']
+            )
             return {
                 'id': new_place.id,
                 'title': new_place.title,
@@ -140,38 +125,21 @@ class PlaceList(Resource):
                 'price': new_place.price,
                 'latitude': new_place.latitude,
                 'longitude': new_place.longitude,
-                'owner_id': new_place.owner_id
+                'owner_id': new_place.owner_id,
+                'amenities': [amenity.id for amenity in new_place.amenities]
             }, 201
         except ValueError as err:
             api.abort(400, str(err))
 
     @api.doc(description='Retrieve the list of all places')
-    # @api.doc(params={'place_id': 'The ID of the place to retrieve'})
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
         """
         Retrieve a list of all places.
-        -------------------------------
-
-        Parameters:
-        ----------
-        - `self`: Reference to the instance of the resource class.
-
-        Expects:
-        --------
-        - No additional parameters.
-
-        Returns:
-        --------
-        - (list): A list of places, each represented as a dictionary containing:
-            - `id` (str): Unique identifier of the place.
-            - `title` (str): Title of the place.
-            - `latitude` (float): Latitude of the place.
-            - `longitude` (float): Longitude of the place.
-        - Status code 200 upon success.
         """
-
         places = facade.get_all_places()
+        if not places:
+            return {'error': 'No places found'}, 404
         return [{
             'id': place.id,
             'title': place.title,
@@ -192,39 +160,12 @@ class PlaceResource(Resource):
     def get(self, place_id):
         """
         Get the details of a place by its ID.
-        --------------------------------------
-
-        Parameters:
-        -----------
-        - `self`: Reference to the instance of the resource class.
-        - `place_id` (str): The unique identifier for the place.
-
-        Expects:
-        --------
-        - No additional parameters.
-
-        Returns:
-        --------
-        - (dict): Detailed information about the place, including:
-            - `id` (str): Unique identifier of the place.
-            - `title` (str): Title of the place.
-            - `description` (str): Description of the place.
-            - `latitude` (float): Latitude of the place.
-            - `longitude` (float): Longitude of the place.
-            - `owner` (dict): Information about the owner, including:
-        - Status code 200 if the place exists.
-        - Status code 404 if the place is not found.
-
-        Raises:
-        - `ValueError`: If an unexpected error occurs while retrieving the place.
         """
 
-        # Logic to retrieve a place by ID, including owner and amenities
         place = facade.get_place(place_id)
         if place is None:
             api.abort(404, 'Place not found')
 
-        # Prepare owner information, handling case if owner is None
         owner_info = {
             'id': place.owner.id if place.owner else None,
             'first_name': place.owner.first_name if place.owner else None,
@@ -232,110 +173,88 @@ class PlaceResource(Resource):
             'email': place.owner.email if place.owner else None
         }
 
-        # Ensure that amenities are correctly populated
-        amenities_info = []
-        if place.amenities:  # Vérifiez si la place a des IDs d'amenities
-            amenities_info = [{
-                'id': amenity.id,
-                'name': amenity.name
-            } for amenity in place.amenities]
-
-        # place = facade.get_place(place_id)
-
         return {
             'id': place.id,
             'title': place.title,
             'description': place.description,
+            'price': place.price,
             'latitude': place.latitude,
             'longitude': place.longitude,
             'owner': owner_info,
-            'amenities': amenities_info
+            'amenities': [{
+                'id': amenity.id,
+                'name': amenity.name
+            } for amenity in place.amenities],
+            'reviews': [{
+                'id': review.id,
+                'text': review.text,
+                'rating': review.rating,
+                'user_id': review.user.id
+            } for review in place.reviews]
         }, 200
 
-    @api.doc(description='Update a specific place by ID')
+    @api.doc(description='Update a specific place by ID', security='BearerAuth')
     @api.doc(params={'place_id': 'The ID of the place to update'})
-    @jwt_required() # add SD
+    @jwt_required()
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
+    @api.response(401, 'Missing Authorization Header')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
         """
         Update the information of a specific place.
-        -------------------------------------------
-
-        Parameters:
-        -----------
-        - `self`: Reference to the instance of the resource class.
-        - `place_id` (str): The unique identifier of the place to update.
-
-        Expects:
-        --------
-        - JSON payload with updated fields matching the place_model, including:
-            - `title` (str): Updated title of the place.
-            - `description` (str): Updated description of the place.
-            - `price` (float): Updated price per night.
-            - `latitude` (float): Updated latitude of the place.
-            - `longitude` (float): Updated longitude of the place.
-
-        Returns:
-        --------
-        - (dict): Success message indicating the place was updated successfully.
-        - Status code 200 if updated successfully.
-        - Status code 400 if data is invalid.
-        - Status code 404 if the place is not found.
-
-        Raises:
-        -------
-        - `ValueError`: If input data is invalid or required fields are missing.
-        - `KeyError`: If the specified place ID does not correspond to an existing place.
         """
-        # data = api.payload
-        # # Validate input data here
-        # required_fields = ['title', 'description', 'price', 'latitude', 'longitude']
-        # for field in required_fields:
-        #     if field not in data:
-        #         api.abort(400, f'Missing required field: {field}')
+        current_user = get_jwt_identity()
 
-        # try:
-        #     updated_place = facade.update_place(place_id, data)
-        #     return {'message': 'Place updated successfully'}, 200
-        # except ValueError as err:
-        #     api.abort(400, str(err))
-        # except KeyError:
-        #     api.abort(404, 'Place not found')
-        current_user = get_jwt_identity() # add SD
-        place = facade.get_place(place_id) # add SD
-        if place.owner_id != current_user: # add SD
-            return {'error': 'Unauthorized action'}, 403 # add SD
+        is_admin = current_user.get('is_admin')
+
+        place = facade.get_place(place_id)
+        if not place:
+            api.abort(404, 'Unauthorized to update this place')
+
+        if str(place.owner_id) != str(current_user['id']) and not is_admin:
+            api.abort(403, "Unauthorized action")
 
         data = api.payload
-
-        # Validate input data here
-        required_fields = ['title', 'description', 'price', 'latitude', 'longitude']
-        for field in required_fields:
-            if field not in data:
-                api.abort(400, f'Missing required field: {field}')
-
-        # Additional validation for types and values
-        if not isinstance(data['title'], str) or not isinstance(data['description'], str):
-            api.abort(400, 'Title and description must be strings.')
-
-        if not isinstance(data['price'], (int, float)) or data['price'] < 0:
-            api.abort(400, 'Price must be a positive number.')
-
-        if not isinstance(data['latitude'], (int, float)) or not (-90 <= data['latitude'] <= 90):
-            api.abort(400, 'Latitude must be a number between -90 and 90.')
-
-        if not isinstance(data['longitude'], (int, float)) or not (-180 <= data['longitude'] <= 180):
-            api.abort(400, 'Longitude must be a number between -180 and 180.')
-
         try:
-            updated_place = facade.update_place(place_id, data) # old
-            updated_place = facade.update_place(place_id, **data) # add SD
-            if updated_place is None:
-                api.abort(404, 'Place not found')
-
-            return {'message': 'Place updated successfully'}, 200
+            updated_place = facade.update_place(place_id, data)
+            return {
+                'id': updated_place.id,
+                'title': updated_place.title,
+                'description': updated_place.description,
+                'price': updated_place.price,
+                'latitude': updated_place.latitude,
+                'longitude': updated_place.longitude,
+                'owner_id': updated_place.owner_id,
+                'amenities': [amenity.id for amenity in updated_place.amenities]
+            }, 200
         except ValueError as err:
             api.abort(400, str(err))
+
+
+    @api.doc('delete_place', security='BearerAuth')
+    @api.response(204, 'Place deleted')
+    @api.response(401, 'Missing Authorization Header')
+    @api.response(403, 'Unauthorized action')
+    @api.response(404, 'Place not found')
+    @jwt_required()
+    def delete(self, place_id):
+        """Delete a place - Owner only"""
+        try:
+            current_user = get_jwt_identity()
+
+            is_admin = current_user.get('is_admin')
+
+            place = facade.get_place(place_id)
+            if not place:
+                api.abort(404, "Place not found")
+
+            if str(place.owner_id) != str(current_user['id']) and not is_admin:
+                api.abort(403, "Unauthorized action")
+
+            facade.delete_place(place_id)
+            return '', 204
+
+        except Exception:
+            api.abort(500, 'Internal Server Error')

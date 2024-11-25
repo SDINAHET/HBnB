@@ -7,42 +7,360 @@
 ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═══╝╚═════╝     ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═══╝╚═════╝     ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═══╝╚═════╝     ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═══╝╚═════╝
  | HBnB Part3 Logo  # C24              | HBnB Part3 Logo  # C24              | HBnB Part3 Logo  # C24              | HBnB Part3 Logo  # C24
 ```
+[![HBNB API Tests](https://github.com/SDINAHET/Part3_HBnB_Auth_&_DB/actions/workflows/test.yml/badge.svg)](https://github.com/SDINAHET/Part3_HBnB_Auth_&_DB/actions/workflows/test.yml)
 
 
+# HBnB Application - Part 3: Enhanced Backend with Authentication and Database Integration
+
+Arborescence du projet HBnB
+```plaintext
+├── README.md                         # Documentation principale du projet
+├── app/                              # Dossier de l'application principale
+│   ├── __init__.py                   # Initialise l'application Flask
+│   ├── models/                       # Contient les modèles SQLAlchemy
+│   │   ├── __init__.py               # Initialise les modèles
+│   │   ├── user.py                   # Modèle pour les utilisateurs
+│   │   ├── place.py                  # Modèle pour les lieux
+│   │   ├── review.py                 # Modèle pour les avis
+│   │   ├── amenity.py                # Modèle pour les commodités
+│   │   ├── place_amenity.py          # Modèle pour l'association lieu-commodité
+│   ├── api/                          # Contient les routes API
+│   │   ├── __init__.py               # Initialise les routes API
+│   │   ├── v1/                       # Version 1 de l'API
+│   │       ├── __init__.py           # Initialise l'API v1
+│   │       ├── users.py              # Routes pour les utilisateurs
+│   │       ├── places.py             # Routes pour les lieux
+│   │       ├── reviews.py            # Routes pour les avis
+│   │       ├── amenities.py          # Routes pour les commodités
+│   ├── config.py                     # Configuration de Flask (base de données, secrets, etc.)
+│   ├── development.db                # Fichier SQLite contenant la base de données
+│   ├── templates/                    # Contient les templates HTML (si nécessaire)
+│   ├── static/                       # Contient les fichiers statiques (CSS, JS, images)
+├── requirements.txt                  # Liste des dépendances Python
+├── setup_db.py                       # Script pour initialiser la base de données et insérer les données initiales
+├── instance/                         # Dossier contenant les fichiers spécifiques à l'environnement
+│   ├── development.db                # Base de données pour le développement
+├── tests/                            # Dossier contenant les tests
+│   ├── __init__.py                   # Initialise les tests
+│   ├── test_users.py                 # Tests pour les utilisateurs
+│   ├── test_places.py                # Tests pour les lieux
+│   ├── test_reviews.py               # Tests pour les avis
+│   ├── test_amenities.py             # Tests pour les commodités
+├── run.py                            # Point d'entrée pour lancer l'application Flask
+└── .github/
+    ├── workflows/                    # Contient les fichiers GitHub Actions pour CI/CD
+    │   ├── test.yml                  # Workflow pour exécuter les tests automatiques
+```
+
+## HBnB Backend API
+
+### Overview
+This repository contains the backend API for the HBnB application. The API is built using Flask and SQLAlchemy and provides endpoints for managing users, places, reviews, and amenities.
+
+### Installation
+#### Prerequisites:
+
+Python (version 3.10)
+pip (Python package installer)
+A code editor (Visual Studio Code)
+
+#### Clone the repository:
+
+```Bash
+git clone https://github.com/SDINAHET/HBnB.git
+cd HBnB/Part3_HBnB_AUTH_&_DB/hbnb
+```
+
+#### Create a virtual environment:
+
+```Bash
+python -m venv venv
+source venv/bin/activate  # For Linux/macOS
+venv\Scripts\activate  # For Windows
+```
+
+#### Install dependencies:
+
+```Bash
+pip install -r requirements.txt
+```
+
+```plaintext
+Flask==2.1.3
+flask-restx==0.5.1
+marshmallow==3.18.0
+requests==2.31.0
+flask-bcrypt==1.0.1
+flask-jwt-extended==4.4.4
+pytest==7.3.1
+sqlalchemy==1.4.47
+flask-sqlalchemy==2.5.1
+Werkzeug==2.1.2
+pytest==7.3.1
+pytest-flask
+pytest-cov
+```
+#### run hbnb:
+
+```Bash
+cd hbnb
+./run.py
+```
 
 
+#### Create the database:
+
+```Bash
+flask shell
+from app import db
+db.create_all()
+```
+
+#### Configuration
+Environment variables:
+Set the FLASK_APP environment variable to app:app.
+Set the FLASK_ENV environment variable to development or production to enable debug mode.
+Database configuration:
+Update the SQLALCHEMY_DATABASE_URI setting in your configuration file (e.g., config.py) to match your database connection details.
+
+#### Running the application
+```Bash
+flask run
+```
+
+### SQLITE
+in hbnb folder
+```bash
+sqlite3 development.db
+```
+
+then insert the script: 1_activate_foreign_key
+```sql
+-- Activer les clés étrangères
+PRAGMA foreign_keys = ON;
+```
+and script: 2_create_tables.sql
+```sql
+-- Create User table
+CREATE TABLE users (
+    id CHAR(36) PRIMARY KEY,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create Place table
+CREATE TABLE places (
+    id CHAR(36) PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    latitude FLOAT NOT NULL,
+    longitude FLOAT NOT NULL,
+    owner_id CHAR(36),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Create Review table
+CREATE TABLE reviews (
+    id CHAR(36) PRIMARY KEY,
+    text TEXT NOT NULL,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    user_id CHAR(36),
+    place_id CHAR(36),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE,
+    UNIQUE (user_id, place_id)
+);
+
+-- Create Amenity table
+CREATE TABLE amenities (
+    id CHAR(36) PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+
+);
+
+-- Create Place_Amenity association table
+CREATE TABLE place_amenity (
+    place_id CHAR(36),
+    amenity_id CHAR(36),
+    PRIMARY KEY (place_id, amenity_id),
+    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE,
+    FOREIGN KEY (amenity_id) REFERENCES amenities(id) ON DELETE CASCADE
+);
+```
+and then script: 3_insert_initial_data_admin.sql
+```sql
+-- Insert admin user
+INSERT INTO users (id, first_name, last_name, email, password, is_admin)
+VALUES (
+    '36c9050e-ddd3-4c3b-9731-9f487208bbc1', -- fix const UUID prédéfini
+    'Admin',
+    'HBnB',
+    'admin@hbnb.io',
+    ---'hashed_admin1234',  -- Replace with the hashed password
+    -- '$2b$12$WZqhkmHErIMTl7YKJ/RdfXEbrNKg9XyFo7Csh5RgN5tQ8qGHyjfD2', -- bcrypt hash of 'admin1234'
+    '$2a$12$ivDzHW.L7rqFI4ymAdVBbOswoVX4zsrfE1B1a5mnW.Yxt6e7ZKYoW', -- bcrypt2 hash of 'admin1234'
+    TRUE
+);
+
+INSERT INTO amenities (id, name) VALUES ('a12ef460-8e90-4e7a-8f43-1918a006078d', 'WiFi');
+INSERT INTO amenities (id, name) VALUES ('acbc951d-ef60-4486-84b9-87afc47d1eb2', 'Swimming Pool');
+INSERT INTO amenities (id, name) VALUES ('6fac204d-90b6-40cc-a87a-dbbc0814745e', 'Air Conditioning');
+```
+checking hash password: https://bcrypt-generator.com/
+![alt text](image.png)
+
+### ADMINISTRATOR:
+
+```plaintext
+Admin
+HBnB
+email: admin@hbnb.io
+password: admin1234
+hashed password: $2b$12$WZqhkmHErIMTl7YKJ/RdfXEbrNKg9XyFo7Csh5RgN5tQ8qGHyjfD2
+$2a$12$ivDzHW.L7rqFI4ymAdVBbOswoVX4zsrfE1B1a5mnW.Yxt6e7ZKYoW
+UUID4_user:36c9050e-ddd3-4c3b-9731-9f487208bbc1  (fix always)
 
 
+Amenity1:
+UUID4_amenity: a12ef460-8e90-4e7a-8f43-1918a006078d
+name: WiFi
 
+Amenity2:
+UUID4_amenity: acbc951d-ef60-4486-84b9-87afc47d1eb2
+name: Swimming Pool
 
+Amenity3:
+UUID4_amenity: 6fac204d-90b6-40cc-a87a-dbbc0814745e
+name: Air Conditioning
+```
 
+### API Endpoints
+User Endpoints
+Create a user:
+```Bash
+curl -X POST http://127.0.0.1:5000/api/v1/users/ -H "Content-Type: application/json" -d '{"first_name": "John", "last_name": "Doe", "email": "johndoe@example.com", "password": "password123"}'
+```
 
+Get a user:
+```Bash
+curl http://127.0.0.1:5000/api/v1/users/<user_id>
+```
 
+Update a user:
+```Bash
+curl -X PUT http://127.0.0.1:5000/api/v1/users/<user_id> -H "Content-Type: application/json" -d '{"first_name": "Jane"}'
+```
 
+Place Endpoints
+Create a place:
+```Bash
+# ... (similar to creating a user)
+```
 
+Get a place:
+```Bash
+# ... (similar to getting a user)
+```
 
+Get places with amenities:
+```Bash
+curl http://127.0.0.1:5000/api/v1/places?amenity=wifi&amenity=pool
+```
 
+Review Endpoints
+Create a review:
+```Bash
+# ... (similar to creating a user)
+```
 
+Get reviews for a place:
+```Bash
+curl http://127.0.0.1:5000/api/v1/places/<place_id>/reviews
+```
 
+Amenity Endpoints
+Get all amenities:
+```Bash
+curl http://127.0.0.1:5000/api/v1/amenities
+```
 
+#### Database Schema
+<!-- [Insert Mermaid.js diagram here] -->
+<!-- Part3_HBnB_Auth_&_DB/hbnb/app/ER_diagrams.png -->
+```mermaid
+erDiagram
+    USER {
+        string id PK
+        string first_name
+        string last_name
+        string email
+        string password
+        boolean is_admin
+    }
+    PLACE {
+        string id PK
+        string title
+        string description
+        decimal price
+        float latitude
+        float longitude
+        string owner_id FK
+    }
+    REVIEW {
+        string id PK
+        string text
+        int rating
+        string user_id FK
+        string place_id FK
+    }
+    AMENITY {
+        string id PK
+        string name
+    }
+    PLACE_AMENITY {
+        string place_id PK, FK
+        string amenity_id PK, FK
+    }
 
+    %% Relationships
+    USER ||--o{ PLACE : "owns"
+    PLACE ||--o{ REVIEW : "has"
+    USER ||--o{ REVIEW : "writes"
+    %% USER ||--|| REVIEW : "writes"
+    PLACE ||--o{ PLACE_AMENITY : "has"
+    AMENITY ||--o{ PLACE_AMENITY : "belongs to"
+```
 
+#### Technologies Used
+Python: Programming language
+Flask: Web framework
+SQLAlchemy: ORM for database interactions
+SQLite: Database (can be replaced with PostgreSQL, MySQL, etc.)
+Mermaid.js: For generating database diagrams
 
+#### Contributing (Dinahet Stéphane / Beaumois Louis / Henri Mille)
+Fork the repository
+Create a new branch
+Make your changes
+Commit and push
+Submit a pull request
 
+#### License
+[MIT]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+________________________________________________________________________________
 
 # HBnB Application - Part 2: Implementation of Business Logic and API Endpoints
 
@@ -1142,3 +1460,79 @@ OK
 - Stéphane Dinahet
 - Henri Milles
 
+
+
+Étape 1 : Préparer l’environnement
+Assurez-vous que SQLite est installé : Vérifiez avec :
+
+bash
+Copier le code
+sqlite3 --version
+Si ce n’est pas le cas, installez SQLite (sous Ubuntu, par exemple) :
+
+bash
+Copier le code
+sudo apt install sqlite3
+Créez ou ouvrez le fichier development.db :
+
+bash
+Copier le code
+sqlite3 instance/development.db
+Activez les clés étrangères (important pour gérer les relations) :
+
+sql
+Copier le code
+PRAGMA foreign_keys = ON;
+Étape 2 : Coller et exécuter les commandes SQL
+Une fois dans l'interface SQLite, collez vos commandes SQL pour créer les tables.
+
+sql
+Copier le code
+-- Create User table
+CREATE TABLE users (
+    id CHAR(36) PRIMARY KEY,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE
+);
+
+-- Create Place table
+CREATE TABLE places (
+    id CHAR(36) PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    latitude FLOAT NOT NULL,
+    longitude FLOAT NOT NULL,
+    owner_id CHAR(36),
+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Create Review table
+CREATE TABLE reviews (
+    id CHAR(36) PRIMARY KEY,
+    text TEXT NOT NULL,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    user_id CHAR(36),
+    place_id CHAR(36),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE,
+    UNIQUE (user_id, place_id)
+);
+
+-- Create Amenity table
+CREATE TABLE amenities (
+    id CHAR(36) PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- Create Place_Amenity association table
+CREATE TABLE place_amenity (
+    place_id CHAR(36),
+    amenity_id CHAR(36),
+    PRIMARY KEY (place_id, amenity_id),
+    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE,
+    FOREIGN KEY (amenity_id) REFERENCES amenities(id) ON DELETE CASCADE
+);

@@ -1,0 +1,5 @@
+python3 -m unittest discover tests
+python3 test_auth.py
+python3 test_users.py
+python3 test_places.py
+python3 test_reviews.py

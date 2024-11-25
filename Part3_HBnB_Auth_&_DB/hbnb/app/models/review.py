@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-
+# #!/usr/bin/python3
 """
 Module : review
 
@@ -15,69 +14,52 @@ Classes :
 from __future__ import annotations  # Doit être la première ligne
 from .base_entity import BaseEntity
 from app.models.user import User
-# from app.models.place import Place
+from app.models.place import Place  # Uncommented to use Place class directly
 from typing import TYPE_CHECKING
+from app.extension import db
+from datetime import datetime
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 if TYPE_CHECKING:
     from .user import User
     from .place import Place
 
 class Review(BaseEntity):
-    """Classe représentant une évaluation d'un lieu.
+    __tablename__ = 'reviews'  # Define the table name once
 
-    Attributs :
-        comment (str) : Commentaire de l'évaluation, doit être une chaîne non vide.
-        rating (int) : Note de l'évaluation, doit être un entier entre 1 et 5.
-        user_id (str) : Identifiant de l'utilisateur ayant laissé l'évaluation.
-        place_id (str) : Identifiant du lieu évalué.
-    """
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    comment = db.Column(db.String(500), nullable=False)  # Review comment (max 500 characters)
+    rating = db.Column(db.Integer, nullable=False)  # Review rating (1-5)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Creation timestamp
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Update timestamp
+
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+    place_id = db.Column(UUID(as_uuid=True), db.ForeignKey('places.id'), nullable=False)
+
+    # Relationships
+    user = db.relationship('User', back_populates='reviews', lazy=True)  # Relation with User (one-to-many)
+    place = db.relationship('Place', back_populates='reviews', lazy=True)  # Relation with Place (one-to-many)
+
     def __init__(self, comment: str, rating: int, user: User, place: Place):
         """Initialise une instance de Review.
-
-        Args :
-            comment (str) : Commentaire de l'évaluation.
-            rating (int) : Note de l'évaluation (entre 1 et 5).
-            user (User) : Instance de l'utilisateur ayant laissé l'évaluation.
-            place (Place) : Instance du lieu évalué.
-
-        Lève une ValueError si les attributs ne sont pas valides.
         """
         super().__init__()
         self.comment = comment
         self.rating = rating
-        self.user_id = user.id
-        self.place_id = place.id
+        self.user = user
+        self.place = place
         self.validate()
-        self.register_review(user, place)
 
     def validate(self):
-        """Validate the review attributes."""
         if not isinstance(self.comment, str) or not self.comment:
             raise ValueError('Comment must be a non-empty string.')
         if not isinstance(self.rating, int) or self.rating < 1 or self.rating > 5:
             raise ValueError('Rating must be an integer between 1 and 5.')
-        if not User.get_by_id(self.user_id):
-            raise ValueError("User does not exist.")
-        if not Place.get_by_id(self.place_id):
-            raise ValueError("Place does not exist.")
-
-    def register_review(self, user: User, place: Place):
-        """Link the review to the user and place."""
-        user.add_review(self)
-        place.add_review(self)
-
-    @staticmethod
-    def get_by_id(review_id: str) -> 'Review':
-        """Static method to retrieve a review by its ID."""
-        return next((review for review in Review.reviews.values() if review.id == review_id), None)
-
-    def get_user(self):
-        from app.models.user import User
-        return User.get_by_id(self.user_id)
-
-    def get_place(self):
-        """Retrieve the place instance associated with this review."""
-        return Place.get_by_id(self.place_id)
+        if not isinstance(self.user, User):
+            raise ValueError('User must be an instance of User.')
+        if not isinstance(self.place, Place):
+            raise ValueError('Place must be an instance of Place.')
 
     def to_dict(self):
         """Return a dictionary representation of the Review instance."""
@@ -90,7 +72,3 @@ class Review(BaseEntity):
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
         }
-
-    def some_method():
-        from app.models.place import Place
-        # Your logic her

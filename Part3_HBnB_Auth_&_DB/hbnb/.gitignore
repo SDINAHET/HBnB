@@ -5,3 +5,4 @@ __pycache__/
 
 # Ignorer les fichiers créés par Visual Studio Code
 .vscode/
+# instance/

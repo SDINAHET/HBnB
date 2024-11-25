@@ -1,0 +1,56 @@
+name: HBNB API Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: hbnb_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
+
+    - name: Install Dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Set Up Environment Variables
+      run: |
+        echo "DATABASE_URL=mysql+pymysql://root:root@localhost:3306/hbnb_test" >> .env
+        echo "FLASK_ENV=testing" >> .env
+
+    - name: Run Database Migrations
+      run: |
+        flask db upgrade
+
+    - name: Run Unit Tests
+      env:
+        DATABASE_URL: mysql+pymysql://root:root@localhost:3306/hbnb_test
+      run: |
+        pytest --maxfail=5 --disable-warnings --tb=short

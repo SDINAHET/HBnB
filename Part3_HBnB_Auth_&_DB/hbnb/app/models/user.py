@@ -1,167 +1,108 @@
 #!/usr/bin/python3
 
 """
-Module pour la gestion des utilisateurs dans une application de location.
+Module for managing users in a rental application.
 
-Ce module définit la classe `User`, qui représente un utilisateur dans le système.
-La classe hérite de `BaseEntity` et inclut des méthodes pour valider les attributs,
-enregistrer les utilisateurs, et gérer les avis et les lieux associés à l'utilisateur.
+This module defines the `User` class, which represents a user in the system.
+The class inherits from `BaseEntity` and includes methods to validate attributes,
+register users, and manage associated reviews and places.
 
 Classes:
-    - User: Représente un utilisateur avec des détails tels que le prénom, le nom, l'email,
-      le statut d'administrateur, les lieux possédés et les avis écrits.
+    - User: Represents a user with details such as first name, last name, email,
+      admin status, owned places, and written reviews.
 
-Attributs:
-    - users (Dict[str, 'User']): Dictionnaire de niveau de classe pour stocker les utilisateurs.
+Attributes:
+    - users (Dict[str, 'User']): Class-level dictionary to store users.
 
-Méthodes:
-    - __init__(first_name, last_name, email, is_admin=False): Initialise une instance de `User`.
-    - validate_first_name(first_name): Valide que le prénom est entre 1 et 50 caractères.
-    - validate_last_name(last_name): Valide que le nom de famille est entre 1 et 50 caractères.
-    - validate_email(email): Valide le format de l'email et s'assure qu'il est unique.
-    - is_valid_email(email): Vérifie si l'email est au format valide.
-    - register_user(): Enregistre l'utilisateur dans le dictionnaire de niveau de classe.
-    - get_reviews(): Renvoie la liste des avis écrits par l'utilisateur.
+Methods:
+    - __init__(first_name, last_name, email, is_admin=False): Initializes a `User` instance.
+    - validate_first_name(first_name): Validates that the first name is between 1 and 50 characters.
+    - validate_last_name(last_name): Validates that the last name is between 1 and 50 characters.
+    - validate_email(email): Validates the email format and ensures it's unique.
+    - is_valid_email(email): Checks if the email has a valid format.
+    - register_user(): Registers the user in the class-level dictionary.
+    - get_reviews(): Returns the list of reviews written by the user.
 """
 
-from app.extension import bcrypt
+from app.extension import bcrypt, db
 from marshmallow import ValidationError
 import re
-from typing import List, Dict
 from app.models.base_entity import BaseEntity
-
+from sqlalchemy import Column, String, Integer, DateTime, Boolean
+from datetime import datetime
+import uuid
+from flask import current_app
 
 class User(BaseEntity):
 
-    users: Dict[str, 'User'] = {} # Class-level storage for users
+    __tablename__ = 'users'
 
-    def __init__(self, first_name, last_name, email, password, is_admin=False):
+    id = db.Column(String(36), primary_key=True, default=str(uuid.uuid4))
+    first_name = db.Column(String(100), nullable=False)
+    last_name = db.Column(String(100), nullable=False)
+    email = db.Column(String(100), nullable=False, unique=True)
+    password = db.Column(String(255), nullable=False)
+    is_admin = db.Column(Boolean, default=False)
+    created_at = db.Column(DateTime, default=datetime.utcnow)
+    updated_at = db.Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    places = db.relationship('Place', back_populates='owner', lazy=True)  # Relation avec les lieux (Place)
+    reviews = db.relationship('Review', back_populates='user', lazy=True)  # Relation avec les avis (Review)
+    
+    def __init__(self, first_name: str, last_name: str, email: str, password: str, is_admin: bool = False):
         """
-        Initialise une instance de `User`.
-
-        Args:
-            first_name (str): Prénom de l'utilisateur.
-            last_name (str): Nom de famille de l'utilisateur.
-            email (str): Adresse e-mail de l'utilisateur.
-            is_admin (bool, optional): Indique si l'utilisateur est un administrateur. Par défaut, False.
-
-        Raises:
-            ValidationError: Si le prénom, le nom de famille ou l'email ne respectent pas les règles de validation.
+        Initializes a new user with the provided attributes.
         """
         super().__init__() #appelle le constructeur de BaseEntity
         self.first_name = self.validate_first_name(first_name)
         self.last_name = self.validate_last_name(last_name)
         self.email = self.validate_email(email)
         self.is_admin = is_admin  # Ajoutez cet attribut si nécessaire
-        self.password = None
-        self.hash_password(password)
-        self.places: List['Place'] = []  # Places owned by the user
-        self.reviews: List['Review'] = []  # Reviews written by the user
-        self.register_user()  # ajout
+        self.password = password
 
     def hash_password(self, password):
         """
         Hashes the password using bcrypt and stores it.
         """
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        return bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
-        """Verifies if the provided password matches the hashed password."""
+        """Checks if the provided password matches the stored hash."""
+        current_app.logger.info(f"Hashed password: {self.password}")
+        current_app.logger.info(f"Plain-text password: {password}")
         return bcrypt.check_password_hash(self.password, password)
 
     def validate_first_name(self, first_name):
-        """
-        Valide que le prénom est un non vide et a une longueur maximale de 50 caractères.
-
-        Args:
-            first_name (str): Prénom à valider.
-
-        Returns:
-            str: Prénom validé.
-
-        Raises:
-            ValidationError: Si le prénom est vide ou dépasse 50 caractères.
-        """
+        """Validates the first name length (1-50 characters)."""
         if not first_name or len(first_name) > 50:
             raise ValidationError("First name must be between 1 and 50 characters.")
         return first_name
 
     def validate_last_name(self, last_name):
-        """
-        Valide que le nom de famille est un non vide et a une longueur maximale de 50 caractères.
-
-        Args:
-            last_name (str): Nom de famille à valider.
-
-        Returns:
-            str: Nom de famille validé.
-
-        Raises:
-            ValidationError: Si le nom de famille est vide ou dépasse 50 caractères.
-        """
+        """Validates the last name length (1-50 characters)."""
         if not last_name or len(last_name) > 50:
             raise ValidationError("Last name must be between 1 and 50 characters.")
         return last_name
 
-    def register_user(self):
-        """
-        Enregistre l'utilisateur dans le dictionnaire de classe.
-
-        Raises:
-            ValidationError: Si un utilisateur avec cet email existe déjà.
-        """
-        # Vérifie si un utilisateur avec cet email existe déjà
-        if any(user.email == self.email for user in User.users.values()):
-            raise ValidationError("An account with this email already exists.")
-        User.users[self.id] = self
-
     @staticmethod
     def is_valid_email(email):
-        """
-        Vérifie si l'email est au format valide.
-
-        Args:
-            email (str): Email à valider.
-
-        Returns:
-            bool: True si l'email est valide, False sinon.
-        Simple regex for email validation
-        """
+        """Validates the email format using regex."""
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         return re.match(regex, email) is not None
 
     def validate_email(self, email):
-        """
-        Valide le format de l'email et s'assure qu'il est unique.
-
-        Args:
-            email (str): Email à valider.
-
-        Returns:
-            str: Email validé.
-
-        Raises:
-            ValidationError: Si l'email est invalide ou déjà utilisé.
-        """
+        """Validates and ensures email is unique."""
         if not self.is_valid_email(email):
             raise ValidationError("Invalid email format.")
+        if User.query.filter_by(email=email).first():  # Vérifie l'existence de l'email dans la DB
+            raise ValidationError("Email already exists.")
         return email
 
-    # def add_place(self, place):
-    #     """Add a place to the user's list of places."""
-    #     self.places.append(place)
-    #     self.save()  # Update timestamp when adding a place
-
-    # def add_review(self, review):
-    #     """Add a review to the user's list of reviews."""
-    #     self.reviews.append(review)
-    #     self.save()  # Update timestamp when adding a place
-
     def get_reviews(self):
-        """
-        Renvoie la liste des avis écrits par l'utilisateur.
-
-        Returns:
-            List[Review]: Liste des avis associés à l'utilisateur.
-        """
+        """Returns the list of reviews written by the user."""
         return self.reviews
+
+    @staticmethod
+    def get_by_id(user_id: str) -> 'User':
+        """Fetches a user by their ID."""
+        return User.query.get(user_id)  # Using SQLAlchemy's query method

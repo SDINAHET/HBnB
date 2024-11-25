@@ -8,12 +8,26 @@ entities by interacting with the underlying repository layer.
 """
 import logging
 
+from app.extension import db, bcrypt
 from marshmallow import ValidationError
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
-from app.persistence.repository import InMemoryRepository
+from app.persistence.sqlalchemy_repository import UserRepository, PlaceRepository, ReviewRepository, AmenityRepository
+from app.persistence.sqlalchemy_repository import SQLAlchemyRepository
+from werkzeug.exceptions import BadRequest, Forbidden, NotFound
+import re
+from flask import current_app
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.exc import NoResultFound
+from uuid import UUID
+
+
+
+class UserCreationError(Exception):
+    """Custom exception raised when user creation fails."""
+    pass
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)  # You can adjust the level as needed
@@ -29,61 +43,63 @@ class HBnBFacade:
     def __init__(self):
         """Initialize the HBnBFacade with repositories for users, places,
         reviews, and amenities."""
-        self.user_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
+        self.user_repo = UserRepository() # Switched to SQLAlchemyRepository
+        self.place_repository = PlaceRepository()
+        self.review_repository = ReviewRepository()
+        self.amenity_repository = AmenityRepository()
+
+    def is_valid_email(self, email):
+        """
+        Validates the email format.
+        """
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        return re.match(email_regex, email) is not None
 
     # User_service_facade
     def create_user(self, user_data):
-        """
-        Create a new user and add it to the repository.
+        try:
+            self.validate_user_data(user_data)
 
-        Args:
-            user_data (dict): A dictionary containing user details (e.g., first name, last name, email).
+            # Ensure password is hashed
+            if 'password' in user_data:
+                user_data['password'] = bcrypt.generate_password_hash(user_data['password']).decode('utf-8')
+                current_app.logger.info(f"Hashed password for {user_data['email']}: {user_data['password']}")  # Log hashed password
+            
+            user = User(**user_data)
+            db.session.add(user)
+            db.session.commit()
+            return user
 
-        Returns:
-            User: The newly created user object.
-        """
-        user = User(**user_data)
-        self.user_repo.add(user)
-        return user
+        except KeyError as e:
+            current_app.logger.error(f"Missing required field: {e}")
+            raise ValueError(f"Missing required field: {e}")
+        except IntegrityError as e:
+            current_app.logger.error(f"Integrity error: {str(e)}")
+            db.session.rollback()  # Rollback any changes on error
+            raise UserCreationError("Database integrity error. Please check the user data.")
+        except Exception as e:
+            current_app.logger.error(f"Unexpected error: {str(e)}")
+            raise UserCreationError(f"Error creating user: {str(e)}")
 
     def get_user(self, user_id):
         """
         Retrieve a user by their ID.
-
-        Args:
-            user_id (str): The unique ID of the user.
-
-        Returns:
-            User: The user object, or None if the user is not found.
         """
         return self.user_repo.get(user_id)
 
     def get_user_by_email(self, email):
         """
-        Retrieve a user by their email.
-
-        Args:
-            email (str): The email of the user.
-
-        Returns:
-            User: The user object, or None if the user is not found.
+        Retrieve a user by their email..
         """
-        return self.user_repo.get_by_attribute('email', email)
-
+        return User.query.filter_by(email=email).first()
+    
     def get_all_users(self):
         """
         Retrieve all users from the repository.
-
-        Returns:
-            list: A list of all user objects.
         """
         return self.user_repo.get_all()
 
-    def validate_user_data(user_data):
-        """Validate the incoming user data."""
+    def validate_user_data(self, user_data):
         if 'first_name' in user_data and not isinstance(user_data['first_name'], str):
             raise ValidationError("First name must be a string.")
         if 'last_name' in user_data and not isinstance(user_data['last_name'], str):
@@ -94,13 +110,6 @@ class HBnBFacade:
     def update_user(self, user_id, user_data):
         """
         Update the details of an existing user.
-
-        Args:
-            user_id (str): The unique ID of the user to update.
-            user_data (dict): A dictionary containing the updated user details.
-
-        Returns:
-            User: The updated user object, or None if the user is not found.
         """
         user = self.user_repo.get(user_id)
         if user:
@@ -111,281 +120,203 @@ class HBnBFacade:
         return None
 
     # Amenity_service_facade
-    def create_amenity(self, amenity_data):
+    def create_amenity(self, data):
         """
         Create a new amenity and add it to the repository.
-
-        Args:
-            amenity_data (dict): A dictionary containing amenity details (e.g., name).
-
-        Returns:
-            Amenity: The newly created amenity object.
         """
-        new_amenity = Amenity(**amenity_data)
-        self.amenity_repo.add(new_amenity)
+        if not data.get('name'):
+            raise BadRequest("Amenity name is required.")
+        
+        existing_amenity = self.amenity_repository.get_by_name(data['name'])
+        if existing_amenity:
+            raise BadRequest(f"Amenity with name '{data['name']}' already exists.")
+        
+        new_amenity = Amenity(name=data['name'], description=data.get('description', ''))
+        self.amenity_repository.add(new_amenity)
         return new_amenity
 
     def get_amenity(self, amenity_id):
         """
         Retrieve an amenity by its ID.
-
-        Args:
-            amenity_id (str): The unique ID of the amenity.
-
-        Returns:
-            Amenity: The amenity object, or None if not found.
         """
-        return self.amenity_repo.get(amenity_id)
+        amenity = self.amenity_repository.get(amenity_id)
+        if not amenity:
+            raise NotFound(f"Amenity with ID {amenity_id} not found.")
+        return amenity
 
     def get_all_amenities(self):
         """
         Retrieve all amenities from the repository.
-
-        Returns:
-            list: A list of all amenity objects.
         """
-        return self.amenity_repo.get_all()
+        return self.amenity_repository.get_all()
 
-    def update_amenity(self, amenity_id, amenity_data):
+    def update_amenity(self, amenity_id, data):
         """
         Update the details of an existing amenity.
-
-        Args:
-            amenity_id (str): The unique ID of the amenity to update.
-            amenity_data (dict): A dictionary containing the updated amenity details.
-
-        Returns:
-            Amenity: The updated amenity object, or None if not found.
         """
-        amenity = self.amenity_repo.get(amenity_id)
-        if amenity:
-            for key, value in amenity_data.items():
-                setattr(amenity, key, value)
-            # self.user_repo.update(amenity_id, amenity_data)  # Pass amenity_id and amenity_data
-            # amenity.update(**amenity_data)
-            self.amenity_repo.update(amenity_id, amenity_data)
-            return amenity
-        return None
+        updated_amenity = self.amenity_repository.update(amenity_id, data)
+        if not updated_amenity:
+            raise NotFound(f"Amenity with ID {amenity_id} not found.")
+        return updated_amenity
 
-    # Place_service_facade
-    def create_place(self, place_data):
+    def delete_amenity(self, amenity_id):
+        """Delete amenity by id"""
+        result = self.amenity_repository.delete(amenity_id)
+        if not result:
+            raise NotFound(f"Amenity with ID {amenity_id} not found.")
+        return {"message": "Amenity deleted successfully."}
+
+    @staticmethod
+    def create_place(title, description, price, latitude, longitude, owner_id, amenities):
         """
-        Create a new place and add it to the repository.
-
-        Args:
-            place_data (dict): A dictionary containing place details (e.g., name, description, owner_id).
-
-        Returns:
-            Place: The newly created place object.
+        Crée un nouveau lieu et l'ajoute à la base de données.
         """
-        owner = self.user_repo.get(place_data['owner_id'])
+        if not title or not description or not price or not latitude or not longitude or not owner_id:
+            raise ValueError("Missing required data to create place")
+    
+        # Fetch the owner from the database
+        owner = User.query.get(owner_id)
         if not owner:
             raise ValueError("Owner not found")
 
-        # Récupérer et initialiser les amenities
-        amenities = []
-        if 'amenities' in place_data:
-            amenities = [self.amenity_repo.get(amenity_id) for amenity_id in place_data['amenities']]
-            # Filtrer les amenities valides
-            amenities = [amenity for amenity in amenities if amenity is not None]
+        # Create the new Place object, with the owner as an actual object, not just an ID
+        place = Place(
+            title=title,
+            description=description,
+            price=price,
+            latitude=latitude,
+            longitude=longitude,
+            owner_id=str(owner_id)  # Here, we pass the actual User object, not just the owner_id
+        )
 
-        # Créer une nouvelle instance de Place
-        new_place = Place(
-            title=place_data['title'],
-            description=place_data.get('description'),
-            price=place_data['price'],
-            latitude=place_data['latitude'],
-            longitude=place_data['longitude'],
-            owner_id=place_data['owner_id'],  # Ensure this is included
-            owner=owner,   # Associate owner instance
-            # amenities=place_data.get['amenities'],
-            # amenities=place_data.get('amenities', []),
-            reviews=[],  # ou data.get('reviews', [])
-            # amenities=[]  # ou data.get('amenities', [])
-            amenities=amenities
-            )
+        # Save the place to the database
+        place.save()
 
-        # # Ajouter les amenities si présentes
-        # if 'amenities' in place_data:
-        #     amenities = [self.amenity_repo.get(amenity_id) for amenity_id in place_data['amenities']]
-        #     new_place.amenities = [amenity for amenity in amenities if amenity is not None]
+        # Link amenities to the place
+        for amenity_id in amenities:
+            # Fetch the amenity from the database
+            amenity = Amenity.query.get(amenity_id)
+            if amenity:
+                place.amenities.append(amenity)
 
-        try:
-            # Ajouter la nouvelle place au repository
-            self.place_repo.add(new_place)
-        # owner = self.user_repo.get(place_data['owner_id'])
-            logging.info(f"Successfully created place: {new_place}")
-
-        # # Ajoutez la place au dictionnaire
-        # places_data[place_id] = new_place
-        except Exception as e:
-            logging.error(f"Error adding place: {e}")
-            raise ValueError(f"Error adding place: {str(e)}")
-            # Log the error or handle it as appropriate
-            # print(f"Error creating place: {e}")
-            # return None
-        return new_place
-
-    def get_place(self, place_id):
-        """
-        Retrieve a place by its ID.
-
-        Args:
-            place_id (str): The unique ID of the place.
-
-        Returns:
-            Place: The place object, or None if not found.
-        """
-        logger.info(f"Retrieving place with ID: {place_id}")
-        place = self.place_repo.get(place_id)
-
-        if place:
-            logger.info(f"Found place: {place}")
-
-            # Récupérer le propriétaire de la place
-            owner = self.user_repo.get(place.owner_id)
-            place.owner = owner
-            logger.info(f"Associated owner: {owner}")
-
-            # Récupérer les amenities basées sur les IDs
-            if place.amenities:  # Vérifiez si la place a des IDs d'amenities
-                amenities = [self.amenity_repo.get(a_id) for a_id in place.amenities]
-                # Filtrer pour enlever les None
-                place.amenities = [amenity for amenity in amenities if amenity is not None]
-                logger.info(f"Associated amenities: {place.amenities}")
-
-        else:
-            logger.warning(f"No place found with ID: {place_id}")
+        # Save the updated place with amenities
+        place.save()
 
         return place
-        # return self.place_repo.get(place_id)
 
-    def get_all_places(self):
+    @staticmethod
+    def get_place_by_id(place_id):
         """
-        Retrieve all places from the repository.
-
-        Returns:
-            list: A list of all place objects.
+        Retrieves a single place by its ID from the database.
         """
-        places = self.place_repo.get_all()
-        for place in places:
-            place.owner = self.user_repo.get(place.owner_id)
-            place.amenities = [self.amenity_repo.get(a_id) for a_id in place.amenities]
-        return places
+        try:
+            return Place.query.get(place_id)
+        except NoResultFound:
+            return None
 
-    def update_place(self, place_id, place_data):
+    @staticmethod
+    def list_places():
         """
-        Update the details of an existing place.
-
-        Args:
-            place_id (str): The unique ID of the place to update.
-            place_data (dict): A dictionary containing the updated place details.
-
-        Returns:
-            Place: The updated place object, or None if not found.
+        Retrieves all places from the database.
         """
-        logger.info(f"Updating place with ID: {place_id}")
-        place = self.place_repo.get(place_id)
+        return Place.query.all()
 
+    def update_place(self, place_id, data):
+        """
+        Updates the place with the given ID using the provided data.
+        """
+        place = Place.query.get(place_id)
+        if not place:
+            raise ValueError("Place not found")
+
+        # Update place fields with the provided data
+        if 'title' in data:
+            place.title = data['title']
+        if 'description' in data:
+            place.description = data['description']
+        if 'price' in data:
+            place.price = data['price']
+        if 'latitude' in data:
+            place.latitude = data['latitude']
+        if 'longitude' in data:
+            place.longitude = data['longitude']
+
+        # Handle amenities update
+        if 'amenities' in data:
+            # Remove existing amenities
+            place.amenities.clear()
+            for amenity_id in data['amenities']:
+                amenity = Amenity.query.get(amenity_id)
+                if amenity:
+                    place.amenities.append(amenity)
+
+        # Save the updated place
+        place.save()
+
+        return place
+
+    def delete_place(self, place_id):
+        """
+        Deletes the place with the given ID from the database.
+        """
+        place = Place.query.get(place_id)
         if place:
-            for key, value in place_data.items():
-                if value is not None:
-                    setattr(place, key, value)
-            self.place_repo.update(place_id, place_data)
-            return place
-        logger.warning(f"No place found with ID: {place_id} to update.")
-        return None
+            place.delete()
+        else:
+            raise ValueError("Place not found")
 
-    def check_owner_exists(self, owner_id):
-        # Implémentez la logique pour vérifier si l'owner existe
-        owner = get_owner_by_id(owner_id)  # Récupérez l'owner par ID
-        return owner is not None
-
-    def check_amenity_exists(self, amenity_id):
-        # Implémentez la logique pour vérifier si l'amenity existe
-        amenity = get_amenity_by_id(amenity_id)  # Récupérez l'amenity par ID
-        return amenity is not None
-
-    # Review_service_facade
-    def create_review(self, review_data):
-        """
-        Create a new review and add it to the repository.
-
-        Args:
-            review_data (dict): A dictionary containing review details (e.g., place_id, user_id, text).
-
-        Returns:
-            Review: The newly created review object.
-        """
-        new_review = Review(**review_data)
-        self.review_repo.add(new_review)
-        return new_review
-
-    def get_review(self, review_id):
-        """
-        Retrieve a review by its ID.
-
-        Args:
-            review_id (str): The unique ID of the review.
-
-        Returns:
-            Review: The review object, or None if not found.
-        """
-        return self.review_repo.get(review_id)
-
-    def get_all_reviews(self):
-        """
-        Retrieve all reviews from the repository.
-
-        Returns:
-            list: A list of all review objects.
-        """
-        return self.review_repo.get_all()
-
-    def get_reviews_by_place(self, place_id):
-        """
-        Retrieve all reviews for a specific place.
-
-        Args:
-            place_id (str): The unique ID of the place.
-
-        Returns:
-            list: A list of review objects for the specified place.
-        """
-        return self.review_repo.get_by_attribute('place_id', place_id)
-
-    def update_review(self, review_id, review_data):
-        """
-        Update the details of an existing review.
-
-        Args:
-            review_id (str): The unique ID of the review to update.
-            review_data (dict): A dictionary containing the updated review details.
-
-        Returns:
-            Review: The updated review object, or None if not found.
-        """
-        review = self.review_repo.get(review_id)
-        if review:
-            for key, value in review_data.items():
-                setattr(review, key, value)
-            self.review_repo.update(review_id, review_data) # Pass user_id and user_data
-            return review
-        return None
-
-    def delete_review(self, review_id):
-        """
-        Delete a review by its ID.
-
-        Args:
-            review_id (str): The unique ID of the review to delete.
-
-        Returns:
-            bool: True if the review was deleted, False otherwise.
-        """
-        review = self.review_repo.get(review_id)
-        if review:
-            self.review_repo.delete(review_id)
-            return True
+    def user_has_reviewed_place(self, user_id, place_id):
+        reviews = self.review_repository.get_by_attribute('user_id', user_id)
+        if reviews is None:
+            return False
+        for review in reviews:
+            if review.place_id == place_id:
+                return True
         return False
 
+    def create_review(self, review_data):
+        """Create a new review."""
+        try:
+            user_id = UUID(review_data['user_id'])
+            place_id = UUID(review_data['place_id'])
+        except ValueError:
+            raise ValueError("Invalid UUID format for user_id or place_id")
+
+        # Retrieve the User and Place instances using the UUIDs
+        user = User.query.filter_by(id=user_id).first()
+        place = Place.query.filter_by(id=place_id).first()
+        
+        if not user or not place:
+            raise ValueError("Invalid user_id or place_id")
+
+        # Create the Review instance with the User and Place instances
+        review = Review(
+            comment=review_data['comment'],
+            rating=review_data['rating'],
+            user=user,  # Pass the User instance
+            place=place  # Pass the Place instance
+        )
+
+        # Add the review to the repository
+        self.review_repository.add(review)
+        return review
+
+    def get_review(self, review_id):
+        """Retrieve a review by its ID."""
+        return self.review_repository.get(review_id)
+
+    def get_all_reviews(self):
+        """Retrieve all reviews from the repository."""
+        return self.review_repository.get_all()
+
+    def get_reviews_by_place(self, place_id):
+        """Retrieve all reviews for a specific place."""
+        return self.review_repository.get_by_attribute('place_id', place_id)
+
+    def update_review(self, review_id, review_data):
+        """Update the details of an existing review."""
+        return self.review_repository.update(review_id, review_data)
+
+    def delete_review(self, review_id):
+        """Delete a review by its ID."""
+        return self.review_repository.delete(review_id)
