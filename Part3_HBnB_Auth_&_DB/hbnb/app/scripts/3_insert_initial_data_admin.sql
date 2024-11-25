@@ -6,7 +6,8 @@ VALUES (
     'HBnB',
     'admin@hbnb.io',
     ---'hashed_admin1234',  -- Replace with the hashed password
-    '$2b$12$WZqhkmHErIMTl7YKJ/RdfXEbrNKg9XyFo7Csh5RgN5tQ8qGHyjfD2', -- bcrypt hash of 'admin1234'
+    -- '$2b$12$WZqhkmHErIMTl7YKJ/RdfXEbrNKg9XyFo7Csh5RgN5tQ8qGHyjfD2', -- bcrypt hash of 'admin1234'
+    '$2a$12$ivDzHW.L7rqFI4ymAdVBbOswoVX4zsrfE1B1a5mnW.Yxt6e7ZKYoW', -- bcrypt2 hash of 'admin1234'
     TRUE
 );
 
