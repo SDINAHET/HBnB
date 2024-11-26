@@ -24,7 +24,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r Correction_Part3_HBnB/requirements.txt
+        pip install -r Correction_Part3_HBnB/hbnb/requirements.txt
 
     - name: Setup SQLite Database for Tests
       run: |
@@ -33,6 +33,6 @@ jobs:
         python -c "from app import db; db.create_all()"
 
     - name: Run tests
-      working-directory: Correction_Part3_HBnB
+      working-directory: Correction_Part3_HBnB/hbnb
       run: |
         pytest --cov=app
