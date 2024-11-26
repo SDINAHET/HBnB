@@ -7,7 +7,7 @@ en cours de correction la version finale corrigé fonctionnant à 100% avec les 
 
 
 
-
+```plaintext
 HBnB
 |---.github
 |   |   |---workflows
@@ -18,4 +18,5 @@ HBnB
 |   |       |---test.yml -->
 |   |---app
 |       |---tests
+```
 
