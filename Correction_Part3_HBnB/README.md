@@ -20,3 +20,12 @@ HBnB
 |       |---tests
 ```
 
+```plaintext
+HBnB
+|---.github
+|   |   |---workflows
+|   |       |---test.yml
+|---Correction_Part3_HBnB
+|   |---app
+|       |---tests
+```
