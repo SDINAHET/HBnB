@@ -28,8 +28,8 @@ jobs:
 
     - name: Setup SQLite Database for Tests
       run: |
-        export PYTHONPATH=$PYTHONPATH:$(pwd)/Correction_Part3_HBnB/hbnb/instance
-        cd Correction_Part3_HBnB/hbnb
+        export PYTHONPATH=$PYTHONPATH:$(pwd)/Correction_Part3_HBnB/hbnb
+        cd Correction_Part3_HBnB/hbnb/instance
         touch test.db
         python -c "from app import db; db.create_all()"
 
