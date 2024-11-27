@@ -34,6 +34,6 @@ jobs:
         python -c "from app import db; db.create_all()"
 
     - name: Run tests
-      working-directory: Correction_Part3_HBnB/hbnb/app/tests
+      working-directory: Correction_Part3_HBnB/hbnb
       run: |
         pytest --cov=app
