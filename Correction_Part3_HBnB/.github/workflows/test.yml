@@ -30,7 +30,7 @@ jobs:
       run: |
         export PYTHONPATH=$PYTHONPATH:$(pwd)/Correction_Part3_HBnB/hbnb/instance
         cd Correction_Part3_HBnB/hbnb
-        # touch test.db
+        touch test.db
         python -c "from app import db; db.create_all()"
 
     - name: Run tests
