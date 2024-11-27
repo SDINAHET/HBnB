@@ -28,7 +28,7 @@ jobs:
 
     - name: Setup SQLite Database for Tests
       run: |
-        cd Correction_Part3_HBnB
+        cd Correction_Part3_HBnB/hbnb
         touch test.db
         python -c "from app import db; db.create_all()"
 
