@@ -32,7 +32,7 @@ jobs:
         cd Correction_Part3_HBnB/hbnb
         # touch test.db
         # python -c "from app import db; db.create_all()"
-        flask db upgrade
+        # flask db upgrade
         python -c "import os; os.environ['ENV'] = 'development'; from app import db; db.create_all()"
 
     - name: Run tests
