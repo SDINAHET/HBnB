@@ -1,0 +1,29 @@
+# Flask Framework and Extensions
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+Flask-Migrate==4.0.4
+Flask-JWT-Extended==4.4.4
+Flask-Cors==3.0.10
+
+# Database Drivers
+SQLAlchemy==2.0.22
+psycopg2-binary==2.9.6  # PostgreSQL (utilisez-le si vous utilisez PostgreSQL)
+PyMySQL==1.0.3          # MySQL (optionnel, supprimez-le si non utilisé)
+
+# Password Hashing
+bcrypt==4.0.1
+
+# Testing Tools
+pytest==7.4.2
+pytest-cov==4.1.0
+pytest-mock==3.11.1
+requests==2.31.0
+
+# Utilities
+python-dotenv==1.0.0  # Gestion des variables d'environnement
+gunicorn==21.0.0      # Pour déploiement (optionnel)
+
+# Linters and Code Formatters
+flake8==6.1.0
+black==23.9.1
+isort==5.12.0
