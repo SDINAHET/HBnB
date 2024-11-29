@@ -1,136 +1,96 @@
-from app import db
+# hbnb/app/persistence/repository.py
+
+from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
+from app.models.base_entity import BaseEntity
+from app import db
+
 
 class BaseRepository:
     """
-    A generic repository class for handling common CRUD operations.
-
-    Attributes:
-        model (db.Model): The SQLAlchemy model class for the repository.
+    Base repository providing generic CRUD operations for database entities.
     """
-
-    def __init__(self, model):
+    def __init__(self, entity_class: BaseEntity):
         """
-        Initialize the repository with the specified SQLAlchemy model.
+        Initialize the repository with the specified entity class.
 
-        Args:
-            model (db.Model): The SQLAlchemy model class to manage.
+        :param entity_class: The SQLAlchemy model class associated with this repository.
         """
-        self.model = model
+        self.entity_class = entity_class
+        self.session = scoped_session(sessionmaker(bind=db.engine))
+
+    def get_all(self):
+        """
+        Retrieve all records for the entity.
+
+        :return: List of all entities.
+        """
+        try:
+            return self.session.query(self.entity_class).all()
+        except SQLAlchemyError as e:
+            print(f"Error retrieving all {self.entity_class.__name__}: {str(e)}")
+            return []
+
+    def get_by_id(self, entity_id: str):
+        """
+        Retrieve a single entity by its ID.
+
+        :param entity_id: ID of the entity.
+        :return: The entity object if found, else None.
+        """
+        try:
+            return self.session.query(self.entity_class).get(entity_id)
+        except SQLAlchemyError as e:
+            print(f"Error retrieving {self.entity_class.__name__} by ID: {str(e)}")
+            return None
 
     def add(self, entity):
         """
         Add a new entity to the database.
 
-        Args:
-            entity (db.Model): The entity instance to add.
-
-        Returns:
-            The added entity.
-
-        Raises:
-            SQLAlchemyError: If a database error occurs.
+        :param entity: The entity object to add.
+        :return: True if successful, False otherwise.
         """
         try:
-            db.session.add(entity)
-            db.session.commit()
-            return entity
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise e
-
-    def get_by_id(self, entity_id):
-        """
-        Retrieve an entity by its primary key.
-
-        Args:
-            entity_id: The ID of the entity to retrieve.
-
-        Returns:
-            The entity instance, or None if not found.
-        """
-        return self.model.query.get(entity_id)
-
-    def get_all(self):
-        """
-        Retrieve all entities of the model.
-
-        Returns:
-            List of all entities of the model.
-        """
-        return self.model.query.all()
-
-    def update(self, entity_id, updates):
-        """
-        Update an entity with the specified data.
-
-        Args:
-            entity_id: The ID of the entity to update.
-            updates (dict): A dictionary of field-value pairs to update.
-
-        Returns:
-            The updated entity, or None if not found.
-
-        Raises:
-            SQLAlchemyError: If a database error occurs.
-        """
-        entity = self.get_by_id(entity_id)
-        if not entity:
-            return None
-        try:
-            for key, value in updates.items():
-                if hasattr(entity, key):
-                    setattr(entity, key, value)
-            db.session.commit()
-            return entity
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise e
-
-    def delete(self, entity_id):
-        """
-        Delete an entity by its primary key.
-
-        Args:
-            entity_id: The ID of the entity to delete.
-
-        Returns:
-            True if deletion was successful, False if entity not found.
-
-        Raises:
-            SQLAlchemyError: If a database error occurs.
-        """
-        entity = self.get_by_id(entity_id)
-        if not entity:
-            return False
-        try:
-            db.session.delete(entity)
-            db.session.commit()
+            self.session.add(entity)
+            self.session.commit()
             return True
         except SQLAlchemyError as e:
-            db.session.rollback()
-            raise e
+            self.session.rollback()
+            print(f"Error adding {self.entity_class.__name__}: {str(e)}")
+            return False
 
-    def filter_by(self, **kwargs):
+    def update(self, entity):
         """
-        Retrieve entities filtered by the given criteria.
+        Update an existing entity in the database.
 
-        Args:
-            **kwargs: Field-value pairs to filter by.
-
-        Returns:
-            List of entities matching the criteria.
+        :param entity: The entity object to update.
+        :return: True if successful, False otherwise.
         """
-        return self.model.query.filter_by(**kwargs).all()
+        try:
+            self.session.merge(entity)
+            self.session.commit()
+            return True
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            print(f"Error updating {self.entity_class.__name__}: {str(e)}")
+            return False
 
-    def first_by(self, **kwargs):
+    def delete(self, entity_id: str):
         """
-        Retrieve the first entity matching the given criteria.
+        Delete an entity from the database by its ID.
 
-        Args:
-            **kwargs: Field-value pairs to filter by.
-
-        Returns:
-            The first entity matching the criteria, or None if no match.
+        :param entity_id: ID of the entity to delete.
+        :return: True if successful, False otherwise.
         """
-        return self.model.query.filter_by(**kwargs).first()
+        try:
+            entity = self.get_by_id(entity_id)
+            if entity:
+                self.session.delete(entity)
+                self.session.commit()
+                return True
+            return False
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            print(f"Error deleting {self.entity_class.__name__}: {str(e)}")
+            return False

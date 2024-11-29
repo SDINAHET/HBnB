@@ -1,13 +1,8 @@
-from flask import Flask
-from app import db, create_app
-# from flask_migrate import Migrate
+from app import create_app
 
-# Créer l'application Flask
+# Initialisation de l'application Flask
 app = create_app()
 
-# # Configurer Flask-Migrate pour la gestion des migrations
-# migrate = Migrate(app, db)
-
-# Point d'entrée pour démarrer le serveur Flask
 if __name__ == "__main__":
+    # Lancement de l'application sur localhost, port 5000
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -1,8 +1,10 @@
 # hbnb/app/api/__init__.py
-from flask import Blueprint
 
-api_bp = Blueprint('api', __name__)
+from flask import Flask
+from hbnb.app.api.v1 import blueprint as api_v1_blueprint
 
-# Import all versioned APIs
-from .v1 import api_v1_bp
-api_bp.register_blueprint(api_v1_bp, url_prefix='/api/v1')
+def register_blueprints(app: Flask):
+    """
+    Register all API blueprints with the Flask application.
+    """
+    app.register_blueprint(api_v1_blueprint)

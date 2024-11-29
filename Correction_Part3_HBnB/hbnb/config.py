@@ -1,39 +1,24 @@
 import os
-from datetime import timedelta
 
 class Config:
-    """Base configuration."""
-    SECRET_KEY = os.getenv("SECRET_KEY", "your_default_secret_key")
+    """Configuration de base pour l'application."""
+
+    SECRET_KEY = os.environ.get("SECRET_KEY", "default_secret_key")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", "sqlite:///instance/development.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your_jwt_secret_key")
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)  # Durée de validité des tokens
-    CORS_HEADERS = "Content-Type"
-    API_TITLE = "HBnB API"
-    API_VERSION = "v1"
-    SWAGGER_UI_DOC_EXPANSION = "list"
-    SWAGGER_UI_JSONEDITOR = True
-    SWAGGER_UI_OPERATION_ID = True
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "super_secret_jwt_key")
 
 class DevelopmentConfig(Config):
-    """Configuration for development."""
+    """Configuration pour l'environnement de développement."""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("DEV_DATABASE_URI", "sqlite:///instance/development.db")
-
-class TestingConfig(Config):
-    """Configuration for testing."""
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("TEST_DATABASE_URI", "sqlite:///instance/test.db")
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=5)  # Tokens expirent rapidement pour les tests
 
 class ProductionConfig(Config):
-    """Configuration for production."""
+    """Configuration pour l'environnement de production."""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.getenv("PROD_DATABASE_URI", "postgresql://user:password@localhost/hbnb")
 
-# Configuration mapping
-config = {
+# Dictionnaire pour le choix de configuration
+config_by_name = {
     "development": DevelopmentConfig,
-    "testing": TestingConfig,
     "production": ProductionConfig,
-    "default": DevelopmentConfig
 }
+

@@ -1,10 +1,18 @@
+# hbnb/app/models/place.py
+
+"""
+Define the Place model for the HBnB application.
+"""
+
 from app.models.base_entity import BaseEntity
-from app import db
+from app.models import db
 
 class Place(BaseEntity):
     """
-    Model representing a Place entity.
+    Place model
+    Represents a rental property in the HBnB application.
     """
+
     __tablename__ = 'places'
 
     title = db.Column(db.String(100), nullable=False)
@@ -15,25 +23,24 @@ class Place(BaseEntity):
     owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
 
     # Relationships
-    owner = db.relationship('User', back_populates='places')
-    reviews = db.relationship('Review', back_populates='place', cascade="all, delete-orphan")
-    amenities = db.relationship(
-        'Amenity',
-        secondary='place_amenity',
-        back_populates='places'
-    )
+    reviews = db.relationship('Review', backref='place', lazy=True, cascade="all, delete-orphan")
+    amenities = db.relationship('Amenity', secondary='place_amenity', lazy='subquery',
+                                 backref=db.backref('places', lazy=True))
 
     def to_dict(self):
         """
-        Converts the Place instance to a dictionary representation.
+        Convert the Place instance to a dictionary representation.
+        Returns:
+            dict: Dictionary representation of the Place instance.
         """
-        base_dict = super().to_dict()
-        base_dict.update({
+        return {
+            'id': self.id,
             'title': self.title,
             'description': self.description,
             'price': self.price,
             'latitude': self.latitude,
             'longitude': self.longitude,
-            'owner_id': self.owner_id
-        })
-        return base_dict
+            'owner_id': self.owner_id,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+        }

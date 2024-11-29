@@ -1,57 +1,62 @@
-from app import db, bcrypt
+# hbnb/app/models/user.py
+
+"""
+Define the User model for the HBnB application.
+"""
+
 from app.models.base_entity import BaseEntity
-from sqlalchemy import Column, String, Boolean
-from sqlalchemy.orm import relationship
-from sqlalchemy.orm import validates
+from app.models import db
+from flask_bcrypt import generate_password_hash, check_password_hash
 
 
 class User(BaseEntity):
     """
-    User model for representing users in the application.
-
-    Attributes:
-        first_name (str): The user's first name.
-        last_name (str): The user's last name.
-        email (str): The user's email address, unique and validated.
-        password (str): The hashed password of the user.
-        is_admin (bool): Whether the user is an administrator.
+    User model
+    Represents a user in the HBnB application.
     """
 
     __tablename__ = 'users'
 
-    first_name = Column(String(50), nullable=False)
-    last_name = Column(String(50), nullable=False)
-    email = Column(String(120), nullable=False, unique=True)
-    password = Column(String(128), nullable=False)
-    is_admin = Column(Boolean, default=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
-    places = relationship("Place", back_populates="owner", cascade="all, delete-orphan")
-    reviews = relationship("Review", back_populates="user", cascade="all, delete-orphan")
+    # Relationships
+    places = db.relationship('Place', backref='owner', lazy=True)
+    reviews = db.relationship('Review', backref='author', lazy=True)
 
-    @validates('email')
-    def validate_email(self, key, value):
-        """Validate that the email is not empty and follows a valid format."""
-        if not value or not value.strip():
-            raise ValueError("Email cannot be empty")
-        if "@" not in value or "." not in value.split("@")[-1]:
-            raise ValueError("Invalid email format")
-        return value.strip()
+    def set_password(self, password):
+        """
+        Hashes and sets the user's password.
+        Args:
+            password (str): The plaintext password to be hashed.
+        """
+        self.password = generate_password_hash(password).decode('utf-8')
 
-    @validates('first_name', 'last_name')
-    def validate_names(self, key, value):
-        """Validate that the first and last names are not empty."""
-        if not value or not value.strip():
-            raise ValueError(f"{key.capitalize()} cannot be empty")
-        if len(value) > 50:
-            raise ValueError(f"{key.capitalize()} must be 50 characters or less")
-        return value.strip()
+    def check_password(self, password):
+        """
+        Verifies if the provided password matches the stored hash.
+        Args:
+            password (str): The plaintext password to verify.
+        Returns:
+            bool: True if the password matches, False otherwise.
+        """
+        return check_password_hash(self.password, password)
 
-    def hash_password(self, password):
-        """Hash the password before storing it."""
-        if not password or len(password) < 8:
-            raise ValueError("Password must be at least 8 characters long")
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-    def verify_password(self, password):
-        """Verify a provided password against the hashed password."""
-        return bcrypt.check_password_hash(self.password, password)
+    def to_dict(self):
+        """
+        Convert the User instance to a dictionary representation.
+        Returns:
+            dict: Dictionary representation of the User instance.
+        """
+        return {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email,
+            'is_admin': self.is_admin,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+        }

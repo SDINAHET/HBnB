@@ -53,6 +53,47 @@ HBnB/
 │   │   ├── test.yml
 ```
 
+HBnB/
+├── Correction_Part3_HBnB/
+│   ├── hbnb/
+│   │   ├── app/
+│   │   │   ├── api/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── v1/
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── auth.py
+│   │   │   │   │   ├── users.py
+│   │   │   │   │   ├── places.py
+│   │   │   │   │   ├── reviews.py
+│   │   │   │   │   ├── amenities.py
+│   │   │   │   │   ├── protected.py
+│   │   │   ├── __init__.py
+│   │   │   ├── models/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── base_entity.py
+│   │   │   │   ├── user.py
+│   │   │   │   ├── place.py
+│   │   │   │   ├── review.py
+│   │   │   │   ├── amenity.py
+│   │   │   │   ├── place_amenity.py
+│   │   │   ├── persistence/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── repository.py
+│   │   │   ├── services/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── facade.py
+│   │   │   ├── swagger/
+│   │   │   ├── tests/
+│   │   ├── instance/
+│   │   │   ├── development.db
+│   │   │   ├── config.py
+│   │   ├── config.py
+│   │   ├── run.py
+│   │   ├── requirements.txt
+│   │   ├── __init__.py
+├── .github/
+│   ├── workflows/
+│   │   ├── test.yml
 
 ```plaintext
 HBnB

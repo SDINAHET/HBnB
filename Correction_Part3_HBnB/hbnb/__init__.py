@@ -1,2 +1,6 @@
 # hbnb/__init__.py
-from .app import create_app
+
+"""
+This is the root-level package for the HBnB project.
+It allows the app package to be recognized and properly configured.
+"""

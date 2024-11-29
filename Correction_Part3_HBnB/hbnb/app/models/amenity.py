@@ -1,80 +1,39 @@
-from flask import request, jsonify
-from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.facade import HBnBFacade
+# hbnb/app/models/amenity.py
 
-api = Namespace('amenities', description='Amenities-related operations')
+"""
+Define the Amenity model for the HBnB application.
+"""
 
-# Define input model for creating or updating amenities
-amenity_model = api.model('Amenity', {
-    'name': fields.String(required=True, description='Name of the amenity')
-})
+from app.models.base_entity import BaseEntity
+from app.models import db
 
-facade = HBnBFacade()
+class Amenity(BaseEntity):
+    """
+    Amenity Model
+    Represents an amenity that can be associated with places in the HBnB application.
+    """
 
+    __tablename__ = 'amenities'
 
-@api.route('/')
-class AmenityList(Resource):
-    @api.doc('list_amenities')
-    def get(self):
-        """List all amenities"""
-        amenities = facade.get_all_amenities()
-        return jsonify([amenity.to_dict() for amenity in amenities])
+    name = db.Column(db.String(50), nullable=False, unique=True)
 
-    @api.expect(amenity_model)
-    @jwt_required()
-    def post(self):
-        """Create a new amenity (admin only)"""
-        current_user = get_jwt_identity()
-        if not current_user.get('is_admin', False):
-            return {'error': 'Admin privileges required'}, 403
+    def __init__(self, name: str):
+        """
+        Initialize an Amenity instance.
+        Args:
+            name (str): Name of the amenity.
+        """
+        self.name = name
 
-        amenity_data = request.json
-        try:
-            new_amenity = facade.create_amenity(amenity_data)
-            return jsonify(new_amenity.to_dict()), 201
-        except ValueError as e:
-            return {'error': str(e)}, 400
-
-
-@api.route('/<string:amenity_id>')
-class AmenityDetail(Resource):
-    @api.doc('get_amenity')
-    def get(self, amenity_id):
-        """Get a specific amenity by ID"""
-        amenity = facade.get_amenity(amenity_id)
-        if not amenity:
-            return {'error': 'Amenity not found'}, 404
-        return jsonify(amenity.to_dict())
-
-    @api.expect(amenity_model)
-    @jwt_required()
-    def put(self, amenity_id):
-        """Update an amenity (admin only)"""
-        current_user = get_jwt_identity()
-        if not current_user.get('is_admin', False):
-            return {'error': 'Admin privileges required'}, 403
-
-        amenity_data = request.json
-        try:
-            updated_amenity = facade.update_amenity(amenity_id, amenity_data)
-            return jsonify(updated_amenity.to_dict())
-        except ValueError as e:
-            return {'error': str(e)}, 400
-        except KeyError as e:
-            return {'error': f'Missing field: {str(e)}'}, 400
-
-    @api.doc('delete_amenity')
-    @jwt_required()
-    def delete(self, amenity_id):
-        """Delete an amenity (admin only)"""
-        current_user = get_jwt_identity()
-        if not current_user.get('is_admin', False):
-            return {'error': 'Admin privileges required'}, 403
-
-        amenity = facade.get_amenity(amenity_id)
-        if not amenity:
-            return {'error': 'Amenity not found'}, 404
-
-        facade.delete_amenity(amenity_id)
-        return {'message': 'Amenity deleted successfully'}, 200
+    def to_dict(self):
+        """
+        Convert the Amenity object into a dictionary for API responses.
+        Returns:
+            dict: Dictionary representation of the Amenity.
+        """
+        return {
+            'id': self.id,
+            'name': self.name,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+        }
