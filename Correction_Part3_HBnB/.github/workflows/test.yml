@@ -1,4 +1,4 @@
-name: Python CI
+name: Python CI with SQLite
 
 on:
   push:
@@ -26,19 +26,45 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r Correction_Part3_HBnB/hbnb/requirements.txt
 
-    - name: Setup SQLite Database for Tests
+        - name: Vérifier l'installation de SQLite
+        run: sqlite3 --version
+
+    - name: Créer la base de données SQLite
       run: |
-        export PYTHONPATH=$PYTHONPATH:$(pwd)/Correction_Part3_HBnB/hbnb
-        cd Correction_Part3_HBnB/hbnb
-        # touch test.db
-        # python -c "from app import db; db.create_all()"
-        # flask db upgrade
-        python -c "import os; os.environ['ENV'] = 'development'; from app import db; db.create_all()"
+        sqlite3 test.db < Correction_Part3_HBnB/hbnb/schema.sql
+
+    - name: Ajouter des données de test
+      run: |
+        sqlite3 test.db <<EOF
+        INSERT INTO users (id, first_name, last_name, email, password, is_admin)
+        VALUES (
+            '36c9050e-ddd3-4c3b-9731-9f487208bbc1',
+            'Admin',
+            'HBnB',
+            'admin@hbnb.io',
+            '$2a$12$ivDzHW.L7rqFI4ymAdVBbOswoVX4zsrfE1B1a5mnW.Yxt6e7ZKYoW',
+            TRUE
+        );
+        EOF
 
     - name: Run tests
       working-directory: Correction_Part3_HBnB/hbnb
-      run: |
-        pytest --cov=app
+      run: pytest --cov=app
+
+
+    # - name: Setup SQLite Database for Tests
+    #   run: |
+    #     export PYTHONPATH=$PYTHONPATH:$(pwd)/Correction_Part3_HBnB/hbnb
+    #     cd Correction_Part3_HBnB/hbnb
+    #     # touch test.db
+    #     # python -c "from app import db; db.create_all()"
+    #     # flask db upgrade
+    #     python -c "import os; os.environ['ENV'] = 'development'; from app import db; db.create_all()"
+
+    # - name: Run tests
+    #   working-directory: Correction_Part3_HBnB/hbnb
+    #   run: |
+    #     pytest --cov=app
 
     # - name: Debug Python Path
     #   run: |
