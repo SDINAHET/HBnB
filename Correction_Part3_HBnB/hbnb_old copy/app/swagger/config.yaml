@@ -1,0 +1,25 @@
+openapi: 3.0.0
+info:
+  title: HBnB API Documentation
+  version: "1.0"
+  description: >
+    Ceci est la documentation interactive pour l'API HBnB.
+  contact:
+    name: HBnB Team
+    url: https://github.com/SDINAHET/HBnB
+    email: contact@hbnb.io
+servers:
+  - url: http://localhost:5000
+    description: Serveur local de développement
+
+tags:
+  - name: Users
+    description: Gestion des utilisateurs
+  - name: Places
+    description: Gestion des lieux
+  - name: Reviews
+    description: Gestion des avis
+  - name: Amenities
+    description: Gestion des équipements
+
+paths: {}
