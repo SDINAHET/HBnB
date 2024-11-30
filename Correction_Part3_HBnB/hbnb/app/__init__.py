@@ -1,29 +1,18 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager
-from flask_cors import CORS
-from app.models import setup_db
-from app.routes import setup_routes
+from flask import Blueprint
+from flask_restx import Api
 
-# Initialiser les extensions
-db = SQLAlchemy()
-jwt = JWTManager()
+api_v1 = Blueprint('api_v1', __name__)
+api = Api(api_v1)
 
-def create_app():
-    app = Flask(__name__)
+# Import and register namespaces
+from hbnb.app.api.v1.auth import api as auth_ns
+from hbnb.app.api.v1.users import api as users_ns
+from hbnb.app.api.v1.places import api as places_ns
+from hbnb.app.api.v1.reviews import api as reviews_ns
+from hbnb.app.api.v1.amenities import api as amenities_ns
 
-    # Charger la configuration
-    app.config.from_object("config.Config")
-
-    # Initialiser les extensions
-    db.init_app(app)
-    jwt.init_app(app)
-    CORS(app)
-
-    # Configurer la base de données
-    setup_db(app)
-
-    # Ajouter les routes
-    setup_routes(app)
-
-    return app
+api.add_namespace(auth_ns)
+api.add_namespace(users_ns)
+api.add_namespace(places_ns)
+api.add_namespace(reviews_ns)
+api.add_namespace(amenities_ns)
