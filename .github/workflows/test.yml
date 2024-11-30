@@ -47,9 +47,24 @@ jobs:
     #     );
     #     EOF
 
-    - name: Run tests
+    # - name: Run tests
+    #   working-directory: Correction_Part3_HBnB/hbnb
+    #   run: pytest --cov=app
+
+    - name: Run tests with coverage
+      env:
+        PYTHONPATH: ${{ github.workspace }}/Correction_Part3_HBnB/hbnb
       working-directory: Correction_Part3_HBnB/hbnb
-      run: pytest --cov=app
+      run: pytest --cov=app --cov-report=term-missing
+
+
+
+
+
+
+
+
+
 
 # name: Python CI
 
