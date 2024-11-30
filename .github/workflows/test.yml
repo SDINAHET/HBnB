@@ -71,6 +71,7 @@ jobs:
 
     - name: Run tests with coverage
       env:
+        PYTHONWARNINGS: "ignore::pluggy.PluggyTeardownRaisedWarning"
         PYTHONPATH: ${{ github.workspace }}/Correction_Part3_HBnB/hbnb
       working-directory: ${{ github.workspace }}/Correction_Part3_HBnB/hbnb
       run: pytest app/tests --cov=app --cov-report=term-missing
