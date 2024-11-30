@@ -51,10 +51,16 @@ jobs:
     #   working-directory: Correction_Part3_HBnB/hbnb
     #   run: pytest --cov=app
 
+    # - name: Run tests with coverage
+    #   env:
+    #     PYTHONPATH: ${{ github.workspace }}/Correction_Part3_HBnB/hbnb
+    #   working-directory: Correction_Part3_HBnB/hbnb
+    #   run: pytest app/tests --cov=app --cov-report=term-missing
+
     - name: Run tests with coverage
       env:
         PYTHONPATH: ${{ github.workspace }}/Correction_Part3_HBnB/hbnb
-      working-directory: Correction_Part3_HBnB/hbnb
+      working-directory: ${{ github.workspace }}/Correction_Part3_HBnB/hbnb
       run: pytest app/tests --cov=app --cov-report=term-missing
 
 
