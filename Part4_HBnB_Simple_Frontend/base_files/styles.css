@@ -76,20 +76,40 @@ header #login-link:hover {
 /* ==========================
    Main Section
 ========================== */
-main {
-  flex: 1; /*Fills space between header and footer */
-  /* display: flex; Centers the content */
-  justify-content: center; /*Horizontal centering */
-  align-items: center; /* Vertical centering */
-  padding: 20px;
-  /* min-height: calc(100vh - 120px); Prend tout l'espace sauf le header et le footer */
-  text-align: center; /* Centre le contenu */
-}
+
 
 
 /* ==========================
    Form Styling (e.g., Login, Add Review)
 ========================== */
+/* Styles spécifiques à la page de connexion */
+.login-page {
+  flex: 1; /*Fills space between header and footer */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 120px);
+  background-color: #f4f4f4;
+  text-align: center; /* Centre le contenu */
+}
+
+/* Styles spécifiques à la page d’accueil */
+.home-page {
+  /* flex: 1;
+  display: flex;
+  padding: 20px;
+  background-color: #ffffff;
+  color: #333; */
+  flex: 1; /* Permet de remplir l'espace */
+  display: flex; /* Active Flexbox */
+  flex-direction: column; /* Aligne les enfants en colonne */
+  justify-content: flex-start; /* Aligne le contenu en haut */
+  padding: 20px; /* Ajoute un espace autour du contenu */
+  background-color: #ffffff;
+  color: #333;
+
+}
+
 .form-container {
   background-color: white;
   padding: 2rem;

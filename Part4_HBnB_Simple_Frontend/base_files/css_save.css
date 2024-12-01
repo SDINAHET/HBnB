@@ -406,3 +406,33 @@ header {
     position: relative;
   }
 
+/* Styles spécifiques pour la page login*/
+.login-page {
+  display: flex; /* Active Flexbox */
+  justify-content: center; /* Centre horizontalement */
+  align-items: center; /* Centre verticalement */
+  height: calc(100vh - 120px); /* Prend toute la hauteur visible moins header/footer */
+  background-color: #f4f4f4; /* Ajoutez une couleur de fond si nécessaire */
+  padding: 20px; /* Espacement interne */
+}
+
+/* Optionnel : Ajustez également le formulaire s'il y a des styles spécifiques */
+.login-page .form-container {
+  max-width: 400px; /* Largeur maximale pour le formulaire */
+  width: 100%; /* Prend toute la largeur disponible dans les petits écrans */
+  padding: 2rem;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+main {
+  flex: 1; /*Fills space between header and footer */
+  /* display: flex; Centers the content */
+  justify-content: center; /*Horizontal centering */
+  align-items: center; /* Vertical centering */
+  padding: 20px;
+  /* min-height: calc(100vh - 120px); Prend tout l'espace sauf le header et le footer */
+  text-align: center; /* Centre le contenu */
+}
