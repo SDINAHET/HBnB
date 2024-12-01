@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorer les fichiers créés par Visual Studio Code
+.vscode/
+# instance/

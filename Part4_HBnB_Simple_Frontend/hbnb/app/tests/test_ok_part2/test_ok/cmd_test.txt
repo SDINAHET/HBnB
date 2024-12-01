@@ -1,0 +1,67 @@
+In folder hbnb
+# Unittest
+
+python3 -m unittest discover -s app/tests/test_ok
+
+Test test_base_entity / Test User / Test Amenity / Test création_Place
+python3 -m unittest app.tests.test_ok.test_base_entity
+python3 -m unittest app.tests.test_ok.test_user2
+python3 -m unittest app.tests.test_ok.test_user_task2
+python3 -m unittest app.tests.test_ok.test_amenity
+python3 -m unittest app.tests.test_ok.test_amenity_task3
+
+python3 app/tests/test_ok/automate_creation_place.py
+
+# cd app/tests/test_ok
+python3 automate_creation_place.py
+./automate_creation_place.py
+# cd ..
+# cd ..
+# cd ..
+
+
+# Pytest
+pytest app/tests/test_ok/test_user_task2_pytest.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+not_ok:
+python3 -m unittest app.tests.test_ok.test_place
+python3 -m unittest app.tests.test_ok.test_place_task4
+python3 -m unittest app.tests.test_ok.test_review
+python3 -m unittest app.tests.test_ok.test_review_task5
+
+
+python3 -m unittest app.tests.test_place
+python3 -m unittest app.tests.test_place_task4
+python3 -m unittest app.tests.test_review
+python3 -m unittest app.tests.test_review_task5
+python3 -m unittest app.tests.test_all
+pytest app/tests/test_user_task2_pytest.py
+python3 -m unittest app.tests.test_creation_place
