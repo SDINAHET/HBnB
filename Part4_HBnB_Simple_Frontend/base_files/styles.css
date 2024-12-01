@@ -1,8 +1,6 @@
-/* 
-  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
-  You'll probably need to override some of theese styles.
-*/
-
+/* ==========================
+   Global Styles
+========================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,22 +9,326 @@
 }
 
 body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure footer sticks to the bottom */
+  margin: 0;
   background-color: #f4f4f4;
+  /* background-color: #f8f9fa; */
+  color: #333;
+  background: rgb(231, 231, 231)
+}
+
+/* ==========================
+   Header Section
+========================== */
+header {
+  display: flex; /* Aligns items horizontally */
+  justify-content: space-between; /* Space between logo and login link */
+  align-items: center; /* Centers items vertically */
+  background-color: #ff8c00; /* Orange color */
+  padding: 1rem 2rem;
+  color: white; /* White text */
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+}
+
+header .logo {
+  display: flex; /* Aligns logo icon and text horizontally */
+  align-items: center;
+  /* font-size: 24px;
+  font-weight: bold; */
+}
+
+header .logo-img {
+  width: 150px; /* Logo size */
+  height: auto;
+  margin-right: 10px;
+}
+
+header .logo-text {
+  font-size: 1.5rem; /* Logo text size */
+  font-weight: bold;
+  color: #003580; /* Dark blue */
+}
+
+header #login-link {
+  font-size: 1rem;
+  /*color: white;*/
+  color: #ff8c00;
+  text-decoration: none;
+  /*background-color: #fff;*/
+  background-color: #ff8c00;
+  /*color: #ff8c00;*/
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+header #login-link:hover {
+  background-color: #ffd27f; /* Lighter orange on hover */
+}
+
+
+
+/* ==========================
+   Main Section
+========================== */
+main {
+  flex: 1; /*Fills space between header and footer */
+  /* display: flex; Centers the content */
+  justify-content: center; /*Horizontal centering */
+  align-items: center; /* Vertical centering */
+  padding: 20px;
+  /* min-height: calc(100vh - 120px); Prend tout l'espace sauf le header et le footer */
+  text-align: center; /* Centre le contenu */
+}
+
+
+/* ==========================
+   Form Styling (e.g., Login, Add Review)
+========================== */
+.form-container {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+}
+
+.form-container h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
   color: #333;
 }
 
-header {
-  background-color: #333;
-  color: #fff;
+.form-container label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.form-container .submit-btn {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #ff8c00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.form-container .submit-btn:hover {
+  background-color: #e67e00;
+}
+
+.submit-btn {
+  width: 100%; /* Pleine largeur */
+  padding: 0.7rem; /* Espacement interne */
+  background-color: #ff8c00; /* Couleur orange */
+  color: #fff; /* Texte blanc */
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem; /* Taille du texte augmentée */
+  font-weight: bold; /* (Optionnel) Pour un texte plus gras */
+  cursor: pointer;
+}
+
+
+/* ==========================
+  Index Section (index Page)
+========================== */
+/* Title Section */
+.title-section {
+  text-align: center; /* Centre le conteneur */
+  margin-bottom: 30px; /* Espace sous le titre */
+}
+
+
+.title-filter {
+  display: flex; /* Alignement horizontal des éléments */
+  flex-direction: column; /* Position verticale (titre au-dessus du filtre) */
+  align-items: center; /* Centrage horizontal */
+  justify-content: center; /* Centrage vertical */
+  gap: 10px; /* Espacement entre le titre et le filtre */
+  margin-bottom: 40px; /* Espacement avec la section des cartes */
+}
+
+/* Style pour le titre */
+main h1 {
+  text-align: center; /* Centre le titre */
+  font-size: 2rem; /* Taille plus grande pour le titre */
+  margin-bottom: 20px; /* Espace entre le titre et le filtre */
+  color: #333; /* Couleur sombre */
+}
+
+/* Title Section */
+.title-section h1 {
+  text-align: center; /* Centre le conteneur */
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.filter {
+  display:  inline-flex; /* Aligner le label et le select horizontalement */
+  align-items: center;
+  /* justify-content: center; Centrer horizontalement */
+  align-items: center; /* Aligne verticalement le label et le select */
+  gap: 10px; /* Espacement entre label et select */
+  margin-bottom: 20px; /* Espace entre le filtre et les cartes */
+}
+
+.filter label {
+  /* display: flex; Permet d'aligner label et select horizontalement */
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.filter select {
+  /* display: flex; Permet d'aligner label et select horizontalement */
+  padding: 5px 10px;
+  font-size: 1rem;
+}
+
+/* Places Section */
+.places {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  /* flex-wrap: wrap;  */
+}
+
+.place-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 250px;
+  /* transition: transform 0.3s ease; */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Effet au survol */
+}
+
+.place-card:hover {
+  /* transform: scale(1.05); */
+  transform: scale(1.1); /* Effet de zoom plus marqué */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Ombre renforcée au survol */
+}
+
+.place-card h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.place-card p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.place-card button {
+  background-color: #ff7300;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.place-card button:hover {
+  background-color: #e66900;
+}
+
+.place-card .details-btn {
+  background-color: #ff7300;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+
+
+
+/* ==========================
+   Review Section (Add Review Page)
+========================== */
+.add-review-section {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: left;
+}
+
+.add-review-section h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.add-review-section label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.add-review-section textarea,
+.add-review-section select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.add-review-section .submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff8c00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.add-review-section .submit-button:hover {
+  background-color: #e67e00;
+}
+
+/* ==========================
+   Footer Section
+========================== */
+footer {
+  background-color: #ff8c00;
+  color: white;
+  text-align: center;
   padding: 1rem;
-}
-
-nav a {
-  color: #fff;
-  text-decoration: none;
-  margin-left: 1rem;
-}
-
-main {
-  padding: 2rem;
+  width: 100%;
+  font-size: 1rem;
 }
