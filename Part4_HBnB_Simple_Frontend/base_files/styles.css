@@ -21,9 +21,14 @@ body {
   /* min-height: 100vh; */
 }
 
-.place-page {
-  flex: 1; /* Permet au contenu de s'étendre pour éviter le chevauchement */
+.wrapper {
+  flex: 1; /* Permet au contenu de s'étendre */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
+
 
 /* ==========================
    Header Section
@@ -105,7 +110,7 @@ header #login-link:hover {
 
 .place-page{
   /* flex: 1; Fills space between header and footer */
-  /* display: flex; */
+  flex: 1; /* Permet au contenu de s'étendre pour éviter le chevauchement */
   flex-direction: column;
   /* justify-content: center; */
   justify-content: flex-start;
