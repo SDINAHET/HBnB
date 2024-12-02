@@ -443,12 +443,14 @@ p {
   justify-content: space-between; /* Texte espacé du bas */
   border: 2px solid #f0f0f0; /* Bordure plus épaisse et légère */
   margin-bottom: 25px;
-  margin-top: 10px;
+  margin-top: 0px;
   padding-top: 20px
+  /* padding-bottom: 20px; Augmente l'espacement interne en bas */
 }
 
 .section-review {
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
+  /* padding-bottom: 20px; Augmente l'espacement interne en bas */
 }
 
 /* .reviews {
@@ -542,4 +544,6 @@ footer {
   font-size: 1.3rem;
   /* margin-top: 200px; Pousse le footer en bas */
   margin-top: auto; /* Assure que le footer reste en bas */
+  /* position: relative; /* Assure qu'il ne chevauche pas */
+  /* z-index: 1; Gère l'ordre de superposition */ */
 }
