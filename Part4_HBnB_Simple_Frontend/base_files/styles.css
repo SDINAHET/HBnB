@@ -17,8 +17,9 @@ body {
   background-color: #f4f4f4;
   /* background-color: #f8f9fa; */
   color: #333;
-  background: rgb(231, 231, 231)
+  background: rgb(231, 231, 231);
   /* min-height: 100vh; */
+  padding: 0;
 }
 
 .wrapper {
@@ -26,6 +27,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
+  padding: 0;
 }
 
 
@@ -101,11 +104,12 @@ header #login-link:hover {
 .home-page {
   flex: 1; /* Permet de remplir l'espace */
   display: flex; /* Active Flexbox */
-  flex-direction: column; /* Aligne les enfants en colonne */
-  justify-content: flex-start; /* Aligne le contenu en haut */
+  flex-direction: column; /*Aligne les enfants en colonne*/
+  justify-content: flex-start; /*Aligne le contenu en haut */
   padding: 20px; /* Ajoute un espace autour du contenu */
   background-color: #e5e4e4;
   color: #333;
+  align-items: center; /* Centre les cartes verticalement si nécessaire */
 }
 
 .place-page{
@@ -141,7 +145,8 @@ header #login-link:hover {
   background-color: white;
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: rgb(250, 249, 249);
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
   width: 400px;
   text-align: center;
 }
@@ -262,6 +267,7 @@ main h1 {
 
 /* Places Section */
 .places {
+
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -271,7 +277,11 @@ main h1 {
 }
 
 .place-card {
-  background-color: white;
+  flex: 1; /* Permet aux cartes de s'étendre uniformément */
+  background: rgb(250, 249, 249);
+  /* background-color: rgb(241, 239, 239); */
+  margin: 0 10px; /* Optionnel, ajoute un espacement entre les cartes */
+  max-width: 300px; /* Limite la largeur d'une carte */
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -415,7 +425,7 @@ p {
 } */
 
 .place-details {
-  background: rgb(238, 236, 236);
+  background: rgb(250, 249, 249);
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -433,7 +443,8 @@ p {
 
 
 .review {
-  background: #efeeee; /* Fond clair pour chaque review */
+  background: rgb(250, 249, 249);
+  /* background: #efeeee; Fond clair pour chaque review */
   border: 1px solid #ddd; /* Bordure légère */
   border-radius: 10px; /* Coins arrondis */
   padding: 20px; /* Espacement interne */
