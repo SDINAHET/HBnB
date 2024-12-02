@@ -237,37 +237,61 @@ main h1 {
 .title-section h1 {
   text-align: center; /* Centre le conteneur */
   font-size: 2rem;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   color: #333;
 }
 
-.filter {
+.index_filter {
+  display: flex; /* Utilise Flexbox pour l'alignement */
   display:  inline-flex; /* Aligner le label et le select horizontalement */
   align-items: center;
   /* justify-content: center; Centrer horizontalement */
-  align-items: center; /* Aligne verticalement le label et le select */
+  /* align-items: center; Aligne verticalement le label et le select */
   gap: 10px; /* Espacement entre label et select */
   margin-bottom: 20px; /* Espace entre le filtre et les cartes */
   font-weight: bold;
+  margin-top: 20px;
+  /* font-size:92rem; */
 }
 
-.filter label {
+.index_filter label {
   /* display: flex; Permet d'aligner label et select horizontalement */
   font-size: 16px;
-  margin-right: 10px;
+  margin-right: 1px;
   font-weight: bold;
+  /* font-size: 16px; Taille du texte du label */
+  color: #333; /* Couleur du texte */
 }
 
-.filter select {
+.index_filter select {
   /* display: flex; Permet d'aligner label et select horizontalement */
-  padding: 5px 10px;
-  font-size: 1rem;
-  font-weight: bold;
+  padding: 10px 10px;
+  font-size: 16px; /* Taille du texte dans le menu déroulant */
+  /* font-size: 1.1rem; */
+  /* font-weight: bold; */
+  border: 1px solid #ccc; /* Bordure légère */
+  border-radius: 10px; /* Coins arrondis */
+  background-color: #f8f5f5; /* Fond blanc */
+  cursor: pointer; /* Curseur pointeur */
+  align-items: center; /* Centre verticalement le contenu */
+}
+
+.index_filter label:focus {
+  outline: none; /* Supprime le contour par défaut */
+  border-color: #ff8c00; /* Couleur de la bordure au focus */
+  border-radius: 10px;
+}
+
+.index_filter select:focus {
+  outline: none; /* Supprime le contour par défaut */
+  border-color: #ff8c00; /* Couleur de la bordure au focus */
+  border-radius: 10px;
 }
 
 /* Places Section */
 .places {
-
+  /* flex: 1; Permet aux cartes de s'étendre uniformément */
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -276,17 +300,25 @@ main h1 {
   /* flex-wrap: wrap;  */
 }
 
+.maxprice {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 5%;
+}
+
 .place-card {
   flex: 1; /* Permet aux cartes de s'étendre uniformément */
   background: rgb(250, 249, 249);
   /* background-color: rgb(241, 239, 239); */
-  margin: 0 10px; /* Optionnel, ajoute un espacement entre les cartes */
+  margin: 0 0px; /* Optionnel, ajoute un espacement entre les cartes */
   max-width: 300px; /* Limite la largeur d'une carte */
-  padding: 20px;
+  padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 250px;
+  width: 400px;
   /* transition: transform 0.3s ease; */
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Effet au survol */
 
