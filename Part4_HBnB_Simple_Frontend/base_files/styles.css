@@ -104,8 +104,8 @@ header #login-link:hover {
 }
 
 .place-page{
-  /* flex: 1; Fills space between header and footer */ */
-  display: flex;
+  /* flex: 1; Fills space between header and footer */
+  /* display: flex; */
   flex-direction: column;
   /* justify-content: center; */
   justify-content: flex-start;
@@ -448,10 +448,10 @@ p {
   /* padding-bottom: 20px; Augmente l'espacement interne en bas */
 }
 
-.section-review {
+/* .section-review {
   /* margin-bottom: 20px; */
   /* padding-bottom: 20px; Augmente l'espacement interne en bas */
-}
+/* } */
 
 /* .reviews {
   background: white;
@@ -545,5 +545,5 @@ footer {
   /* margin-top: 200px; Pousse le footer en bas */
   margin-top: auto; /* Assure que le footer reste en bas */
   /* position: relative; /* Assure qu'il ne chevauche pas */
-  /* z-index: 1; Gère l'ordre de superposition */ */
+  /* z-index: 1; Gère l'ordre de superposition */
 }
