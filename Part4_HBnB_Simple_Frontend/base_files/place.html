@@ -18,7 +18,7 @@
             <a href="login.html" id="login-link">Login</a>
           </nav>
       </header>
-      <main>
+      <main class="place-page">
         <!-- <section id="place-details"> -->
           <!-- Place details will be populated dynamically -->
         <!-- </section> -->
@@ -40,32 +40,26 @@
           <p><strong>Price per night:</strong> $150</p>
           <p><strong>Description:</strong> A beautiful beach house with amazing views...</p>
           <p><strong>Amenities:</strong> WiFi, Pool, Air Conditioning</p>
+          <p></p>
+        </section>
+        <h2 id="reviews-title">Reviews</h2>
+        <section class="reviews">
+          <div class="review">
+            <p><strong>Jane Smith:</strong> </p>
+            <p>Great place to stay!</p>
+            <p>Rating: ★★★★☆</p>
+            <p></p>
+          </div>
         </section>
         <section class="reviews">
-          <h2>Reviews</h2>
           <div class="review">
-            <p><strong>Jane Smith:</strong> Great place to stay!</p>
-            <p><strong>Rating:</strong> ★★★★☆</p>
-          </div>
-          <div class="review">
-            <p><strong>Robert Brown:</strong> Amazing location and very comfortable.</p>
-            <p><strong>Rating:</strong> ★★★★★</p>
+            <p><strong>Robert Brown:</strong> </p>
+            <p>Amazing location and very comfortable.</p>
+            <p>Rating: ★★★★★</p>
+            <p></p>
           </div>
         </section>
-        <section class="add-review">
-          <h2>Add a Review</h2>
-          <form id="review-form">
-            <textarea id="review-text" placeholder="Write your review..." required></textarea>
-            <select id="review-rating">
-              <option value="1">1 Star</option>
-              <option value="2">2 Stars</option>
-              <option value="3">3 Stars</option>
-              <option value="4">4 Stars</option>
-              <option value="5">5 Stars</option>
-            </select>
-            <button type="submit">Submit Review</button>
-          </form>
-        </section>
+
       </main>
       <script src="scripts.js"></script>
       <footer>

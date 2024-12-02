@@ -436,3 +436,18 @@ main {
   /* min-height: calc(100vh - 120px); Prend tout l'espace sauf le header et le footer */
   text-align: center; /* Centre le contenu */
 }
+
+/* <section class="add-review">
+<h2>Add a Review</h2>
+<form id="review-form">
+  <textarea id="review-text" placeholder="Write your review..." required></textarea>
+  <select id="review-rating">
+    <option value="1">1 Star</option>
+    <option value="2">2 Stars</option>
+    <option value="3">3 Stars</option>
+    <option value="4">4 Stars</option>
+    <option value="5">5 Stars</option>
+  </select>
+  <button type="submit">Submit Review</button>
+</form>
+</section> */

@@ -19,22 +19,47 @@
       </nav>
     </header>
 
-    <main>
+    <main class="place-page">
+      <h1 id="place-title">Beautiful Beach House</h1>
+      <section class="place-details">
+        <p><strong>Host:</strong> John Doe</p>
+        <p><strong>Price per night:</strong> $150</p>
+        <p><strong>Description:</strong> A beautiful beach house with amazing views...</p>
+        <p><strong>Amenities:</strong> WiFi, Pool, Air Conditioning</p>
+        <p></p>
+      </section>
+      <h2 id="reviews-title">Reviews</h2>
+      <section class="reviews">
+        <div class="review">
+          <p><strong>Jane Smith:</strong> </p>
+          <p>Great place to stay!</p>
+          <p>Rating: ★★★★☆</p>
+          <p></p>
+        </div>
+      </section>
+      <section class="reviews">
+        <div class="review">
+          <p><strong>Robert Brown:</strong> </p>
+          <p>Amazing location and very comfortable.</p>
+          <p>Rating: ★★★★★</p>
+          <p></p>
+        </div>
+      </section>
+      <h2 id="addreview-title">Add a Review</h2>
       <section class="add-review-section">
-        <h2>Reviewing: Beautiful Beach House</h2>
-        <form id="review-form">
-          <label for="review">Your Review:</label>
-          <textarea id="review" name="review" placeholder="Write your review here..." required></textarea>
-          <label for="rating">Rating:</label>
-          <select id="rating" name="rating" required>
-            <option value="1">1 Star</option>
-            <option value="2">2 Stars</option>
-            <option value="3">3 Stars</option>
-            <option value="4">4 Stars</option>
-            <option value="5">5 Stars</option>
-          </select>
-          <button type="submit" class="submit-button">Submit Review</button>
-        </form>
+      <form id="review-form">
+        <label for="review">Your Review:</label>
+        <textarea id="review" name="review" placeholder="" required></textarea>
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating" required>
+          <option value="1">1 Star</option>
+          <option value="2">2 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="5">5 Stars</option>
+        </select>
+        <button type="submit" class="submit-button">Submit Review</button>
+      </form>
       </section>
     </main>
     <script src="scripts.js"></script>
