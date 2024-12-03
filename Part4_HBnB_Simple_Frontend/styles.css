@@ -1,0 +1,597 @@
+/* ==========================
+   Global Styles
+========================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure footer sticks to the bottom */
+  margin: 0;
+  background-color: #f4f4f4;
+  /* background-color: #f8f9fa; */
+  color: #333;
+  background: rgb(231, 231, 231);
+  /* min-height: 100vh; */
+  padding: 0;
+}
+
+.wrapper {
+  flex: 1; /* Permet au contenu de s'étendre */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
+}
+
+
+
+/* ==========================
+   Header Section
+========================== */
+header {
+  display: flex; /* Aligns items horizontally */
+  justify-content: space-between; /* Space between logo and login link */
+  align-items: center; /* Centers items vertically */
+  background-color: #ff8c00; /* Orange color */
+  padding: 1rem 2rem;
+  color: white; /* White text */
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+}
+
+header .logo {
+  display: flex; /* Aligns logo icon and text horizontally */
+  align-items: center;
+  /* font-size: 24px;
+  font-weight: bold; */
+}
+
+header .logo-img {
+  width: 150px; /* Logo size */
+  height: auto;
+  margin-right: 10px;
+}
+
+header .logo-text {
+  font-size: 1.5rem; /* Logo text size */
+  font-weight: bold;
+  color: #003580; /* Dark blue */
+}
+
+header #login-link {
+  font-size: 1rem;
+  /*color: white;*/
+  color: #ff8c00;
+  text-decoration: none;
+  /*background-color: #fff;*/
+  background-color: #ff8c00;
+  /*color: #ff8c00;*/
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+header #login-link:hover {
+  background-color: #ffd27f; /* Lighter orange on hover */
+}
+
+
+
+/* ==========================
+   Main Section
+========================== */
+/* Styles spécifiques à la page de connexion */
+.login-page {
+  flex: 1; /*Fills space between header and footer */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 120px);
+  background-color: #e5e4e4;
+  text-align: center; /* Centre le contenu */
+}
+
+/* Styles spécifiques à la page d’accueil */
+.home-page {
+  flex: 1; /* Permet de remplir l'espace */
+  display: flex; /* Active Flexbox */
+  flex-direction: column; /*Aligne les enfants en colonne*/
+  justify-content: flex-start; /*Aligne le contenu en haut */
+  padding: 20px; /* Ajoute un espace autour du contenu */
+  background-color: #e5e4e4;
+  color: #333;
+  align-items: center; /* Centre les cartes verticalement si nécessaire */
+}
+
+.place-page{
+  /* flex: 1; Fills space between header and footer */
+  flex: 1; /* Permet au contenu de s'étendre pour éviter le chevauchement */
+  flex-direction: column;
+  /* justify-content: center; */
+  justify-content: flex-start;
+  align-items: center;
+  height: calc(100vh - 120px);
+  background-color: #e5e4e4;
+  text-align: center; /* Centre le contenu */
+  padding: 20px;
+}
+
+.add-review-page{
+  flex: 1; /*Fills space between header and footer */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 120px);
+  background-color: #e5e4e4;
+  text-align: center; /* Centre le contenu */
+}
+
+
+/* ==========================
+   Form Styling (e.g., Login, Add Review)
+========================== */
+
+
+.form-container {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  background: rgb(250, 249, 249);
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  width: 400px;
+  text-align: center;
+}
+
+.form-container h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.form-container label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.form-container .submit-btn {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #ff8c00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.form-container .submit-btn:hover {
+  background-color: #e67e00;
+}
+
+.submit-btn {
+  width: 100%; /* Pleine largeur */
+  padding: 0.7rem; /* Espacement interne */
+  background-color: #ff8c00; /* Couleur orange */
+  color: #fff; /* Texte blanc */
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem; /* Taille du texte augmentée */
+  font-weight: bold; /* (Optionnel) Pour un texte plus gras */
+  cursor: pointer;
+}
+
+
+/* ==========================
+  Index Section (index Page)
+========================== */
+/* Title Section */
+.title-section {
+  text-align: center; /* Centre le conteneur */
+  margin-bottom: 30px; /* Espace sous le titre */
+  font-weight: bold;
+}
+
+
+.title-section .filter {
+  display: flex; /* Alignement horizontal des éléments */
+  flex-direction: column; /* Position verticale (titre au-dessus du filtre) */
+  align-items: center; /* Centrage horizontal */
+  justify-content: center; /* Centrage vertical */
+  gap: 10px; /* Espacement entre le titre et le filtre */
+  margin-bottom: 40px; /* Espacement avec la section des cartes */
+  font-weight: bold;
+}
+
+/* Style pour le titre */
+main h1 {
+  text-align: center; /* Centre le titre */
+  font-size: 2rem; /* Taille plus grande pour le titre */
+  margin-bottom: 20px; /* Espace entre le titre et le filtre */
+  color: #333; /* Couleur sombre */
+  font-weight: bold;
+}
+
+/* Title Section */
+.title-section h1 {
+  text-align: center; /* Centre le conteneur */
+  font-size: 2rem;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.index_filter {
+  display: flex; /* Utilise Flexbox pour l'alignement */
+  display:  inline-flex; /* Aligner le label et le select horizontalement */
+  align-items: center;
+  /* justify-content: center; Centrer horizontalement */
+  /* align-items: center; Aligne verticalement le label et le select */
+  gap: 10px; /* Espacement entre label et select */
+  margin-bottom: 20px; /* Espace entre le filtre et les cartes */
+  font-weight: bold;
+  margin-top: 20px;
+  /* font-size:92rem; */
+}
+
+.index_filter label {
+  /* display: flex; Permet d'aligner label et select horizontalement */
+  font-size: 16px;
+  margin-right: 1px;
+  font-weight: bold;
+  /* font-size: 16px; Taille du texte du label */
+  color: #333; /* Couleur du texte */
+}
+
+.index_filter select {
+  /* display: flex; Permet d'aligner label et select horizontalement */
+  padding: 10px 10px;
+  font-size: 16px; /* Taille du texte dans le menu déroulant */
+  /* font-size: 1.1rem; */
+  /* font-weight: bold; */
+  border: 1px solid #ccc; /* Bordure légère */
+  border-radius: 10px; /* Coins arrondis */
+  background-color: #f8f5f5; /* Fond blanc */
+  cursor: pointer; /* Curseur pointeur */
+  align-items: center; /* Centre verticalement le contenu */
+}
+
+.index_filter label:focus {
+  outline: none; /* Supprime le contour par défaut */
+  border-color: #ff8c00; /* Couleur de la bordure au focus */
+  border-radius: 10px;
+}
+
+.index_filter select:focus {
+  outline: none; /* Supprime le contour par défaut */
+  border-color: #ff8c00; /* Couleur de la bordure au focus */
+  border-radius: 10px;
+}
+
+/* Places Section */
+.places {
+  /* flex: 1; Permet aux cartes de s'étendre uniformément */
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  /* flex-wrap: wrap;  */
+}
+
+.maxprice {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 5%;
+}
+
+.place-card {
+  flex: 1; /* Permet aux cartes de s'étendre uniformément */
+  background: rgb(250, 249, 249);
+  /* background-color: rgb(241, 239, 239); */
+  margin: 0 0px; /* Optionnel, ajoute un espacement entre les cartes */
+  max-width: 300px; /* Limite la largeur d'une carte */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 400px;
+  /* transition: transform 0.3s ease; */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Effet au survol */
+
+}
+
+.place-card:hover {
+  /* transform: scale(1.05); */
+  transform: scale(1.1); /* Effet de zoom plus marqué */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Ombre renforcée au survol */
+}
+
+.place-card h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.place-card p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.place-card button {
+  background-color: #ff7300;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.place-card button:hover {
+  background-color: #e66900;
+}
+
+.place-card .details-btn {
+  background-color: #ff7300;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* ==========================
+   Form Place.html
+========================== */
+/* Titre principal */
+#place-title {
+  text-align: center;
+  font-size: 2rem;
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+.place-details-section {
+  background: white;
+  padding: 20px;
+  /* border-radius: 10px; */
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  width: 400px;
+  text-align: center;
+  margin-bottom: 20px; /* Ajoute 20px d'espace sous la section */
+  margin-top: 20px; /* Ajoute 20px d'espace sous la section */
+  padding-bottom: 20px; /* Ajoute de l'espace interne au bas de la section */
+  padding-top: 20px; /* Ajoute de l'espace interne en haut de la section */
+}
+
+p {
+  margin-top: 20px; /* Ajoute 20px d'espace entre le paragraphe et l'élément au-dessus */
+  /* margin-bottom: 20px; */
+}
+
+/* Section Détails */
+/* .place-details {
+  background: #918787;
+  margin-top: 60px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 0px;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+} */
+
+
+/* Section Avis */
+/* .reviews {
+  background: #918787;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 20px;
+  margin: 0px auto; /* Centré horizontalement */
+  /* text-align: left; */
+/* } */
+
+/* h2 {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  text-align: left;
+  padding: 20px;
+} */
+
+#reviews-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #0a0a0a;
+  text-align: left;
+  margin: 20px 10px; /* Haut et gauche */
+}
+
+/* section {
+  margin-bottom: 30px;
+} */
+
+
+
+/* .review:last-child {
+  border-bottom: 0;
+} */
+
+/* .review p {
+  margin: 5px 0;
+} */
+
+.place-details {
+  background: rgb(250, 249, 249);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  /* width: 100%;
+  max-width: 800px; */
+  margin: 20px auto; /* Centre horizontalement */
+  text-align: center; /* Aligne le contenu à gauche */
+  margin-bottom: 30px; /* Espacement après les détails */
+  border: 300px;
+  font-size: 1.1rem; /* Taille légèrement augmentée */
+  margin-bottom: 30px;
+  margin-top: 20px;
+  padding-top: 20px
+}
+
+
+.review {
+  background: rgb(250, 249, 249);
+  /* background: #efeeee; Fond clair pour chaque review */
+  border: 1px solid #ddd; /* Bordure légère */
+  border-radius: 10px; /* Coins arrondis */
+  padding: 20px; /* Espacement interne */
+  margin-bottom: 15px; /*Espace entre chaque review */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre douce */
+  text-align: left; /* Aligne le contenu à gauche */
+  margin: 20px auto; /*Centre horizontalement
+  /* margin: 20px auto 40px; Bas espacé du footer */
+  min-height: 150px; /* Hauteur minimale */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Texte espacé du bas */
+  border: 2px solid #f0f0f0; /* Bordure plus épaisse et légère */
+  margin-bottom: 25px;
+  margin-top: 0px;
+  padding-top: 20px
+  /* padding-bottom: 20px; Augmente l'espacement interne en bas */
+}
+
+/* .section-review {
+  /* margin-bottom: 20px; */
+  /* padding-bottom: 20px; Augmente l'espacement interne en bas */
+/* } */
+
+/* .reviews {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  /* width: 100%; */
+  /* max-width: 800px; */
+  /* margin: 20px auto 40px; Bas espacé du footer */
+  /* text-align: left; */
+/* } */
+
+
+/* ==========================
+   Review Section (Add Review Page)
+========================== */
+#addreview-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #0a0a0a;
+  text-align: left;
+  margin: 20px 10px; /* Haut et gauche */
+}
+
+.add-review-section {
+  /* background: white; */
+  padding: 0px;
+  /* border-radius: 10px; */
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  /* width: 400px; */
+  text-align: left;
+  font-size: 1.1rem; /* Taille légèrement augmentée */
+  padding-bottom: 40px; /* Augmente l'espace au bas */
+}
+
+.add-review-section h2 {
+  text-align: left;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.add-review-section label {
+  /* display: block; */
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 1.1rem; /* Taille légèrement augmentée */
+}
+
+.add-review-section textarea,
+.add-review-section select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.add-review-section .submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff8c00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+
+}
+
+.add-review-section .submit-button:hover {
+  background-color: #e67e00;
+}
+
+.add-review-page footer{
+  margin-top: 200px; /* Pousse le footer en bas */
+}
+
+/* ==========================
+   Footer Section
+========================== */
+footer {
+  background-color: #ff8c00;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  width: 100%;
+  font-size: 1.3rem;
+  /* margin-top: 200px; Pousse le footer en bas */
+  margin-top: auto; /* Assure que le footer reste en bas */
+  /* position: relative; /* Assure qu'il ne chevauche pas */
+  /* z-index: 1; Gère l'ordre de superposition */
+}
