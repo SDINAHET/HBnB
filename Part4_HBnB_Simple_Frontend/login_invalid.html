@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" href="images/icon.png" type="image/x-icon">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <img src="images/logo.png" alt="HBnB Logo" class="logo-img">
+        <!-- <span>hbnb</span> -->
+      </div>
+      <nav>
+        <a href="login.html" id="login-link">Login</a>
+      </nav>
+    </header>
+    <!-- <main>
+      <form id="login-form">
+        <h2>Login</h2>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit">Login</button>
+      </form>
+    </main> -->
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">×</span>
+      </button>
+      Utilisateur ou mot de passe invalides.
+  </div>
+    <main class="login-page">
+      <!-- Conteneur du cadre -->
+      <div class="panel-heading">
+        Merci de vous authentifier
+      </div>
+      <div class="form-container">
+        <h1>Connexion</h1>
+        <form>
+          <!-- Champ Email -->
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+          <!-- Champ Mot de passe -->
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+          <!-- Bouton de soumission -->
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
+      </div>
+    </main>
+    <script src="scripts.js"></script>
+  </body>
+  <footer>
+    <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
+  </footer>
+</html>
+<!-- DINAHET -->

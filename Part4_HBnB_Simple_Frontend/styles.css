@@ -31,7 +31,7 @@ body {
   padding: 0;
 }
 
-
+html {scroll-behavior: smooth;}
 
 /* ==========================
    Header Section
@@ -42,6 +42,7 @@ header {
   align-items: center; /* Centers items vertically */
   background-color: #ff8c00; /* Orange color */
   padding: 1rem 2rem;
+  /* position: relative; Allows z-index to work */
   color: white; /* White text */
   font-family: Arial, sans-serif;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
@@ -84,6 +85,59 @@ header #login-link:hover {
   background-color: #ffd27f; /* Lighter orange on hover */
 }
 
+header #place-link {
+  font-size: 1rem;
+  /*color: white;*/
+  color: #ff8c00;
+  text-decoration: none;
+  /*background-color: #fff;*/
+  background-color: #ff8c00;
+  /*color: #ff8c00;*/
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+header #place-link:hover {
+  background-color: #ffd27f; /* Lighter orange on hover */
+}
+
+header #add_review-link {
+  font-size: 1rem;
+  /*color: white;*/
+  color: #ff8c00;
+  text-decoration: none;
+  /*background-color: #fff;*/
+  background-color: #ff8c00;
+  /*color: #ff8c00;*/
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+header #add_review-link:hover {
+  background-color: #ffd27f; /* Lighter orange on hover */
+}
+
+header #index-link {
+  font-size: 1rem;
+  /*color: white;*/
+  color: #ff8c00;
+  text-decoration: none;
+  /*background-color: #fff;*/
+  background-color: #ff8c00;
+  /*color: #ff8c00;*/
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+header #index-link:hover {
+  background-color: #ffd27f; /* Lighter orange on hover */
+}
 
 
 /* ==========================
