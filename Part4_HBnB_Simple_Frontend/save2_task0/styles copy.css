@@ -8,38 +8,18 @@
   font-family: Arial, sans-serif;
 }
 
-
 body {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Assure que le footer reste en bas */
+  min-height: 100vh; /* Ensure footer sticks to the bottom */
   margin: 0;
-  background-color: #f9f9f9;
+  background-color: #f4f4f4;
+  /* background-color: #f8f9fa; */
   color: #333;
+  background: rgb(231, 231, 231);
+  /* min-height: 100vh; */
   padding: 0;
-}
-
-
-h1 {
-  margin-top: 20px;
-}
-
-button {
-  background-color: orange;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: darkorange;
-}
-
-.filter {
-  margin-bottom: 10px; /* Réduisez l'espace sous "Max Price" */
 }
 
 .wrapper {
@@ -469,6 +449,240 @@ p {
   /* margin-bottom: 20px; */
 }
 
+/* Section Détails */
+/* .place-details {
+  background: #918787;
+  margin-top: 60px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 0px;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+} */
+
+
+/* Section Avis */
+/* .reviews {
+  background: #918787;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 20px;
+  margin: 0px auto; /* Centré horizontalement */
+  /* text-align: left; */
+/* } */
+
+/* h2 {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  text-align: left;
+  padding: 20px;
+} */
+
+#reviews-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #0a0a0a;
+  text-align: left;
+  margin: 20px 10px; /* Haut et gauche */
+}
+
+/* section {
+  margin-bottom: 30px;
+} */
+
+
+
+/* .review:last-child {
+  border-bottom: 0;
+} */
+
+/* .review p {
+  margin: 5px 0;
+} */
+
+.place-details {
+  background: rgb(250, 249, 249);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  /* width: 100%;
+  max-width: 800px; */
+  margin: 20px auto; /* Centre horizontalement */
+  text-align: center; /* Aligne le contenu à gauche */
+  margin-bottom: 30px; /* Espacement après les détails */
+  border: 300px;
+  font-size: 1.1rem; /* Taille légèrement augmentée */
+  margin-bottom: 30px;
+  margin-top: 20px;
+  padding-top: 20px
+}
+
+
+.review {
+  background: rgb(250, 249, 249);
+  /* background: #efeeee; Fond clair pour chaque review */
+  border: 1px solid #ddd; /* Bordure légère */
+  border-radius: 10px; /* Coins arrondis */
+  padding: 20px; /* Espacement interne */
+  margin-bottom: 15px; /*Espace entre chaque review */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre douce */
+  text-align: left; /* Aligne le contenu à gauche */
+  margin: 20px auto; /*Centre horizontalement
+  /* margin: 20px auto 40px; Bas espacé du footer */
+  min-height: 150px; /* Hauteur minimale */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Texte espacé du bas */
+  border: 2px solid #f0f0f0; /* Bordure plus épaisse et légère */
+  margin-bottom: 25px;
+  margin-top: 0px;
+  padding-top: 20px
+  /* padding-bottom: 20px; Augmente l'espacement interne en bas */
+}
+
+/* .section-review {
+  /* margin-bottom: 20px; */
+  /* padding-bottom: 20px; Augmente l'espacement interne en bas */
+/* } */
+
+/* .reviews {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  /* width: 100%; */
+  /* max-width: 800px; */
+  /* margin: 20px auto 40px; Bas espacé du footer */
+  /* text-align: left; */
+/* } */
+
+
+/* ==========================
+   Review Section (Add Review Page)
+========================== */
+#addreview-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #0a0a0a;
+  text-align: left;
+  margin: 20px 10px; /* Haut et gauche */
+}
+
+.add-review-section {
+  /* background: white; */
+  padding: 0px;
+  /* border-radius: 10px; */
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  /* width: 400px; */
+  text-align: left;
+  font-size: 1.1rem; /* Taille légèrement augmentée */
+  padding-bottom: 40px; /* Augmente l'espace au bas */
+}
+
+.add-review-section h2 {
+  text-align: left;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.add-review-section label {
+  /* display: block; */
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 1.1rem; /* Taille légèrement augmentée */
+}
+
+.add-review-section textarea,
+.add-review-section select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.add-review-section .submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff8c00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+
+}
+
+.add-review-section .submit-button:hover {
+  background-color: #e67e00;
+}
+
+.add-review-page footer{
+  margin-top: 200px; /* Pousse le footer en bas */
+}
+
+/* ==========================
+   Footer Section
+========================== */
+footer {
+  background-color: #ff8c00;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  width: 100%;
+  font-size: 1.3rem;
+  /* margin-top: 200px; Pousse le footer en bas */
+  margin-top: auto; /* Assure que le footer reste en bas */
+  /* position: relative; /* Assure qu'il ne chevauche pas */
+  /* z-index: 1; Gère l'ordre de superposition */
+}
+
+
+
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
+}
+
+h1 {
+  margin-top: 20px;
+}
+
+button {
+  background-color: orange;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: darkorange;
+}
+
+.filter {
+  margin-bottom: 10px; /* Réduisez l'espace sous "Max Price" */
+}
 
 #cards-container {
   display: flex; /* Active Flexbox */
@@ -575,203 +789,16 @@ p {
 }
 
 
+@media (max-width: 768px) {
+  .place-list {
+    flex-direction: column; /* Passe les cartes en disposition verticale */
+    align-items: center; /*Centre les cartes sur petits écrans */
+ }
 
-
-/* Section Détails */
-/* .place-details {
-  background: #918787;
-  margin-top: 60px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 0px;
-  width: 100%;
-  max-width: 800px;
-  margin-bottom: 20px;
-  text-align: center;
-  font-size: 1.1rem;
-} */
-
-
-/* Section Avis */
-/* .reviews {
-  background: #918787;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 100%;
-  max-width: 800px;
-  margin-bottom: 20px;
-  margin: 0px auto; /* Centré horizontalement */
-  /* text-align: left; */
-/* } */
-
-/* h2 {
-  margin-top: 20px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  text-align: left;
-  padding: 20px;
-} */
-
-#reviews-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-  color: #0a0a0a;
-  text-align: left;
-  margin: 20px 10px; /* Haut et gauche */
-}
-
-/* section {
-  margin-bottom: 30px;
-} */
-
-
-
-/* .review:last-child {
-  border-bottom: 0;
-} */
-
-/* .review p {
-  margin: 5px 0;
-} */
-
-.place-details {
-  background: rgb(250, 249, 249);
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  /* width: 100%;
-  max-width: 800px; */
-  margin: 20px auto; /* Centre horizontalement */
-  text-align: center; /* Aligne le contenu à gauche */
-  margin-bottom: 30px; /* Espacement après les détails */
-  border: 300px;
-  font-size: 1.1rem; /* Taille légèrement augmentée */
-  margin-bottom: 30px;
-  margin-top: 20px;
-  padding-top: 20px
-}
-
-
-.review {
-  background: rgb(250, 249, 249);
-  /* background: #efeeee; Fond clair pour chaque review */
-  border: 1px solid #ddd; /* Bordure légère */
-  border-radius: 10px; /* Coins arrondis */
-  padding: 20px; /* Espacement interne */
-  margin-bottom: 15px; /*Espace entre chaque review */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre douce */
-  text-align: left; /* Aligne le contenu à gauche */
-  margin: 20px auto; /*Centre horizontalement
-  /* margin: 20px auto 40px; Bas espacé du footer */
-  min-height: 150px; /* Hauteur minimale */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Texte espacé du bas */
-  border: 2px solid #f0f0f0; /* Bordure plus épaisse et légère */
-  margin-bottom: 25px;
-  margin-top: 0px;
-  padding-top: 20px;
-  /* text-align: left; */
-  /* padding-bottom: 20px; Augmente l'espacement interne en bas */
-}
-
-/* .section-review {
-  /* margin-bottom: 20px; */
-  /* padding-bottom: 20px; Augmente l'espacement interne en bas */
-/* } */
-
-/* .reviews {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  /* width: 100%; */
-  /* max-width: 800px; */
-  /* margin: 20px auto 40px; Bas espacé du footer */
-  /* text-align: left; */
-/* } */
-
-
-/* ==========================
-   Review Section (Add Review Page)
-========================== */
-#addreview-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-  color: #0a0a0a;
-  text-align: left;
-  margin: 20px 10px; /* Haut et gauche */
-}
-
-
-
-
-
-.add-review-section {
-  width: 100%; /* Prend toute la largeur du conteneur parent */
-  margin: 20px auto; /* Centre la section horizontalement */
-  padding: 20px;
-  max-width: 1200px; /* Largeur du formulaire */
-  background: rgb(250, 249, 249);
-  /* background: white; */
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: left;
-}
-
-.add-review-container h2 {
-  text-align: center; /* Centre le titre */
-  font-size: 1.8rem; /* Taille légèrement plus grande */
-  font-weight: bold; /* Rend le texte plus gras */
-  color: #333; /* Couleur sombre */
-  margin: 20px 0; /* Ajoute un espace avant et après le titre */
-}
-
-.add-review-section label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-.add-review-section label {
-  /* display: block; */
-  margin-bottom: 5px;
-  font-weight: bold;
-  font-size: 1.1rem; /* Taille légèrement augmentée */
-}
-
-.add-review-section textarea,
-.add-review-section select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
-.add-review-section .submit-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #ff8c00;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-
-}
-
-.add-review-section .submit-button:hover {
-  background-color: #e67e00;
-}
-
-.add-review-page footer{
-  margin-top: 200px; /* Pousse le footer en bas */
+  .place-card {
+    width: 90%; /* Les cartes occupent presque toute la largeur */
+    margin: 20px 0; /*Ajuste les marges verticales */
+  }
 }
 
 #add-review-button-container {
@@ -794,55 +821,4 @@ p {
 #add-review-button:hover {
   background-color: darkorange;
 }
-
-
-
-
-
-/* ==========================
-   Footer Section
-========================== */
-footer {
-  background-color: #ff8c00;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-  width: 100%;
-  font-size: 1.3rem;
-  /* margin-top: 200px; Pousse le footer en bas */
-  margin-top: auto; /* Assure que le footer reste en bas */
-  /* position: relative; /* Assure qu'il ne chevauche pas */
-  /* z-index: 1; Gère l'ordre de superposition */
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-@media (max-width: 768px) {
-  .place-list {
-    flex-direction: column; /* Passe les cartes en disposition verticale */
-    align-items: center; /*Centre les cartes sur petits écrans */
- }
-
-  .place-card {
-    width: 90%; /* Les cartes occupent presque toute la largeur */
-    max-width: 100%;
-    margin: 20px 0; /*Ajuste les marges verticales */
-  }
-
-  /* .add-review-section {
-    width: 90%;
-    padding: 10px;
-  } */
-}
-
 

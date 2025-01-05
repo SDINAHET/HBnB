@@ -346,14 +346,8 @@
 // }
 // });
 
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
-  // Définition des données statiques pour les lieux
+  // Données des lieux
   const places = [
     {
       id: 1,
@@ -389,220 +383,170 @@ document.addEventListener("DOMContentLoaded", () => {
         { author: "Liam Martinez", comment: "Perfect for business travel.", rating: 4 },
       ],
     },
-    // Nouvel élément ajouté :
-    {
-      id: 4,
-      name: "Rustic Lakehouse",
-      host: "Laura White",
-      price: 180,
-      description: "A charming lakehouse with a beautiful view of the sunset.",
-      amenities: "Boat Dock, Fireplace, Private Garden",
-      reviews: [
-        { author: "Michael Scott", comment: "Absolutely stunning and relaxing!", rating: 5 },
-        { author: "Pam Beesly", comment: "Perfect place for a getaway.", rating: 4 },
-      ],
-    },
-    {
-      id: 5,
-      name: "Penthouse Suite",
-      host: "David Beckham",
-      price: 350,
-      description: "A luxurious penthouse with panoramic city views.",
-      amenities: "Private Pool, Rooftop Bar, 24/7 Butler Service",
-      reviews: [
-        { author: "Victoria Beckham", comment: "Luxury at its finest!", rating: 5 },
-        { author: "Elton John", comment: "Absolutely worth it!", rating: 5 },
-      ],
-    },
   ];
 
-  // Vérifie si on est sur la page des détails ou de la liste
+  // Vérifie si on est sur la page des cartes ou des détails
   const urlParams = new URLSearchParams(window.location.search);
   const placeId = urlParams.get("id");
 
   if (placeId) {
-    renderPlaceDetails(places, placeId);
+    // Page des détails
+    const place = places.find((p) => p.id == placeId);
+
+    if (place) {
+      // Remplir les informations dynamiques
+      document.getElementById("place-title").textContent = place.name;
+      document.getElementById("place-host").textContent = place.host;
+      document.getElementById("place-price").textContent = `${place.price}`;
+      document.getElementById("place-description").textContent = place.description;
+      document.getElementById("place-amenities").textContent = place.amenities;
+
+      const reviewsSection = document.getElementById("reviews-section");
+      reviewsSection.innerHTML = "";
+
+      // Générer les avis dynamiquement
+      place.reviews.forEach((review) => {
+        const reviewDiv = document.createElement("div");
+        reviewDiv.className = "review";
+        reviewDiv.innerHTML = `
+          <p><strong>${review.author}:</strong></p>
+          <p>${review.comment}</p>
+          <p>Rating: ${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
+        `;
+        reviewsSection.appendChild(reviewDiv);
+      });
+    } else {
+      document.body.innerHTML = "<h1>Place not found</h1>";
+    }
   } else {
-    renderPlaceList(places);
+    // Page principale avec les cartes
+    const placeList = document.querySelector(".place-list");
+    const maxPriceFilter = document.getElementById("max-price");
+
+    // Fonction pour afficher les lieux
+    function renderPlaces(filteredPlaces) {
+      placeList.innerHTML = ""; // Effacer le contenu existant
+      filteredPlaces.forEach((place) => {
+        const card = document.createElement("div");
+        card.className = "place-card";
+        card.innerHTML = `
+          <h2>${place.name}</h2>
+          <p>Price per night: $${place.price}</p>
+          <button class="details-btn" data-id="${place.id}">View Details</button>
+        `;
+        placeList.appendChild(card);
+      });
+
+      // Ajoute des événements pour les boutons "View Details"
+      document.querySelectorAll(".details-btn").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const placeId = e.target.getAttribute("data-id");
+          window.location.href = `place.html?id=${placeId}`;
+        });
+      });
+    }
+
+    // Afficher tous les lieux au chargement initial
+    renderPlaces(places);
+
+    // Filtrer les lieux par prix
+    maxPriceFilter.addEventListener("change", (e) => {
+      const maxPrice = e.target.value === "all" ? Infinity : parseInt(e.target.value, 10);
+      const filteredPlaces = places.filter((place) => place.price <= maxPrice);
+      renderPlaces(filteredPlaces);
+    });
   }
 });
 
-/**
- * Affiche les détails d'un lieu.
- */
-function renderPlaceDetails(places, placeId) {
-  const place = places.find((p) => p.id == placeId);
 
-  if (!place) {
-    document.body.innerHTML = "<h1>Place not found</h1>";
-    return;
-  }
-
-  // Remplit les informations dynamiques
-  document.getElementById("place-title").textContent = place.name;
-  document.getElementById("place-host").textContent = place.host;
-  document.getElementById("place-price").textContent = `${place.price}`;
-  document.getElementById("place-description").textContent = place.description;
-  document.getElementById("place-amenities").textContent = place.amenities;
-
-  const reviewsSection = document.getElementById("reviews-section");
-  reviewsSection.innerHTML = "";
-
-  // Affiche les avis
-  place.reviews.forEach((review) => {
-    const reviewDiv = document.createElement("div");
-    reviewDiv.className = "review";
-    reviewDiv.innerHTML = `
-      <p><strong>${review.author}:</strong></p>
-      <p>${review.comment}</p>
-      <p>Rating: ${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
-    `;
-    reviewsSection.appendChild(reviewDiv);
-  });
-}
-
-/**
- * Affiche la liste des lieux.
- */
-function renderPlaceList(places) {
-  const placeList = document.querySelector(".place-list");
-  const maxPriceFilter = document.getElementById("max-price");
-
-  function displayPlaces(filteredPlaces) {
-    placeList.innerHTML = ""; // Efface le contenu existant
-    filteredPlaces.forEach((place) => {
-      const card = document.createElement("div");
-      card.className = "place-card";
-      card.innerHTML = `
-        <h2>${place.name}</h2>
-        <p>Price per night: $${place.price}</p>
-        <button class="details-btn" data-id="${place.id}">View Details</button>
-      `;
-      placeList.appendChild(card);
-    });
-
-    // Ajoute des événements aux boutons
-    document.querySelectorAll(".details-btn").forEach((button) => {
-      button.addEventListener("click", (e) => {
-        const placeId = e.target.getAttribute("data-id");
-        window.location.href = `place.html?id=${placeId}`;
-      });
-    });
-  }
-
-  // Affiche tous les lieux au chargement initial
-  displayPlaces(places);
-
-  // Filtre les lieux en fonction du prix
-  maxPriceFilter.addEventListener("change", (e) => {
-    const maxPrice = e.target.value === "all" ? Infinity : parseInt(e.target.value, 10);
-    const filteredPlaces = places.filter((place) => place.price <= maxPrice);
-    displayPlaces(filteredPlaces);
-  });
-}
-
-/**
- * Gestion du formulaire de connexion.
- */
 document.addEventListener("DOMContentLoaded", () => {
+  // Dictionnaire des utilisateurs autorisés
   const users = {
     "admin@hbnb.com": "admin1234",
   };
 
+  // Gestion du formulaire de connexion
   const loginForm = document.getElementById("login-form");
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
 
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-      if (users[email] && users[email] === password) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userEmail", email);
-        alert("Login successful!");
-        window.location.href = "add_review.html";
-      } else {
-        const errorMessage = document.getElementById("error-message");
-        errorMessage.style.display = "block";
-        errorMessage.textContent = "Invalid email or password. Please try again.";
-      }
-    });
-  }
+    // Récupération des données du formulaire
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    // Vérification des identifiants
+    if (users[email] && users[email] === password) {
+      localStorage.setItem("isLoggedIn", "true"); // Enregistre la session
+      localStorage.setItem("userEmail", email);  // Optionnel : Enregistre l'email
+      alert("Login successful!");               // Affiche le message de succès
+      window.location.href = "add_review.html"; // Redirige vers add_review.html
+    } else {
+      // Affiche un message d'erreur si les identifiants sont invalides
+      const errorMessage = document.getElementById("error-message");
+      errorMessage.style.display = "block";
+      errorMessage.textContent = "Invalid email or password. Please try again.";
+    }
+  });
 });
 
 
+  // // Vérification de l'accès à "add_review.html"
+  // if (window.location.pathname.endsWith("add_review.html")) {
+  //   const isLoggedIn = localStorage.getItem("isLoggedIn");
 
+  //   // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+  //   if (isLoggedIn !== "true") {
+  //     // alert("You must be logged in to access this page!");
+  //     window.location.href = "login.html";
+  //   }
+  // }
+// });
 
+// document.addEventListener("DOMContentLoaded", () => {
+//   const logoutButton = document.getElementById("logout-button");
 
-
-// // Récupérer l'ID du lieu à partir de l'URL
-// const urlParams = new URLSearchParams(window.location.search);
-// const placeId = parseInt(urlParams.get("id"));
-
-// // Trouver le lieu correspondant
-// const place = places.find((p) => p.id === placeId);
-
-// if (place) {
-//   // Mettre à jour les informations dynamiques
-//   document.getElementById("place-title").textContent = place.name;
-//   document.getElementById("place-host").textContent = place.host;
-//   document.getElementById("place-price").textContent = place.price;
-//   document.getElementById("place-description").textContent = place.description;
-//   document.getElementById("place-amenities").textContent = place.amenities;
-
-//   // Afficher les avis existants
-//   const reviewsSection = document.getElementById("reviews-section");
-//   reviewsSection.innerHTML = ""; // Réinitialiser les avis existants
-//   place.reviews.forEach((review) => {
-//     const reviewDiv = document.createElement("div");
-//     reviewDiv.className = "review";
-//     reviewDiv.innerHTML = `
-//       <p><strong>${review.author}:</strong></p>
-//       <p>${review.comment}</p>
-//       <p>Rating: ${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
-//     `;
-//     reviewsSection.appendChild(reviewDiv);
-//   });
-
-//   // Gestion de la soumission du formulaire d'ajout d'avis
-//   const reviewForm = document.getElementById("review-form");
-//   reviewForm.addEventListener("submit", (e) => {
-//     e.preventDefault();
-
-//     const reviewText = document.getElementById("review").value;
-//     const rating = parseInt(document.getElementById("rating").value);
-
-//     // Ajouter le nouvel avis
-//     const newReview = {
-//       author: "Anonymous", // Vous pouvez personnaliser avec le nom de l'utilisateur connecté
-//       comment: reviewText,
-//       rating: rating,
-//     };
-//     place.reviews.push(newReview);
-
-//     // Réafficher les avis
-//     const reviewDiv = document.createElement("div");
-//     reviewDiv.className = "review";
-//     reviewDiv.innerHTML = `
-//       <p><strong>${newReview.author}:</strong></p>
-//       <p>${newReview.comment}</p>
-//       <p>Rating: ${"★".repeat(newReview.rating)}${"☆".repeat(5 - newReview.rating)}</p>
-//     `;
-//     reviewsSection.appendChild(reviewDiv);
-
-//     // Réinitialiser le formulaire
-//     reviewForm.reset();
-//     alert("Review submitted successfully!");
-//   });
-// // } else {
-// //   document.body.innerHTML = "<h1>Place not found</h1>";
-// // }
+//   if (logoutButton) {
+//     logoutButton.addEventListener("click", () => {
+//       localStorage.removeItem("isLoggedIn");
+//       localStorage.removeItem("userEmail");
+//       alert("You have been logged out!");
+//       window.location.href = "login.html";
+//     });
+//   }
 // });
 
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Gestion du formulaire de connexion
+  const loginForm = document.getElementById("login-form");
+  if (loginForm) {
+    loginForm.addEventListener("submit", handleLogin);
+  }
+
+  // Vérification d'accès à add_review.html
+  if (window.location.pathname.endsWith("add_review.html")) {
+    checkAccess();
+  }
+
+  // Gestion de la déconnexion
+  const logoutButton = document.getElementById("logout-button");
+  if (logoutButton) {
+    logoutButton.addEventListener("click", handleLogout);
+  }
+});
 
 // document.addEventListener("DOMContentLoaded", () => {
+//   // Vérifier si l'utilisateur est connecté
+//   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+//   if (!isLoggedIn) {
+//     alert("You must be logged in to add a review!");
+//     window.location.href = "login.html";
+//     return;
+//   }
+
+//   // Données d'exemple pour les lieux
 //   const places = [
 //     {
 //       id: 1,
@@ -616,162 +560,67 @@ document.addEventListener("DOMContentLoaded", () => {
 //         { author: "Robert Brown", comment: "Amazing location and very comfortable.", rating: 5 },
 //       ],
 //     },
-//     {
-//       id: 2,
-//       name: "Cozy Cabin",
-//       host: "Alice Johnson",
-//       price: 100,
-//       description: "A warm and inviting cabin in the woods.",
-//       amenities: "Fireplace, Hiking Trails, Mountain View",
-//       reviews: [
-//         { author: "Emma Wilson", comment: "So cozy and quiet!", rating: 5 },
-//       ],
-//     },
-//     {
-//       id: 3,
-//       name: "Modern Apartment",
-//       host: "Chris Lee",
-//       price: 200,
-//       description: "A sleek and stylish city apartment with modern amenities.",
-//       amenities: "Smart TV, High-Speed WiFi, Gym Access",
-//       reviews: [
-//         { author: "Liam Martinez", comment: "Perfect for business travel.", rating: 4 },
-//       ],
-//     },
 //   ];
 
+//   // Charger les détails du lieu
 //   const urlParams = new URLSearchParams(window.location.search);
-//   const placeId = urlParams.get("id");
+//   const placeId = parseInt(urlParams.get("id"), 10);
+//   const place = places.find((p) => p.id === placeId);
 
-//   if (placeId) {
-//     renderPlaceDetails(places, placeId);
+//   if (place) {
+//     // Remplir les détails dynamiquement
+//     document.getElementById("place-title").textContent = place.name;
+//     document.getElementById("place-host").textContent = place.host;
+//     document.getElementById("place-price").textContent = place.price;
+//     document.getElementById("place-description").textContent = place.description;
+//     document.getElementById("place-amenities").textContent = place.amenities;
+
+//     // Afficher les avis existants
+//     const reviewsSection = document.getElementById("reviews-section");
+//     reviewsSection.innerHTML = "";
+//     place.reviews.forEach((review) => {
+//       const reviewDiv = document.createElement("div");
+//       reviewDiv.className = "review";
+//       reviewDiv.innerHTML = `
+//         <p><strong>${review.author}:</strong></p>
+//         <p>${review.comment}</p>
+//         <p>Rating: ${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
+//       `;
+//       reviewsSection.appendChild(reviewDiv);
+//     });
+
+//     // Gestion du formulaire d'ajout d'avis
+//     const reviewForm = document.getElementById("review-form");
+//     reviewForm.addEventListener("submit", (e) => {
+//       e.preventDefault();
+
+//       // Récupérer les données du formulaire
+//       const reviewText = document.getElementById("review").value;
+//       const rating = parseInt(document.getElementById("rating").value, 10);
+
+//       // Ajouter le nouvel avis
+//       const newReview = {
+//         author: localStorage.getItem("userEmail") || "Anonymous",
+//         comment: reviewText,
+//         rating: rating,
+//       };
+//       place.reviews.push(newReview);
+
+//       // Afficher le nouvel avis
+//       const newReviewDiv = document.createElement("div");
+//       newReviewDiv.className = "review";
+//       newReviewDiv.innerHTML = `
+//         <p><strong>${newReview.author}:</strong></p>
+//         <p>${newReview.comment}</p>
+//         <p>Rating: ${"★".repeat(newReview.rating)}${"☆".repeat(5 - newReview.rating)}</p>
+//       `;
+//       reviewsSection.appendChild(newReviewDiv);
+
+//       // Réinitialiser le formulaire
+//       reviewForm.reset();
+//       alert("Your review has been submitted successfully!");
+//     });
 //   } else {
-//     renderPlaceList(places);
+//     document.body.innerHTML = "<h1>Place not found</h1>";
 //   }
 // });
-
-// // Fonction pour afficher les avis
-// function displayReviews(reviews, container) {
-//   container.innerHTML = ""; // Vide les avis existants
-//   reviews.forEach((review) => {
-//     const reviewDiv = document.createElement("div");
-//     reviewDiv.className = "review";
-//     reviewDiv.innerHTML = `
-//       <p><strong>${review.author}:</strong></p>
-//       <p>${review.comment}</p>
-//       <p>Rating: ${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
-//     `;
-//     container.appendChild(reviewDiv);
-//   });
-// }
-
-// // Fonction pour afficher les détails d'un lieu
-// function renderPlaceDetails(places, placeId) {
-//   const place = places.find((p) => p.id == placeId);
-
-//   if (!place) {
-//     document.body.innerHTML = "<h1>Place not found</h1>";
-//     return;
-//   }
-
-//   document.getElementById("place-title").textContent = place.name;
-//   document.getElementById("place-host").textContent = place.host;
-//   document.getElementById("place-price").textContent = `$${place.price}`;
-//   document.getElementById("place-description").textContent = place.description;
-//   document.getElementById("place-amenities").textContent = place.amenities;
-
-//   const reviewsSection = document.getElementById("reviews-section");
-//   displayReviews(place.reviews, reviewsSection);
-
-//   // Gestion de l'ajout d'un avis
-//   const reviewForm = document.getElementById("review-form");
-//   reviewForm.addEventListener("submit", (e) => handleReviewSubmit(e, place, reviewsSection));
-// }
-
-// // Fonction pour gérer la soumission d'un avis
-// function handleReviewSubmit(event, place, reviewsSection) {
-//   event.preventDefault();
-
-//   const reviewInput = document.getElementById("review");
-//   const ratingInput = document.getElementById("rating");
-
-//   const reviewText = reviewInput.value.trim();
-//   const rating = parseInt(ratingInput.value);
-
-//   if (!reviewText || isNaN(rating)) {
-//     alert("Please fill in both the review and rating.");
-//     return;
-//   }
-
-//   const newReview = {
-//     author: "Anonymous",
-//     comment: reviewText,
-//     rating: rating,
-//   };
-
-//   place.reviews.push(newReview);
-//   displayReviews(place.reviews, reviewsSection);
-
-//   reviewInput.value = ""; // Réinitialise le formulaire
-//   ratingInput.value = "1";
-//   alert("Review submitted successfully!");
-// }
-
-// // Fonction pour afficher la liste des lieux
-// function renderPlaceList(places) {
-//   const placeList = document.querySelector(".place-list");
-//   const maxPriceFilter = document.getElementById("max-price");
-
-//   function displayPlaces(filteredPlaces) {
-//     placeList.innerHTML = "";
-//     filteredPlaces.forEach((place) => {
-//       const card = document.createElement("div");
-//       card.className = "place-card";
-//       card.innerHTML = `
-//         <h2>${place.name}</h2>
-//         <p>Price per night: $${place.price}</p>
-//         <button class="details-btn" data-id="${place.id}">View Details</button>
-//       `;
-//       placeList.appendChild(card);
-//     });
-
-//     document.querySelectorAll(".details-btn").forEach((button) => {
-//       button.addEventListener("click", (e) => {
-//         const placeId = e.target.getAttribute("data-id");
-//         window.location.href = `place.html?id=${placeId}`;
-//       });
-//     });
-//   }
-
-//   displayPlaces(places);
-
-//   maxPriceFilter.addEventListener("change", (e) => {
-//     const maxPrice = e.target.value === "all" ? Infinity : parseInt(e.target.value, 10);
-//     const filteredPlaces = places.filter((place) => place.price <= maxPrice);
-//     displayPlaces(filteredPlaces);
-//   });
-// }
-
-document.addEventListener("DOMContentLoaded", () => {
-  const addReviewButton = document.getElementById("add-review-button");
-
-  // Vérifie si l'utilisateur est connecté
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-  const urlParams = new URLSearchParams(window.location.search);
-  const placeId = urlParams.get("id"); // Récupère l'ID du lieu actuel
-
-  if (addReviewButton) {
-    addReviewButton.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      if (isLoggedIn) {
-        // Redirige vers la page add_review.html avec l'ID de la card correspondante
-        window.location.href = `add_review.html?id=${placeId}`;
-      } else {
-        // Si l'utilisateur n'est pas connecté, redirige vers login.html
-        alert("You must be logged in to add a review!");
-        window.location.href = "login.html";
-      }
-    });
-  }
-});

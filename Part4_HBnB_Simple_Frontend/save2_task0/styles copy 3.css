@@ -8,18 +8,30 @@
   font-family: Arial, sans-serif;
 }
 
-
 body {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Assure que le footer reste en bas */
+  min-height: 100vh; /* Ensure footer sticks to the bottom */
   margin: 0;
-  background-color: #f9f9f9;
+  background-color: #f4f4f4;
+  /* background-color: #f8f9fa; */
   color: #333;
+  background: rgb(231, 231, 231);
+  /* min-height: 100vh; */
   padding: 0;
 }
 
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
+}
 
 h1 {
   margin-top: 20px;
@@ -674,8 +686,7 @@ p {
   border: 2px solid #f0f0f0; /* Bordure plus épaisse et légère */
   margin-bottom: 25px;
   margin-top: 0px;
-  padding-top: 20px;
-  /* text-align: left; */
+  padding-top: 20px
   /* padding-bottom: 20px; Augmente l'espacement interne en bas */
 }
 
@@ -709,34 +720,23 @@ p {
   margin: 20px 10px; /* Haut et gauche */
 }
 
-
-
-
-
 .add-review-section {
-  width: 100%; /* Prend toute la largeur du conteneur parent */
-  margin: 20px auto; /* Centre la section horizontalement */
-  padding: 20px;
-  max-width: 1200px; /* Largeur du formulaire */
-  background: rgb(250, 249, 249);
   /* background: white; */
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0px;
+  /* border-radius: 10px; */
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  /* width: 400px; */
   text-align: left;
+  font-size: 1.1rem; /* Taille légèrement augmentée */
+  padding-bottom: 40px; /* Augmente l'espace au bas */
 }
 
-.add-review-container h2 {
-  text-align: center; /* Centre le titre */
-  font-size: 1.8rem; /* Taille légèrement plus grande */
-  font-weight: bold; /* Rend le texte plus gras */
-  color: #333; /* Couleur sombre */
-  margin: 20px 0; /* Ajoute un espace avant et après le titre */
-}
-
-.add-review-section label {
+.add-review-section h2 {
+  text-align: left;
+  margin-bottom: 20px;
   font-weight: bold;
-  margin-bottom: 5px;
 }
+
 .add-review-section label {
   /* display: block; */
   margin-bottom: 5px;
@@ -827,6 +827,8 @@ footer {
 
 
 
+
+
 @media (max-width: 768px) {
   .place-list {
     flex-direction: column; /* Passe les cartes en disposition verticale */
@@ -835,14 +837,8 @@ footer {
 
   .place-card {
     width: 90%; /* Les cartes occupent presque toute la largeur */
-    max-width: 100%;
     margin: 20px 0; /*Ajuste les marges verticales */
   }
-
-  /* .add-review-section {
-    width: 90%;
-    padding: 10px;
-  } */
 }
 
 
