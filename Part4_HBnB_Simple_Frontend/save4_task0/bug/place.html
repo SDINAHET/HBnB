@@ -20,29 +20,32 @@
     </header>
 
     <main class="place-page">
-      <!-- Section Détails du Lieu -->
+      <!-- Section for Place Details -->
       <section class="place-details">
         <h1 id="place-title">Loading...</h1>
         <p><strong>Host:</strong> <span id="place-host">Loading...</span></p>
         <p><strong>Price per night:</strong> $<span id="place-price">Loading...</span></p>
         <p><strong>Description:</strong> <span id="place-description">Loading...</span></p>
-        <p><strong>Amenities:</strong> <span id="place-amenities">Loading...</span></p>
+        <p><strong>Amenities:</strong>
+          <ul id="place-amenities">
+            <!-- Amenities will be dynamically added here -->
+          </ul>
+        </p>
       </section>
 
-      <!-- Section des Avis -->
+      <!-- Reviews Section -->
       <h2 id="reviews-title">Reviews</h2>
       <div class="reviews-section" id="reviews-section">
-        <!-- Les avis seront ajoutés dynamiquement -->
+        <!-- Reviews will be dynamically populated here -->
       </div>
 
-      <!-- Bouton pour ajouter un avis -->
+      <!-- Add Review Button -->
       <div id="add-review-button-container">
-        <!-- <button id="add-review-button" class="button" aria-label="Add a review for this place">Add Review</button> -->
-        <a href="add_review.html" id="add-review-button" class="add-review">Add Review</a>
+        <button id="add-review-button" class="button" aria-label="Add a review for this place">Add Review</button>
       </div>
 
-      <!-- Formulaire pour ajouter un avis (optionnel, affiché dynamiquement) -->
-      <!-- <form id="add-review-form" class="add-review" style="display: none;">
+      <!-- Add Review Form (Displayed if logged in) -->
+      <form id="add-review-form" class="add-review" style="display: none;">
         <h2>Add a Review</h2>
         <label for="review">Your review:</label>
         <textarea id="review" name="review" required></textarea>
@@ -57,7 +60,7 @@
         </select>
 
         <button type="submit" class="submit-button">Submit Review</button>
-      </form> -->
+      </form>
     </main>
 
     <footer>
@@ -67,4 +70,3 @@
     <script src="scripts.js"></script>
   </body>
 </html>
-<!-- DINAHET -->

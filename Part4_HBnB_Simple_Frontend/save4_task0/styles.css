@@ -831,22 +831,12 @@ p {
   width: 100%; /* Prend toute la largeur du conteneur parent */
   margin: 20px auto; /* Centre la section horizontalement */
   padding: 20px;
-  max-width: 3000px; /* Largeur du formulaire */
+  max-width: 1200px; /* Largeur du formulaire */
   background: rgb(250, 249, 249);
   /* background: white; */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: left;
-}
-
-textarea,
-select {
-  width: 100%; /* Champs étendus sur toute la largeur */
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1rem;
 }
 
 .add-review-container h2 {

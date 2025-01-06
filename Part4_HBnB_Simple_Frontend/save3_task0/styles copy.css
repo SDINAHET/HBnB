@@ -165,9 +165,8 @@ header #index-link:hover {
 ========================== */
 /* Styles spécifiques à la page de connexion */
 .login-page {
-  flex: 1; /*Fills space between header and footer*/
+  flex: 1; /*Fills space between header and footer */
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: calc(100vh - 120px);
@@ -280,105 +279,82 @@ header #index-link:hover {
 
 
 
-
-
-/* Main Layout */
-.login-page {
-  flex: 1; /* Prend tout l'espace disponible */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 80vh;
-  position: relative;
-}
-
-/* Form Wrapper */
-.form-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-bottom: 50px;
-}
-
-/* Form Containers */
-.form-container {
-  background-color: white;
+/* Login Section */
+.login-form-container {
+  background-color: #fffcf5; /* Fond léger pour Login */
+  border: 2px solid #ff8c00; /* Bordure orange */
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  text-align: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.login-form-container {
-  border: 2px solid #ff8c00;
-}
-
-.signup-form-container {
-  border: 2px solid #32CD32;
-}
-
-.form-container h1 {
-  margin-bottom: 20px;
-}
-
-.form-container input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.form-container .submit-btn {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.login-form-container h1 {
+  color: #ff8c00; /* Titre orange */
 }
 
 .login-form-container .submit-btn {
-  background-color: #ff8c00;
-  color: white;
-}
-
-.login-form-container .submit-btn:hover {
-  background-color: #e67e00;
-}
-
-.signup-form-container .submit-btn {
-  background-color: #32CD32;
-  color: white;
-}
-
-.signup-form-container .submit-btn:hover {
-  background-color: #2eb82e;
-}
-
-/* Logout Button */
-.logout-container {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.logout-btn {
-  background-color: #ff3333;
-  color: white;
-  padding: 10px 20px;
+  background-color: #ff8c00; /* Bouton orange */
   border: none;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
   border-radius: 5px;
-  font-size: 16px;
   cursor: pointer;
 }
 
-.logout-btn:hover {
-  background-color: #cc0000;
+.login-form-container .submit-btn:hover {
+  background-color: #e67e00; /* Orange foncé au survol */
 }
 
+/* Sign Up Section */
+.signup-form-container {
+  background-color: #f5fff5; /* Fond léger pour Sign Up */
+  border: 2px solid #32CD32; /* Bordure verte */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.signup-form-container h1 {
+  color: #32CD32; /* Titre vert */
+}
+
+.signup-form-container .submit-btn {
+  background-color: #32CD32; /* Bouton vert */
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.signup-form-container .submit-btn:hover {
+  background-color: #2eb82e; /* Vert foncé au survol */
+}
+
+/* Logout Button Styling */
+.logout-container {
+  text-align: center;
+  margin-top: 50px; /* Ajoute de l'espace entre le formulaire et le bouton */
+}
+
+.logout-btn {
+  width: 150px;
+  padding: 10px;
+  background-color: #ff3333; /* Rouge pour le bouton Logout */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 auto; /* Centre le bouton */
+}
+
+.logout-btn:hover {
+  background-color: #cc0000; /* Rouge foncé au survol */
+}
 
 
 /* ==========================
@@ -831,22 +807,12 @@ p {
   width: 100%; /* Prend toute la largeur du conteneur parent */
   margin: 20px auto; /* Centre la section horizontalement */
   padding: 20px;
-  max-width: 3000px; /* Largeur du formulaire */
+  max-width: 1200px; /* Largeur du formulaire */
   background: rgb(250, 249, 249);
   /* background: white; */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: left;
-}
-
-textarea,
-select {
-  width: 100%; /* Champs étendus sur toute la largeur */
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1rem;
 }
 
 .add-review-container h2 {
@@ -930,19 +896,13 @@ footer {
   background-color: #ff8c00;
   color: white;
   text-align: center;
-  padding: 1.5rem;
+  padding: 1rem;
   width: 100%;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   /* margin-top: 200px; Pousse le footer en bas */
   margin-top: auto; /* Assure que le footer reste en bas */
   /* position: relative; /* Assure qu'il ne chevauche pas */
   /* z-index: 1; Gère l'ordre de superposition */
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Ajoute une ombre douce */
-  line-height: 1.5; /* Espacement entre les lignes */
-}
-
-footer p {
-  margin: 0.5rem 0; /* Espacement entre les paragraphes */
 }
 
 
