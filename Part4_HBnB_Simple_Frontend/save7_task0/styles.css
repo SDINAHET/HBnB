@@ -88,7 +88,7 @@ header .logo-text {
 }
 
 header #login-link {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   /*color: white;*/
   color: #ff8c00;
   text-decoration: none;
@@ -934,7 +934,7 @@ footer {
   text-align: center;
   padding: 1.5rem;
   width: 100%;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   /* margin-top: 200px; Pousse le footer en bas */
   margin-top: auto; /* Assure que le footer reste en bas */
   /* position: relative; /* Assure qu'il ne chevauche pas */
