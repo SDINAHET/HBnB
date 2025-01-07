@@ -683,7 +683,7 @@ p {
 /*form review____place.html*/
 /* Style du conteneur */
 .add-review.form {
-  margin-top: 30px;
+  margin-top: 20px;
   padding: 0px;
   /* border: 1px solid #ddd; */
   border-radius: 5px;
@@ -695,10 +695,10 @@ p {
 
 /* Titre du formulaire */
 .add-review.form h2 {
-  margin-bottom: 18px;
-  font-size: 22px;
+  margin-bottom: 15px;
+  font-size: 18px;
   text-align: left;
-  color: #020202;
+  color: #333;
 }
 
 /* Champs de formulaire */
@@ -708,7 +708,6 @@ p {
   font-weight: bold;
   color: #000000;
   text-align: left;
-  font-size: 18px;
 }
 
 .add-review.form textarea,
@@ -718,7 +717,7 @@ p {
   margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* Bouton d'envoi */
