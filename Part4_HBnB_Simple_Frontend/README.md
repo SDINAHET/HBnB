@@ -15,6 +15,9 @@ password: admin1234
 ## index.html
 ![alt text](images/image-3.png)
 
+### filtre max-price
+![alt text](images/image-9.png)
+
 
 ## place.html
 ![alt text](images/image-5.png)
