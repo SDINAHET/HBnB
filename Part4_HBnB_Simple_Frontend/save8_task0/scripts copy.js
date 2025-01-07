@@ -94,6 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+
+
+
 /**
  * Affiche la liste des lieux sur la page index.html.
  */
@@ -229,3 +232,60 @@ addReviewButton.addEventListener("click", () => {
   // Redirection vers add_review.html avec le même ID
   window.location.href = `add_review.html?id=${placeId}`;
 });
+
+/**
+   * Affiche la liste des lieux dans le DOM.
+   * @param {Array} data - Liste des lieux à afficher.
+   */
+function renderPlaceList(data) {
+  const placeListEl = document.querySelector(".place-list");
+  if (!placeListEl) return;
+
+  // Vider les anciens éléments
+  placeListEl.innerHTML = "";
+
+  // Créer une carte pour chaque lieu
+  data.forEach((place) => {
+    const card = document.createElement("div");
+    card.className = "place-card";
+    card.innerHTML = `
+      <h2>${place.name}</h2>
+      <p>Price per night: $${place.price}</p>
+      <button class="details-btn" data-id="${place.id}">View Details</button>
+    `;
+    placeListEl.appendChild(card);
+  });
+
+  // Ajouter des événements aux boutons "View Details"
+  document.querySelectorAll(".details-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const pid = e.target.getAttribute("data-id");
+      window.location.href = `place.html?id=${pid}`;
+    });
+  });
+}
+
+/**
+ * Configure le filtre "Max Price".
+ */
+function setupMaxPriceFilter() {
+  const maxPriceSelect = document.getElementById("maxPrice");
+  if (!maxPriceSelect) return;
+
+  // Filtrer les lieux lorsqu'une option est sélectionnée
+  maxPriceSelect.addEventListener("change", () => {
+    const value = maxPriceSelect.value; // Ex: "100" ou "all"
+    const maxPrice = value === "all" ? Infinity : parseInt(value, 10);
+
+    // Filtrer les lieux en fonction du prix
+    const filteredPlaces = places.filter((place) => place.price <= maxPrice);
+
+    // Réafficher les lieux filtrés
+    renderPlaceList(filteredPlaces);
+  });
+}
+
+// Initialisation
+renderPlaceList(places); // Affiche tous les lieux au départ
+setupMaxPriceFilter();   // Active le filtrage par prix
+

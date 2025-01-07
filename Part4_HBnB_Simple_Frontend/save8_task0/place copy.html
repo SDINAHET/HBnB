@@ -68,72 +68,22 @@
     <footer>
       <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
     </footer>
-    <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Place Details</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <header>
-      <div class="logo">
-        <a href="index.html" id="index-link2">
-          <img src="images/logo.png" alt="HBnB Logo" class="logo-img">
-          <span class="HBnB logo-text"></span>
-        </a>
-      </div>
-      <nav>
-        <a href="login.html" id="login-link">Login</a>
-      </nav>
-    </header>
-
-    <main class="place-page">
-      <!-- Section Détails du Lieu -->
-      <section class="place-details">
-        <h1 id="place-title">Loading...</h1>
-        <p><strong>Host:</strong> <span id="place-host">Loading...</span></p>
-        <p><strong>Price per night:</strong> $<span id="place-price">Loading...</span></p>
-        <p><strong>Description:</strong> <span id="place-description">Loading...</span></p>
-        <p><strong>Amenities:</strong> <span id="place-amenities">Loading...</span></p>
-      </section>
-
-      <!-- Section des Avis -->
-      <h2 id="reviews-title">Reviews</h2>
-      <div class="reviews-section" id="reviews-section">
-        <!-- Les avis seront ajoutés dynamiquement -->
-      </div>
-
-      <!-- Conteneur pour Ajouter un Avis -->
-      <div id="add-review-container"></div>
-    </main>
-
-    <footer>
-      <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
-    </footer>
-
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const urlParams = new URLSearchParams(window.location.search);
         const placeId = parseInt(urlParams.get("id"), 10);
 
-        if (!placeId) {
-          alert("Invalid Place ID!");
-          window.location.href = "index.html";
-          return;
-        }
-
+        // Vérifier si l'utilisateur est connecté
         const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
         const addReviewContainer = document.getElementById("add-review-container");
 
         if (isLoggedIn) {
-          // Créer et afficher le formulaire d'ajout d'avis
+          // Affiche un formulaire si l'utilisateur est connecté
           const addReviewForm = document.createElement("form");
           addReviewForm.className = "add-review form";
-          addReviewForm.id = "review-form";
           addReviewForm.innerHTML = `
-            <h2>Add a Review</h2>
+            <!-- <h2>Add a Review</h2>
             <label for="review-comment">Your review:</label>
             <textarea id="review-comment" name="review" required></textarea>
 
@@ -146,8 +96,28 @@
               <option value="5">5 Stars</option>
             </select>
 
+            <button type="submit" class="submit-review-button">Submit Review</button> -->
+            <div class="add-review-container">
+          <h2 id="reviews-title2">Add a Review</h2>
+          <form id="review-form" class="add-review-section">
+            <label for="review">Your review:</label>
+            <textarea id="review" name="review" required></textarea>
+
+            <label for="rating">Rating:</label>
+            <select id="rating" name="rating" required>
+              <option value="1">1 Star</option>
+              <option value="2">2 Stars</option>
+              <option value="3">3 Stars</option>
+              <option value="4">4 Stars</option>
+              <option value="5">5 Stars</option>
+              <!-- <option value="5" selected>5 Stars</option> -->
+
+            </select>
+
             <button type="submit" class="submit-review-button">Submit Review</button>
-          `;
+          </form>
+        </div>
+            `;
 
           addReviewForm.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -160,28 +130,17 @@
               return;
             }
 
-            // Simuler l'ajout de l'avis
+            // Simuler l'ajout de la review
+            console.log("New Review Submitted:", { comment, rating });
             alert("Review submitted successfully!");
-            console.log("New Review:", { comment, rating });
 
-            // Ajouter l'avis dans la liste des avis
-            const reviewsSection = document.getElementById("reviews-section");
-            const newReview = document.createElement("div");
-            newReview.className = "review";
-            newReview.innerHTML = `
-              <p><strong>You:</strong></p>
-              <p>${comment}</p>
-              <p>Rating: ${"★".repeat(rating)}${"☆".repeat(5 - rating)}</p>
-            `;
-            reviewsSection.appendChild(newReview);
-
-            // Réinitialiser le formulaire
-            addReviewForm.reset();
+            // Reload pour simuler l'ajout
+            window.location.reload();
           });
 
           addReviewContainer.appendChild(addReviewForm);
         } else {
-          // Créer et afficher le bouton "Add Review"
+          // Affiche un bouton si l'utilisateur n'est pas connecté
           const addReviewButton = document.createElement("button");
           addReviewButton.className = "button add-review";
           addReviewButton.textContent = "Add Review";
@@ -193,6 +152,7 @@
           addReviewContainer.appendChild(addReviewButton);
         }
       });
+
     </script>
     <script src="scripts.js"></script>
   </body>
