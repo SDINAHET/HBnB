@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Données statiques
   const places = [
     {
-      id: 1,
+      id: "765a38e6-c131-4315-8e9c-28ac88424634",
       name: "Beautiful Beach House",
       host: "John Doe",
       price: 150,
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ],
     },
     {
-      id: 2,
+      id: "5c66b5f9-74a7-4767-8f5b-7d2b153b6057",
       name: "Cozy Cabin",
       host: "Alice Johnson",
       price: 100,
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ],
     },
     {
-      id: 3,
+      id: "3f477fd8-fc69-47f1-8c22-12dc4db86099",
       name: "Modern Apartment",
       host: "Chris Lee",
       price: 200,
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ],
     },
     {
-      id: 4,
+      id: "13e66193-3e0b-493d-bca2-94252343a5e3",
       name: "Rustic Lakehouse",
       host: "Laura White",
       price: 180,
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ],
     },
     {
-      id: 5,
+      id: "377822b5-1601-43d9-866d-15db7932579f",
       name: "Penthouse Suite",
       host: "David Beckham",
       price: 350,
