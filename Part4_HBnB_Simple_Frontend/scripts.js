@@ -205,42 +205,42 @@ function setupLoginForm() {
       alert("Invalid email or password. Please try again.");
     }
   });document.addEventListener("DOMContentLoaded", () => {
-    const places = [
-      {
-        id: 1,
-        name: "Beautiful Beach House",
-        host: "John Doe",
-        price: 150,
-        description: "A beautiful beach house with amazing views...",
-        amenities: "WiFi, Pool, Air Conditioning",
-        reviews: [
-          { author: "Jane Smith", comment: "Great place to stay!", rating: 4 },
-          { author: "Robert Brown", comment: "Amazing location and very comfortable.", rating: 5 },
-        ],
-      },
-      {
-        id: 2,
-        name: "Cozy Cabin",
-        host: "Alice Johnson",
-        price: 100,
-        description: "A warm and inviting cabin in the woods.",
-        amenities: "Fireplace, Hiking Trails, Mountain View",
-        reviews: [
-          { author: "Emma Wilson", comment: "So cozy and quiet!", rating: 5 },
-        ],
-      },
-      {
-        id: 3,
-        name: "Modern Apartment",
-        host: "Chris Lee",
-        price: 200,
-        description: "A sleek and stylish city apartment with modern amenities.",
-        amenities: "Smart TV, High-Speed WiFi, Gym Access",
-        reviews: [
-          { author: "Liam Martinez", comment: "Perfect for business travel.", rating: 4 },
-        ],
-      },
-    ];
+    // const places = [
+    //   {
+    //     id: 1,
+    //     name: "Beautiful Beach House",
+    //     host: "John Doe",
+    //     price: 150,
+    //     description: "A beautiful beach house with amazing views...",
+    //     amenities: "WiFi, Pool, Air Conditioning",
+    //     reviews: [
+    //       { author: "Jane Smith", comment: "Great place to stay!", rating: 4 },
+    //       { author: "Robert Brown", comment: "Amazing location and very comfortable.", rating: 5 },
+    //     ],
+    //   },
+    //   {
+    //     id: 2,
+    //     name: "Cozy Cabin",
+    //     host: "Alice Johnson",
+    //     price: 100,
+    //     description: "A warm and inviting cabin in the woods.",
+    //     amenities: "Fireplace, Hiking Trails, Mountain View",
+    //     reviews: [
+    //       { author: "Emma Wilson", comment: "So cozy and quiet!", rating: 5 },
+    //     ],
+    //   },
+    //   {
+    //     id: 3,
+    //     name: "Modern Apartment",
+    //     host: "Chris Lee",
+    //     price: 200,
+    //     description: "A sleek and stylish city apartment with modern amenities.",
+    //     amenities: "Smart TV, High-Speed WiFi, Gym Access",
+    //     reviews: [
+    //       { author: "Liam Martinez", comment: "Perfect for business travel.", rating: 4 },
+    //     ],
+    //   },
+    // ];
 
     const urlParams = new URLSearchParams(window.location.search);
     const placeId = parseInt(urlParams.get("id"), 10);
