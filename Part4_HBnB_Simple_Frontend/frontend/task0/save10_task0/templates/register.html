@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un compte - HBnB</title>
+    <link rel="icon" href="../images/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+
+        header {
+            background-color: #f99b03;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        header img {
+            width: 150px;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 10px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h2 {
+            color: #111111;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 0.5rem 0 0.2rem;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.7rem;
+            background-color: #5bc505;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #268f03;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .links a {
+            color: #003366;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #ffab02;
+            color: #fff;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html" id="index-link2">
+                <img src="../images/logo.png" alt="HBnB Logo" class="logo-img">
+                <span class="HBnB logo-text"></span>
+            </a>
+        </div>
+        <h1>Welcome</h1>
+        <a href="index.html" id="login-link" style="color: #f5f4f1; text-decoration: none;">Home</a>
+    </header>
+
+    <div class="container">
+        <h2>Register a new user</h2>
+        <form action="register-success.html" method="post">
+            <label for="first-name">First name</label>
+            <input type="text" id="first-name" name="first_name" placeholder="First name" required>
+
+            <label for="last-name">Name</label>
+            <input type="text" id="last-name" name="last_name" placeholder="Name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="votre-email@exemple.com" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="* * * * * * * *" minlength="8" required>
+
+            <label for="confirm-password">Confirme password</label>
+            <input type="password" id="confirm-password" name="confirm_password" placeholder="* * * * * * * *" required>
+
+            <button type="submit">Sign in</button>
+        </form>
+
+        <div class="links">
+            <a href="login.html">Already register? Login</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
+    </footer>
+    <script>document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        const apiUrl = 'https://your-backend-api/register'; // Remplacez par l'URL de votre API
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Empêche la soumission classique du formulaire
+
+            // Récupération des données du formulaire
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            // Vérifiez que les mots de passe correspondent
+            if (password !== confirmPassword) {
+                alert("Passwords do not match. Please try again.");
+                return;
+            }
+
+            // Création de l'objet utilisateur
+            const userData = {
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                password: password
+            };
+
+            try {
+                // Requête POST vers l'API
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JCASON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Affiche le token et l'ID retournés par l'API
+                    displayTokenAndId(data.token, data.id);
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.message}`);
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                alert('An error occurred. Please try again later.');
+            }
+        });
+
+        // Fonction pour afficher le token et l'ID sur la page
+        function displayTokenAndId(token, id) {
+            const container = document.querySelector('.container');
+            const infoDisplay = document.createElement('div');
+            infoDisplay.classList.add('info-display');
+            infoDisplay.style.marginTop = '20px';
+            infoDisplay.style.padding = '10px';
+            infoDisplay.style.backgroundColor = '#e0ffe0';
+            infoDisplay.style.border = '1px solid #5bc505';
+            infoDisplay.style.borderRadius = '4px';
+            infoDisplay.style.color = '#333';
+            infoDisplay.innerHTML = `
+                <strong>Registration Successful!</strong><br>
+                <strong>Token:</strong> ${token}<br>
+                <strong>User ID:</strong> ${id}
+            `;
+            container.appendChild(infoDisplay);
+        }
+    });
+    </script>
+    <script src="../assets/js/scripts.js"></script>
+</body>
+</html>

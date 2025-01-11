@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" href="images/icon.png" type="image/x-icon">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>List of Places</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <img src="images/logo.png" alt="HBnB Logo" class="logo-img">
+        <span class="logo-text"></span>
+      </div>
+      <nav>
+        <a href="login.html" id="login-link">Login</a>
+      </nav>
+    </header>
+    <main class="home-page">
+      <!-- Section contenant le titre et le filtre -->
+      <div class="title-section">
+        <h1>Available Places</h1>
+        <div class="index_filter">
+          <label for="max-price">Max Price:</label>
+          <select id="max-price">
+            <option value="all">All</option>
+            <option value="100">$100</option>
+            <option value="150">$150</option>
+            <option value="200">$200</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Section contenant les cartes -->
+      <div class="places">
+        <div class="place-card">
+          <h2>Beautiful Beach House</h2>
+          <p>Price per night: $150</p>
+          <button class="details-btn" data-id="1">View Details</button>
+        </div>
+        <div class="place-card">
+          <h2>Cozy Cabin</h2>
+          <p>Price per night: $100</p>
+          <button class="details-btn" data-id="2">View Details</button>
+        </div>
+        <div class="place-card">
+          <h2>Modern Apartment</h2>
+          <p>Price per night: $200</p>
+          <button class="details-btn" data-id="3">View Details</button>
+        </div>
+      </div>
+    </main>
+    <script src="scripts.js"></script>
+  </body>
+  <footer>
+    <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
+  </footer>
+</html>
+<!-- DINAHET -->

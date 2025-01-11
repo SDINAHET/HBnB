@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" href="../images/icon.png" type="image/x-icon">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <!-- <img src="images/logo.png" alt="HBnB Logo" class="logo-img"> -->
+        <a href="index.html" id="index-link2">
+          <img src="../images/logo.png" alt="HBnB Logo" class="logo-img">
+          <span class="HBnB logo-text"></span>
+        </a>
+      </div>
+      <nav>
+        <a href="login.html" id="login-link">Login</a>
+      </nav>
+    </header>
+
+    <main class="login-page">
+      <!-- Conteneur du cadre -->
+      <div class="form-container">
+        <h1>Connexion</h1>
+        <form id="login-form">
+          <!-- Champ Email -->
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+          <!-- Champ Mot de passe -->
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+          <!-- Bouton de soumission -->
+          <button type="submit" class="submit-btn">Login</button>
+          <br>
+          <br>
+          <!-- <div class="signup-form-container"> -->
+            <!-- <form action="/signup" method="post">
+              <label for="username">Username:</label>
+              <input type="text" id="username" name="username" required>
+
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" required>
+
+              <label for="password">Password:</label>
+              <input type="password" id="password" name="password" required> -->
+
+              <!-- Bouton Sign Up -->
+              <div class="links">
+                <a href="register.html">Not register ? Sign-up</a>
+                <!-- <a href="about.html">À propos</a>
+                <a href="contact.html">Contact</a> -->
+              <!-- </div> -->
+          </div>
+
+        </form>
+        <!-- Message d'erreur -->
+        <!-- <p id="error-message" style="display: none; color: red; margin-top: 10px;"></p> -->
+        <p id="error-message" style="color: red; display: none;"></p>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
+    </footer>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginForm = document.getElementById("login-form");
+
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (email === "admin@hbnb.com" && password === "admin1234") {
+          localStorage.setItem("isLoggedIn", "true");
+          alert("Login successful!");
+
+          const redirectUrl = new URLSearchParams(window.location.search).get("redirect");
+          window.location.href = redirectUrl ? decodeURIComponent(redirectUrl) : "index.html";
+        } else {
+          alert("Invalid email or password.");
+        }
+      });
+    });
+  </script>
+  <!-- <script>
+    const loginForm = document.getElementById('login-form');
+    const errorMessage = document.getElementById('error-message');
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://localhost:5000/api/v1/users/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Invalid email or password');
+        }
+
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        window.location.href = 'index.html';
+      } catch (error) {
+        errorMessage.textContent = error.message;
+        errorMessage.style.display = 'block';
+      }
+    });
+  </script> -->
+  <script src="../assets/js/scripts.js"></script>
+</body>
+</html>
+<!-- DINAHET -->
+

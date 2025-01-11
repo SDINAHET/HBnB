@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue sur HBnB</title>
+    <style>
+        /* Styles globaux */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #003366;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        header img {
+            width: 100px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        nav {
+            margin-top: 0.5rem;
+        }
+
+        nav a {
+            color: #ffcc00;
+            text-decoration: none;
+            margin: 0 0.5rem;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Contenu principal */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h2 {
+            color: #003366;
+            margin-top: 0;
+        }
+
+        select {
+            padding: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .place-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .place-card h2 {
+            color: #003366;
+        }
+
+        .place-card button {
+            background-color: #003366;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .place-card button:hover {
+            background-color: #0055cc;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background: #003366;
+            color: #fff;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: #ffcc00;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="images/logo.png" alt="Logo HBnB">
+    <h1>Bienvenue sur HBnB</h1>
+    <nav>
+        <a href="#">Se connecter</a>
+        <a href="#">S'inscrire</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h2>Available Places</h2>
+    <label for="price-filter">Max Price:</label>
+    <select id="price-filter">
+        <option value="all">All</option>
+        <option value="50">€50</option>
+        <option value="100">€100</option>
+        <option value="200">€200</option>
+        <option value="500">€500</option>
+    </select>
+
+    <div class="place-list"></div>
+</div>
+
+<footer>
+    <p>© 2024 HBnB - Tous droits non réservés</p>
+</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Données des places
+        const places = [
+            {
+                id: "1",
+                name: "Beautiful Beach House",
+                host: "John Doe",
+                price: 150,
+                description: "A beautiful beach house with amazing views...",
+                amenities: "WiFi, Pool, Air Conditioning",
+            },
+            {
+                id: "2",
+                name: "Cozy Cabin",
+                host: "Alice Johnson",
+                price: 100,
+                description: "A warm and inviting cabin in the woods.",
+                amenities: "Fireplace, Hiking Trails, Mountain View",
+            },
+            {
+                id: "3",
+                name: "Modern Apartment",
+                host: "Chris Lee",
+                price: 200,
+                description: "A sleek and stylish city apartment with modern amenities.",
+                amenities: "Smart TV, High-Speed WiFi, Gym Access",
+            },
+            {
+                id: "4",
+                name: "Rustic Lakehouse",
+                host: "Laura White",
+                price: 180,
+                description: "A charming lakehouse with a beautiful view of the sunset.",
+                amenities: "Boat Dock, Fireplace, Private Garden",
+            },
+            {
+                id: "5",
+                name: "Penthouse Suite",
+                host: "David Beckham",
+                price: 350,
+                description: "A luxurious penthouse with panoramic city views.",
+                amenities: "Private Pool, Rooftop Bar, 24/7 Butler Service",
+            },
+        ];
+
+        // Fonction pour afficher les places
+        function renderPlaceList(places) {
+            const placeList = document.querySelector(".place-list");
+
+            if (!placeList) return;
+
+            placeList.innerHTML = "";
+
+            places.forEach((place) => {
+                const card = document.createElement("div");
+                card.className = "place-card";
+
+                card.innerHTML = `
+                    <h2>${place.name}</h2>
+                    <p><strong>Hosted by:</strong> ${place.host}</p>
+                    <p><strong>Price per night:</strong> €${place.price}</p>
+                    <p>${place.description}</p>
+                    <p><strong>Amenities:</strong> ${place.amenities}</p>
+                    <button class="details-btn" data-id="${place.id}">View Details</button>
+                `;
+
+                card.querySelector(".details-btn").addEventListener("click", () => {
+                    alert(`Details for: ${place.name}`);
+                });
+
+                placeList.appendChild(card);
+            });
+        }
+
+        // Filtrer les places par prix
+        document.getElementById("price-filter").addEventListener("change", (e) => {
+            const maxPrice = e.target.value === "all" ? Infinity : parseInt(e.target.value, 10);
+            const filteredPlaces = places.filter((place) => place.price <= maxPrice);
+            renderPlaceList(filteredPlaces);
+        });
+
+        // Initialiser l'affichage des places
+        renderPlaceList(places);
+    });
+</script>
+
+</body>
+</html>

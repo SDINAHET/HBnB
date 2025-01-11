@@ -1,0 +1,453 @@
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ff8c00;
+    padding: 1rem 2rem;
+  }
+
+  header .logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  header .logo img {
+    width: 150px;
+    margin-right: 10px;
+  }
+
+  header nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+
+  header nav .login {
+    padding: 0.5rem 1rem;
+    background: #fff;
+    color: #ff8c00;
+    border-radius: 5px;
+  }
+
+  /* Main Content */
+  main {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .filter {
+    margin-bottom: 1.5rem;
+  }
+
+  .filter label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+
+  #max-price {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+  /* Place Details */
+  .place-details, .reviews, .add-review {
+    margin: 2rem auto;
+    max-width: 800px;
+    text-align: left;
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .review {
+    margin: 1rem 0;
+  }
+
+  .review p {
+    margin: 0.5rem 0;
+  }
+
+  .add-review textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .add-review select {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .add-review button {
+    background-color: #ff8c00;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .add-review button:hover {
+    background-color: #e67e00;
+  }
+
+  /* header {
+    /* display: flex; */
+    /* justify-content: space-between; Aligne logo à gauche et lien à droite
+    /* align-items: center; Centre verticalement les éléments */
+    /* padding: 1rem 2rem; Ajoute des marges autour */
+    /* background-color: #ff8c00; Couleur de fond orange */
+  /* } */
+
+  /* header .logo {
+    display: flex;
+    align-items: center;
+  } */
+
+  /* .logo-img {
+    width: 60px; /* Taille augmentée */
+    /* height: auto; */
+    /* margin-right: 10px; Espacement entre l'image et le texte */
+  /* } */
+
+  /* .logo span { */
+    /* font-size: 1.5rem; Ajustez la taille du texte pour correspondre à l'icône */
+    /* color: white; Assurez un bon contraste */
+  /* } */
+
+
+
+  /* header .login-button {
+    background-color: white;
+    color: #ff8c00;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  header .login-button:hover {
+    background-color: #ffd27f;
+  } */
+ /*-----------------------------------------------------------------------*/
+
+ /*
+  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks.
+  You'll probably need to override some of theese styles.
+*/
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  body {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+
+  header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+  }
+
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1rem;
+  }
+
+  main {
+    padding: 2rem;
+  }
+
+
+
+   /* Global header styling */
+   header {
+    display: flex; /* Permet d'aligner les éléments horizontalement */
+    justify-content: space-between; /* Logo à gauche, Login à droite */
+    align-items: center; /* Aligne verticalement */
+    background-color: #ff8c00; /* Couleur orange */
+    padding: 1rem 2rem; /* Espacement autour du contenu */
+    color: #fff; /* Couleur blanche pour le texte */
+    font-family: Arial, sans-serif; /* Police par défaut */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optionnel : ajoute une ombre pour un effet visuel */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+
+  /* Logo container */
+  .logo {
+    display: flex; /* Permet d'aligner le logo et le texte horizontalement */
+    align-items: center; /* Centre verticalement le logo et le texte */
+  }
+
+  /* Logo image */
+  .logo-img {
+    width: 40px; /* Taille de l'icône */
+    height: auto; /* Conserve le ratio d'aspect */
+    margin-right: 10px; /* Espacement entre le logo et le texte */
+  }
+
+  /* Logo text */
+  .logo-text {
+    font-size: 1.5rem; /* Taille du texte */
+    font-weight: bold; /* Gras pour correspondre au style attendu */
+    color: #003580; /* Couleur bleue foncée pour le texte */
+  }
+
+  /* Login link */
+  #login-link {
+    font-size: 1rem; /* Taille du texte du lien */
+    color: #fff; /* Couleur blanche pour le texte */
+    text-decoration: none; /* Supprime le soulignement */
+  }
+
+  #login-link:hover {
+    text-decoration: underline; /* Ajoute un soulignement au survol */
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column; /* Disposer les éléments en colonne */
+    min-height: 100vh; /* S'assure que le wrapper remplit l'écran */
+  }
+
+    /* Conteneur du formulaire (le cadre) */
+    .form-container {
+      background-color: #fff; /* Couleur de fond blanche */
+      border: 2px solid #ddd; /* Bordure grise douce */
+      border-radius: 10px; /* Coins arrondis */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
+      padding: 2rem; /* Espace intérieur */
+      width: 350px; /* Largeur fixe */
+      text-align: center; /* Centre le contenu */
+      position: absolute;
+      top: 50%; /* Place au centre verticalement */
+      left: 50%; /* Place au centre horizontalement */
+      transform: translate(-50%, -50%); /* Décale de moitié pour centrer exactement */
+    }
+
+    /* Titre du formulaire */
+    .form-container h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem; /* Espacement sous le titre */
+      color: #333;
+    }
+
+    /* Labels */
+    form label {
+      display: block; /* Chaque label sur une nouvelle ligne */
+      font-weight: bold; /* Texte en gras */
+      margin-bottom: 0.5rem;
+      text-align: left; /* Aligne à gauche */
+    }
+
+    /* Champs de formulaire */
+    form input {
+      width: 100%; /* Prend toute la largeur */
+      padding: 0.7rem; /* Espacement interne */
+      margin-bottom: 1rem; /* Espacement entre les champs */
+      border: 1px solid #ccc; /* Bordure grise légère */
+      border-radius: 5px; /* Coins arrondis */
+      font-size: 1rem;
+    }
+
+    /* Bouton de soumission */
+    .submit-btn {
+      width: 100%; /* Pleine largeur */
+      padding: 0.7rem;
+      background-color: #ff8c00; /* Couleur orange */
+      color: #fff; /* Texte blanc */
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #e67e00; /* Orange plus foncé au survol */
+    }
+
+
+
+    footer {
+      background-color: #ff8c00; /* Couleur orange */
+      color: white; /* Texte blanc pour le contraste */
+      text-align: center; /* Centre le texte horizontalement */
+      padding: 1rem; /* Ajoute de l'espace autour du contenu */
+      position: relative; /* Permet de fixer ou d'ajuster si nécessaire */
+      bottom: 0;
+      width: 100%; /* S'étend sur toute la largeur */
+      font-size: 1rem; /* Taille de la police */
+    }
+
+    /* -----add review_place.html----- */
+    /* Global styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    /* Header styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ff8c00;
+      padding: 1rem 2rem;
+      color: white;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    header .logo-img {
+      width: 150px;
+      margin-right: 10px;
+    }
+
+
+
+
+
+
+  body {
+    display: flex;
+    flex-direction: column; /* Aligne les enfants verticalement */
+    min-height: 100vh; /* Assure que la hauteur du body est au moins égale à la hauteur de la fenêtre */
+    margin: 0; /* Supprime les marges par défaut */
+  }
+
+
+  /* Main styles */
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+    flex: 1; /* Prend tout l'espace disponible entre le header et le footer */
+  }
+
+  .add-review-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: left;
+  }
+
+  .add-review-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .add-review-section label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .add-review-section textarea,
+  .add-review-section select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+
+  .submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff8c00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .submit-button:hover {
+    background-color: #e67e00;
+  }
+
+  /* Footer styles */
+  .add-review-section footer {
+    text-align: center;
+    background-color: #ff8c00;
+    color: white;
+    padding: 1rem;
+    position: relative;
+  }
+
+/* Styles spécifiques pour la page login*/
+.login-page {
+  display: flex; /* Active Flexbox */
+  justify-content: center; /* Centre horizontalement */
+  align-items: center; /* Centre verticalement */
+  height: calc(100vh - 120px); /* Prend toute la hauteur visible moins header/footer */
+  background-color: #f4f4f4; /* Ajoutez une couleur de fond si nécessaire */
+  padding: 20px; /* Espacement interne */
+}
+
+/* Optionnel : Ajustez également le formulaire s'il y a des styles spécifiques */
+.login-page .form-container {
+  max-width: 400px; /* Largeur maximale pour le formulaire */
+  width: 100%; /* Prend toute la largeur disponible dans les petits écrans */
+  padding: 2rem;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+main {
+  flex: 1; /*Fills space between header and footer */
+  /* display: flex; Centers the content */
+  justify-content: center; /*Horizontal centering */
+  align-items: center; /* Vertical centering */
+  padding: 20px;
+  /* min-height: calc(100vh - 120px); Prend tout l'espace sauf le header et le footer */
+  text-align: center; /* Centre le contenu */
+}
+
+/* <section class="add-review">
+<h2>Add a Review</h2>
+<form id="review-form">
+  <textarea id="review-text" placeholder="Write your review..." required></textarea>
+  <select id="review-rating">
+    <option value="1">1 Star</option>
+    <option value="2">2 Stars</option>
+    <option value="3">3 Stars</option>
+    <option value="4">4 Stars</option>
+    <option value="5">5 Stars</option>
+  </select>
+  <button type="submit">Submit Review</button>
+</form>
+</section> */
