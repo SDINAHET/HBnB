@@ -10,6 +10,7 @@ from app.api.v1.places import api as places_ns
 from app.api.v1.amenities import api as amenities_ns
 from app.api.v1.protected import api as protected_ns
 from config import config
+from flask_cors import CORS
 
 
 def create_app(config_name="default"):
@@ -20,7 +21,9 @@ def create_app(config_name="default"):
     bcrypt.init_app(app)
     jwt.init_app(app)
     db.init_app(app)
-    
+    # Ajoutez ici la configuration CORS
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+
 
     api = Api(app, version='1.0',
             title='HBnB API',

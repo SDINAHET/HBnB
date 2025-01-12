@@ -7,12 +7,27 @@
     <link rel="icon" href="../images/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/styles.css">
     <style>
+        html, body {
+            height: 100%; /* S'assure que le html et le body remplissent toute la hauteur de l'écran */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
         body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f0f4f8;
             color: #333;
+        }
+
+        .container {
+            flex: 1; /* Permet au contenu de prendre toute la place disponible */
         }
 
         header {
@@ -91,12 +106,34 @@
             text-decoration: underline;
         }
 
+        input:invalid {
+            border-color: red;
+            background-color: #ffe6e6;
+        }
+
+        input:valid {
+            border-color: green;
+            background-color: #e6ffe6;
+        }
+
+        .error-message {
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
         footer {
             text-align: center;
             padding: 20px;
             background: #ffab02;
             color: #fff;
             margin-top: 50px;
+            margin-top: auto; /* Place le footer en bas même si le contenu est insuffisant */
         }
     </style>
 </head>
@@ -132,6 +169,9 @@
 
             <button type="submit">Sign in</button>
         </form>
+
+        <!-- Zone pour afficher les résultats -->
+        <div id="result" style="display: none; margin-top: 20px;"></div>
 
         <div class="links">
             <a href="login.html">Already register? Login</a>
@@ -212,6 +252,75 @@
             container.appendChild(infoDisplay);
         }
     });
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', (event) => {
+            // Empêche l'envoi si un champ est invalide
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                displayValidationErrors();
+            }
+        });
+
+        function displayValidationErrors() {
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach((input) => {
+                const errorElement = document.createElement('small');
+                errorElement.classList.add('error-message');
+                errorElement.style.color = 'red';
+                errorElement.style.fontSize = '0.9rem';
+
+                // Supprime les messages d'erreur existants
+                if (input.nextSibling && input.nextSibling.classList?.contains('error-message')) {
+                    input.nextSibling.remove();
+                }
+
+                if (!input.validity.valid) {
+                    let message = '';
+                    if (input.validity.valueMissing) {
+                        message = `Please fill out the ${input.name} field.`;
+                    } else if (input.validity.typeMismatch) {
+                        message = `Please enter a valid ${input.type}.`;
+                    } else if (input.validity.tooShort) {
+                        message = `${input.name} must be at least ${input.minLength} characters.`;
+                    }
+                    errorElement.textContent = message;
+                    input.parentNode.insertBefore(errorElement, input.nextSibling);
+                }
+            });
+        }
+    });
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = 'Submitting...';
+
+        setTimeout(() => {
+            form.submit(); // Envoyez le formulaire après un délai simulé
+        }, 2000);
+    });
+
+    function displayTokenAndId(token, id) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block'; // Rendre la div visible
+        resultDiv.style.padding = '10px';
+        resultDiv.style.backgroundColor = '#e0ffe0';
+        resultDiv.style.border = '1px solid #5bc505';
+        resultDiv.style.borderRadius = '4px';
+        resultDiv.style.color = '#333';
+        resultDiv.innerHTML = `
+            <strong>Registration Successful!</strong><br>
+            <strong>Token:</strong> ${token}<br>
+            <strong>User ID:</strong> ${id}
+        `;
+    }
+
     </script>
     <script src="../assets/js/scripts.js"></script>
 </body>
