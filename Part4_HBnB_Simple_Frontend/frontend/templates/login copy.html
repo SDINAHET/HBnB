@@ -68,6 +68,28 @@
       <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
     </footer>
   <script>
+    <!-- document.addEventListener("DOMContentLoaded", () => {
+      const loginForm = document.getElementById("login-form");
+
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (email === "admin@hbnb.com" && password === "admin1234") {
+          localStorage.setItem("isLoggedIn", "true");
+          alert("Login successful!");
+
+          const redirectUrl = new URLSearchParams(window.location.search).get("redirect");
+          window.location.href = redirectUrl ? decodeURIComponent(redirectUrl) : "index.html";
+        } else {
+          alert("Invalid email or password.");
+        }
+      });
+    }); -->
+
+
     document.addEventListener('DOMContentLoaded', () => {
       const loginForm = document.getElementById('login-form');
       const errorMessage = document.getElementById('error-message');
