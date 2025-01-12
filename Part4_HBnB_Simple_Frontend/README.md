@@ -20,6 +20,13 @@ password: admin1234
 
 ![alt text](frontend/images/image-4.png)
 
+### new page login
+![alt text](frontend/images/image-12.png)
+register a new user (in progress to resolve bug)
+![alt text](frontend/images/image-13.png)
+![alt text](frontend/images/image-14.png)
+![alt text](frontend/images/image-15.png)
+
 ### success login
 ![alt text](frontend/images/image-7.png)
 
