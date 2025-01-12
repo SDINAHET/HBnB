@@ -56,3 +56,14 @@ register a new user (in progress to resolve bug)
 ![alt text](frontend/images/image-10.png)
 
 
+curl -X 'POST' \
+  'http://127.0.0.1:5000/api/v1/users/users/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "first_name": "Stéphane",
+  "last_name": "Dinahet",
+  "email": "st.di@hbnb.io",
+  "password": "user1234",
+  "is_admin": false
+}'
