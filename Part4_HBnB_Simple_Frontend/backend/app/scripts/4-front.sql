@@ -17,11 +17,20 @@ VALUES
     ('377822b5-1601-43d9-866d-15db7932579f', 'Penthouse Suite', 'A luxurious penthouse with panoramic city views.', 350, 48.856613, 2.352222, '3b8bcdc2-4910-4b7f-a3b5-e9b1a5c6b9c4');
 
 -- Table Amenities
+-- INSERT INTO amenities (id, name)
+-- VALUES
+--     ('a12ef460-8e90-4e7a-8f43-1918a006078d', 'WiFi'),
+--     ('acbc951d-ef60-4486-84b9-87afc47d1eb2', 'Swimming Pool'),
+--     ('6fac204d-90b6-40cc-a87a-dbbc0814745e', 'Air Conditioning'),
+--     ('de9e2f01-bfac-4a56-a94d-8e1a453cb3cb', 'Fireplace'),
+--     ('5a73e4cd-3026-4f71-a65c-f7f1de342921', 'Hiking Trails'),
+--     ('c2e7de58-d6a4-4e0f-a79b-58a9ef8124c9', 'Mountain View'),
+--     ('db3f39de-7666-4636-b839-e51bfb47a6de', 'Smart TV'),
+--     ('f74cc8b7-1b53-4d78-93ef-3a59b544be4e', 'High-Speed WiFi'),
+--     ('e1b2f62e-447c-498c-8134-776d9db6c00c', 'Private Garden');
+
 INSERT INTO amenities (id, name)
 VALUES
-    ('a12ef460-8e90-4e7a-8f43-1918a006078d', 'WiFi'),
-    ('acbc951d-ef60-4486-84b9-87afc47d1eb2', 'Swimming Pool'),
-    ('6fac204d-90b6-40cc-a87a-dbbc0814745e', 'Air Conditioning'),
     ('de9e2f01-bfac-4a56-a94d-8e1a453cb3cb', 'Fireplace'),
     ('5a73e4cd-3026-4f71-a65c-f7f1de342921', 'Hiking Trails'),
     ('c2e7de58-d6a4-4e0f-a79b-58a9ef8124c9', 'Mountain View'),
