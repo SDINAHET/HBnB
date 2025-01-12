@@ -2,17 +2,17 @@
 https://hbnb.alwaysdata.net/
 
 ## Login.html
-email: user@hbnb.com   --> identication backend (developpment.db)
+email: user@hbnb.com   --> identification backend (developpment.db)
 
 password: user1234
 
 
-email: admin@hbnb.io   --> identication backend (developpment.db)
+email: admin@hbnb.io   --> identification backend (developpment.db)
 
 password: admin1234
 
 
-email: admin@hbnb.com   --> identication frontend
+email: admin@hbnb.com   --> identification frontend
 
 password: admin1234
 
