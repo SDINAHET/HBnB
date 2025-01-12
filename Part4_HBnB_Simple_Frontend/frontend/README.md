@@ -58,6 +58,8 @@ password: admin1234
 
 ![alt text](frontend/images/image-10.png)
 
+![alt text](frontend/images/image-18.png)
+
 
 curl -X 'POST' \
   'http://127.0.0.1:5000/api/v1/users/users/' \
