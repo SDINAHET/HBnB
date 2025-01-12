@@ -151,7 +151,7 @@
 
     <div class="container">
         <h2>Register a new user</h2>
-        <form action="register-success.html" method="post">
+        <form action="register-success.html" method="get">
             <label for="first-name">First name</label>
             <input type="text" id="first-name" name="first_name" placeholder="First name" required>
 
@@ -183,7 +183,9 @@
     </footer>
     <script>document.addEventListener('DOMContentLoaded', () => {
         const form = document.querySelector('form');
-        const apiUrl = 'https://your-backend-api/register'; // Remplacez par l'URL de votre API
+        <!-- const apiUrl = 'https://your-backend-api/register'; // Remplacez par l'URL de votre API -->
+        const apiUrl = 'http://127.0.0.1:5000/api/v1/users/users';
+
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault(); // Empêche la soumission classique du formulaire
@@ -216,7 +218,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JCASON.stringify(userData)
+                    body: JSON.stringify(userData)
                 });
 
                 if (response.ok) {
@@ -233,25 +235,17 @@
             }
         });
 
-        // Fonction pour afficher le token et l'ID sur la page
-        function displayTokenAndId(token, id) {
-            const container = document.querySelector('.container');
-            const infoDisplay = document.createElement('div');
-            infoDisplay.classList.add('info-display');
-            infoDisplay.style.marginTop = '20px';
-            infoDisplay.style.padding = '10px';
-            infoDisplay.style.backgroundColor = '#e0ffe0';
-            infoDisplay.style.border = '1px solid #5bc505';
-            infoDisplay.style.borderRadius = '4px';
-            infoDisplay.style.color = '#333';
-            infoDisplay.innerHTML = `
-                <strong>Registration Successful!</strong><br>
-                <strong>Token:</strong> ${token}<br>
-                <strong>User ID:</strong> ${id}
-            `;
-            container.appendChild(infoDisplay);
-        }
-    });
+    // Fonction pour afficher le token et l'ID sur la page
+    function displayTokenAndId(token, id) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block'; // Affiche la div
+        resultDiv.innerHTML = `
+            <strong>Registration Successful!</strong><br>
+            <strong>Token:</strong> ${token}<br>
+            <strong>User ID:</strong> ${id}
+        `;
+    }
+
 
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -305,21 +299,6 @@
             form.submit(); // Envoyez le formulaire après un délai simulé
         }, 2000);
     });
-
-    function displayTokenAndId(token, id) {
-        const resultDiv = document.getElementById('result');
-        resultDiv.style.display = 'block'; // Rendre la div visible
-        resultDiv.style.padding = '10px';
-        resultDiv.style.backgroundColor = '#e0ffe0';
-        resultDiv.style.border = '1px solid #5bc505';
-        resultDiv.style.borderRadius = '4px';
-        resultDiv.style.color = '#333';
-        resultDiv.innerHTML = `
-            <strong>Registration Successful!</strong><br>
-            <strong>Token:</strong> ${token}<br>
-            <strong>User ID:</strong> ${id}
-        `;
-    }
 
     </script>
     <script src="../assets/js/scripts.js"></script>
