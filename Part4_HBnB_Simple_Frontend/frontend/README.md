@@ -24,13 +24,15 @@ password: admin1234
 
 ### new page login
 ![alt text](frontend/images/image-12.png)
-register a new user (in progress to resolve bug)
+
+#### register a new user (in progress to resolve bug)
 ![alt text](frontend/images/image-13.png)
 ![alt text](frontend/images/image-14.png)
 ![alt text](frontend/images/image-15.png)
 
 ### success login
 ![alt text](frontend/images/image-7.png)
+![alt text](frontend/images/image-16.png)
 
 ### invalid login
 ![alt text](frontend/images/image-8.png)
