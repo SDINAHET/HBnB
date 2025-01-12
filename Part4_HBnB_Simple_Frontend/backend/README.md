@@ -219,7 +219,7 @@ INSERT INTO amenities (id, name) VALUES ('acbc951d-ef60-4486-84b9-87afc47d1eb2',
 INSERT INTO amenities (id, name) VALUES ('6fac204d-90b6-40cc-a87a-dbbc0814745e', 'Air Conditioning');
 ```
 checking hash password: https://bcrypt-generator.com/
-![alt text](image.png)
+![alt text](image_bcrypt.png)
 
 ### ADMINISTRATOR:
 
