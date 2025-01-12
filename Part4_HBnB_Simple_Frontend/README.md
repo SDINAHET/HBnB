@@ -1,6 +1,8 @@
 # Part4
 https://hbnb.alwaysdata.net/
 
+python3 -m http.server 5500
+
 ## Login.html
 email: user@hbnb.com   --> identification backend (developpment.db)
 

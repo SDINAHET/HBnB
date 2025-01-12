@@ -34,12 +34,12 @@
         <label for="maxPrice">Max Price:</label>
         <select id="max-price">
           <option value="all">All</option>
-          <option value="100">$100</option>
-          <option value="150">$150</option>
-          <option value="200">$200</option>
-          <option value="300">$300</option>
-          <option value="350">$350</option>
-          <option value="400">$400</option>
+          <option value="100">100€</option>
+          <option value="150">150€</option>
+          <option value="200">200€</option>
+          <option value="300">300€</option>
+          <option value="350">350€</option>
+          <option value="400">400€</option>
         </select>
       </div>
     </div>
@@ -89,7 +89,7 @@
       card.className = "place-card";
       card.innerHTML = `
         <h2>${place.name}</h2>
-        <p>Price per night: $${place.price}</p>
+        <p>Price per night: ${place.price}€</p> <!-- Symbole € après le prix -->
         <button class="details-btn" data-id="${place.id}">View Details</button>
       `;
       placeListEl.appendChild(card);

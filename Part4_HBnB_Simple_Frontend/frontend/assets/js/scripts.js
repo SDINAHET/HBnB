@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         card.className = "place-card";
         card.innerHTML = `
           <h2>${place.name}</h2>
-          <p>Price per night: ${place.price}</p>
+          <p>Price per night: ${place.price}€</p> <!-- Symbole € après le prix -->
           <button class="details-btn" data-id="${place.id}">View Details</button>
         `;
         placeList.appendChild(card);
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("place-title").textContent = place.name;
     document.getElementById("place-host").textContent = place.host;
-    document.getElementById("place-price").textContent = `${place.price}`;
+    document.getElementById("place-price").textContent = `${place.price}€`; // Ajout du symbole €
     document.getElementById("place-description").textContent = place.description;
     document.getElementById("place-amenities").textContent = place.amenities;
 
