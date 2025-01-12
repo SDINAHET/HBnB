@@ -22,7 +22,9 @@ def create_app(config_name="default"):
     jwt.init_app(app)
     db.init_app(app)
     # Ajoutez ici la configuration CORS
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+    # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+    CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+
 
 
     api = Api(app, version='1.0',
