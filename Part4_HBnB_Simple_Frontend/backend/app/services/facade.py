@@ -64,7 +64,7 @@ class HBnBFacade:
             if 'password' in user_data:
                 user_data['password'] = bcrypt.generate_password_hash(user_data['password']).decode('utf-8')
                 current_app.logger.info(f"Hashed password for {user_data['email']}: {user_data['password']}")  # Log hashed password
-            
+
             user = User(**user_data)
             db.session.add(user)
             db.session.commit()
@@ -92,7 +92,7 @@ class HBnBFacade:
         Retrieve a user by their email..
         """
         return User.query.filter_by(email=email).first()
-    
+
     def get_all_users(self):
         """
         Retrieve all users from the repository.
@@ -126,11 +126,11 @@ class HBnBFacade:
         """
         if not data.get('name'):
             raise BadRequest("Amenity name is required.")
-        
+
         existing_amenity = self.amenity_repository.get_by_name(data['name'])
         if existing_amenity:
             raise BadRequest(f"Amenity with name '{data['name']}' already exists.")
-        
+
         new_amenity = Amenity(name=data['name'], description=data.get('description', ''))
         self.amenity_repository.add(new_amenity)
         return new_amenity
@@ -173,7 +173,7 @@ class HBnBFacade:
         """
         if not title or not description or not price or not latitude or not longitude or not owner_id:
             raise ValueError("Missing required data to create place")
-    
+
         # Fetch the owner from the database
         owner = User.query.get(owner_id)
         if not owner:
@@ -203,6 +203,22 @@ class HBnBFacade:
         place.save()
 
         return place
+
+#     # add SD
+#  # Other methods remain unchanged
+#     def get_all_places(self):
+#         """
+#         Retrieve all places from the database.
+#         """
+#         # try:
+#             # current_app.logger.debug("Attempting to retrieve all places from the database.")
+#         places = self.place_repository.get_all()
+#             # current_app.logger.debug(f"Retrieved {len(places)} places from the database.")
+#         return [place.to_dict() for place in places]
+#         # except Exception as e:
+#             # current_app.logger.error(f"Error retrieving places: {e}", exc_info=True)
+#             # raise ValueError("Failed to retrieve places.")
+
 
     @staticmethod
     def get_place_by_id(place_id):
@@ -285,7 +301,7 @@ class HBnBFacade:
         # Retrieve the User and Place instances using the UUIDs
         user = User.query.filter_by(id=user_id).first()
         place = Place.query.filter_by(id=place_id).first()
-        
+
         if not user or not place:
             raise ValueError("Invalid user_id or place_id")
 

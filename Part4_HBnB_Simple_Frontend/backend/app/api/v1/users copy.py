@@ -42,8 +42,7 @@ user_update_model = api.model('UserUpdate', {
 
 # -------------------------- Non-Admin User Creation --------------------------
 
-# @api.route('/users/')
-@api.route('/users/', strict_slashes=False)
+@api.route('/users/')
 class UserCreate(Resource):
     @api.expect(user_model, validate=True)
     @api.doc(description='Register a new user (accessible to anyone).')
@@ -63,14 +62,9 @@ class UserCreate(Resource):
 
         try:
             new_user = facade.create_user(user_data)
-
-            # Generate JWT token
-            token = create_access_token(identity={'id': str(new_user.id), 'is_admin': new_user.is_admin})
-
             return {
                 'message': 'User created successfully',
-                'user_id': str(new_user.id),
-                'token': token,
+                'user_id': new_user.id,
             }, 201
         except Exception as e:
             current_app.logger.error(f"Error during user creation: {e}")

@@ -36,7 +36,7 @@ Error Handling:
     - Returns a 404 status code if a requested place is not found (GET, PUT).
 
 """
-# from flask import current_app #add SD
+
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity # add SD
 from app.services import facade
@@ -146,29 +146,7 @@ class PlaceList(Resource):
             'latitude': place.latitude,
             'longitude': place.longitude
         } for place in places], 200
-        
 
-    # @api.doc(description='Retrieve the list of all places')
-    # @api.response(200, 'Success')
-    # @api.response(500, 'Internal Server Error')
-    # def get(self):
-    #     """
-    #     Retrieve a list of all places.
-    #     """
-    #     try:
-    #         places = facade.get_all_places()
-    #         if not places:
-    #             # current_app.logger.info("No places found.")
-    #             return {'message': 'No places found'}, 200
-    #         return [{
-    #             'id': place.id,
-    #             'title': place.title,
-    #             'latitude': place.latitude,
-    #             'longitude': place.longitude
-    #         } for place in places], 200
-    #     except Exception as e:
-    #     #     current_app.logger.error(f"Error retrieving places: {e}")
-    #         return {'message': 'Internal Server Error'}, 500
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):

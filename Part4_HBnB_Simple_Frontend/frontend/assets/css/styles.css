@@ -481,7 +481,7 @@ main h1 {
   /* Vous pouvez centrer l’ensemble dans la page si désiré : */
   /* justify-content: center; */
 
-  margin: 20px 0;
+  /* margin: 20px 0; */
   font-weight: bold;
 }
 
@@ -497,13 +497,16 @@ main h1 {
 
 .index_filter select {
   font-size: 17px;
-  padding: 10px;
+  padding: 5px 5px; /* Plus d'espacement pour un style similaire */
+  /* padding: 10px; */
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f8f5f5;
   cursor: pointer;
   /* Retirez si d’autres styles perturbent l’affichage */
   margin: 0;
+  height: auto; /* Hauteur automatique */
+  width: auto; /* Largeur automatique */
 }
 
 
@@ -517,6 +520,7 @@ main h1 {
   outline: none; /* Supprime le contour par défaut */
   border-color: #ff8c00; /* Couleur de la bordure au focus */
   border-radius: 10px;
+  box-shadow: 0 0 5px rgba(255, 140, 0, 0.8); /* Ajoute un effet de focus */
 }
 
 /* Places Section */

@@ -65,20 +65,6 @@ class PlaceRepository(SQLAlchemyRepository):
     def get_all(self):
         return self.model.query.all()
 
-    # def get_all(self):
-    #     """
-    #     Retrieve all places from the database.
-
-    #     Returns:
-    #         list: A list of all Place objects.
-    #     """
-    #     try:
-    #         places = Place.query.all()  # Fetch all places from the database
-    #         return places
-    #     except Exception as e:
-    #         # current_app.logger.error(f"Error retrieving all places: {e}")
-    #         raise ValueError("Failed to retrieve places.")
-
     def add(self, place):
         db.session.add(place)
         db.session.commit()

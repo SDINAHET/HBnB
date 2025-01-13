@@ -23,7 +23,9 @@ def create_app(config_name="default"):
     db.init_app(app)
     # Ajoutez ici la configuration CORS
     # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
-    CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+    # CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+    CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5500"}}, supports_credentials=True)
+
 
 
 

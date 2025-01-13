@@ -162,7 +162,7 @@
             <input type="email" id="email" name="email" placeholder="your-email@exemple.com" required>
 
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="* * * * * * * *" minlength="6" required/>
+            <input type="password" id="password" name="password" placeholder="* * * * * * * *" minlength="8" required>
 
             <label for="confirm-password">Confirm password</label>
             <input type="password" id="confirm-password" name="confirm_password" placeholder="* * * * * * * *" required>
@@ -187,69 +187,72 @@
             const apiUrl = 'http://127.0.0.1:5000/api/v1/users/users';
 
             form.addEventListener('submit', async (event) => {
-                event.preventDefault(); // Prevent default form submission
+                event.preventDefault(); // Empêche la soumission classique du formulaire
 
-                // Retrieve form data
-                const firstName = document.getElementById('first-name').value.trim();
-                const lastName = document.getElementById('last-name').value.trim();
-                const email = document.getElementById('email').value.trim();
-                const password = document.getElementById('password').value.trim();
-                const confirmPassword = document.getElementById('confirm-password').value.trim();
+                // Récupération des données du formulaire
+                const firstName = document.getElementById('first-name').value;
+                const lastName = document.getElementById('last-name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
 
-                // Validate passwords match
+                // Vérifiez que les mots de passe correspondent
                 if (password !== confirmPassword) {
                     alert("Passwords do not match. Please try again.");
                     return;
                 }
 
-                // Create the user data object
+                // Création de l'objet utilisateur
                 const userData = {
                     first_name: firstName,
                     last_name: lastName,
                     email: email,
-                    password: password,
+                    password: password
                 };
 
                 try {
-                    // POST request to the API
+                    // Requête POST vers l'API
                     const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(userData),
+                        body: JSON.stringify(userData)
                     });
 
                     if (response.ok) {
                         const data = await response.json();
-                        displaySuccess(data.token, data.user_id); // Display success message and redirect
+                        // Affiche le token et l'ID retournés par l'API
+                        displayTokenAndId(data.token, data.id);
                     } else {
                         const error = await response.json();
-                        alert(`Error: ${error.message || 'Registration failed.'}`);
+                        alert(`Error: ${error.message}`);
                     }
                 } catch (error) {
                     console.error('Error during registration:', error);
-                    alert('Could not connect to the server. Please try again later.');
+                    alert('An error occurred. Please try again later.');
                 }
             });
 
-            // Function to display success message and redirect
-            function displaySuccess(token, userId) {
+            // Fonction pour afficher le token et l'ID sur la page
+            function displayTokenAndId(token, id) {
                 const resultDiv = document.getElementById('result');
-                resultDiv.style.display = 'block';
+                resultDiv.style.display = 'block'; // Affiche la div
                 resultDiv.innerHTML = `
                     <strong>Registration Successful!</strong><br>
                     <strong>Token:</strong> ${token}<br>
-                    <strong>User ID:</strong> ${userId}
+                    <strong>User ID:</strong> ${id}
                 `;
-
-                // Redirect after 3 seconds
-                setTimeout(() => {
-                    window.location.href = `register-success.html?token=${token}&id=${userId}`;
-                }, 3000);
             }
 
-            // Function to validate form fields and display errors
+            form.addEventListener('submit', (event) => {
+                // Empêche l'envoi si un champ est invalide
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    displayValidationErrors();
+                }
+            });
+
             function displayValidationErrors() {
                 const inputs = form.querySelectorAll('input');
                 inputs.forEach((input) => {
@@ -258,12 +261,11 @@
                     errorElement.style.color = 'red';
                     errorElement.style.fontSize = '0.9rem';
 
-                    // Remove existing error messages
+                    // Supprime les messages d'erreur existants
                     if (input.nextSibling && input.nextSibling.classList?.contains('error-message')) {
                         input.nextSibling.remove();
                     }
 
-                    // Check validity and display error messages
                     if (!input.validity.valid) {
                         let message = '';
                         if (input.validity.valueMissing) {
@@ -278,8 +280,55 @@
                     }
                 });
             }
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const submitButton = form.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+                submitButton.innerHTML = 'Submitting...';
+
+                setTimeout(() => {
+                    form.submit(); // Envoyez le formulaire après un délai simulé
+                }, 2000);
+            });
         });
 
+
+        const apiUrl = 'http://127.0.0.1:5000/api/v1/users/users';
+
+        document.querySelector('form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = {
+                first_name: document.getElementById('first-name').value,
+                last_name: document.getElementById('last-name').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Success:', data);
+                    window.location.href = `register-success.html?token=${data.token}&id=${data.id}`;
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.message}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Could not connect to the server.');
+            }
+        });
 
     </script>
     <script src="../assets/js/scripts.js"></script>

@@ -24,7 +24,7 @@
       <section class="place-details">
         <h1 id="place-title">Loading...</h1>
         <p><strong>Host:</strong> <span id="place-host">Loading...</span></p>
-        <p><strong>Price per night:</strong> <span id="place-price">Loading...</span></p>
+        <p><strong>Price per night: </strong> <span id="place-price">Loading...</span></p>
         <p><strong>Description:</strong> <span id="place-description">Loading...</span></p>
         <p><strong>Amenities:</strong> <span id="place-amenities">Loading...</span></p>
       </section>
@@ -45,20 +45,16 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // Récupérer les paramètres de l'URL
         const urlParams = new URLSearchParams(window.location.search);
         const placeId = parseInt(urlParams.get("id"), 10);
 
-        // Vérification de l'ID du lieu
         if (!placeId) {
           alert("Invalid Place ID!");
           window.location.href = "index.html";
           return;
         }
 
-        // Vérifier si l'utilisateur est connecté
         const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-        const userName = localStorage.getItem("userName") || "You"; // Récupérer le nom de l'utilisateur ou utiliser "Guest"
         const addReviewContainer = document.getElementById("add-review-container");
 
         if (isLoggedIn) {
@@ -83,7 +79,6 @@
             <button type="submit" class="submit-review-button">Submit Review</button>
           `;
 
-          // Gérer la soumission du formulaire d'avis
           addReviewForm.addEventListener("submit", (e) => {
             e.preventDefault();
 
@@ -97,14 +92,14 @@
 
             // Simuler l'ajout de l'avis
             alert("Review submitted successfully!");
-            console.log("New Review:", { userName, comment, rating });
+            console.log("New Review:", { comment, rating });
 
             // Ajouter l'avis dans la liste des avis
             const reviewsSection = document.getElementById("reviews-section");
             const newReview = document.createElement("div");
             newReview.className = "review";
             newReview.innerHTML = `
-              <p><strong>${userName}:</strong></p>
+              <p><strong>You:</strong></p>
               <p>${comment}</p>
               <p>Rating: ${"★".repeat(rating)}${"☆".repeat(5 - rating)}</p>
             `;
@@ -116,7 +111,7 @@
 
           addReviewContainer.appendChild(addReviewForm);
         } else {
-          // Créer et afficher le bouton "Add Review" pour les utilisateurs non connectés
+          // Créer et afficher le bouton "Add Review"
           const addReviewButton = document.createElement("button");
           addReviewButton.className = "button add-review";
           addReviewButton.textContent = "Add Review";
@@ -132,3 +127,4 @@
     <script src="../assets/js/scripts.js"></script>
   </body>
 </html>
+<!-- DINAHET -->

@@ -51,7 +51,7 @@ class Place(BaseEntity):
         """
         Initializes a Place object with provided information and validates it.
         """
-        
+
         if not owner_id:
             raise ValueError("Owner must be provided")
         super().__init__()
@@ -121,18 +121,29 @@ class Place(BaseEntity):
         self.amenities.append(amenity)
         self.save()  # Update timestamp when modifying amenities
 
+    # def to_dict(self):
+    #     """
+    #     Returns a dictionary representation of the Place instance.
+    #     """
+    #     return {
+    #         'id': self.id,  # Assuming BaseEntity provides an 'id' attribute
+    #         'title': self.title,
+    #         'description': self.description,
+    #         'price': self.price,
+    #         'latitude': self.latitude,
+    #         'longitude': self.longitude,
+    #         'owner': self.owner.to_dict() if self.owner else None,
+    #         'reviews': [review.to_dict() for review in self.reviews],
+    #         'amenities': [amenity.to_dict() for amenity in self.amenities]
+    #     }
     def to_dict(self):
-        """
-        Returns a dictionary representation of the Place instance.
-        """
         return {
-            'id': self.id,  # Assuming BaseEntity provides an 'id' attribute
+            'id': self.id,
             'title': self.title,
             'description': self.description,
             'price': self.price,
             'latitude': self.latitude,
             'longitude': self.longitude,
-            'owner': self.owner.to_dict() if self.owner else None,
-            'reviews': [review.to_dict() for review in self.reviews],
-            'amenities': [amenity.to_dict() for amenity in self.amenities]
+            'owner_id': self.owner_id,
+            'amenities': [amenity.id for amenity in self.amenities]
         }

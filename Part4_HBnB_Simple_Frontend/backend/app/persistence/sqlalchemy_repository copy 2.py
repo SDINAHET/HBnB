@@ -1,12 +1,15 @@
 #!/usr/bin/python3
-from app import db  # Assuming you have SQLAlchemy set up
-
+from sqlalchemy.exc import SQLAlchemyError
+from app import db
 from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
 from app.models.amenity import Amenity
 
 class SQLAlchemyRepository:
+    """
+    Base repository class for common database operations.
+    """
     def __init__(self, model):
         self.model = model
 
@@ -14,13 +17,97 @@ class SQLAlchemyRepository:
         try:
             db.session.add(obj)
             db.session.commit()
-        except Exception as e:
+            return obj
+        except SQLAlchemyError as e:
             db.session.rollback()
-            raise e
+            raise ValueError(f"Error adding object: {e}")
 
     def get(self, obj_id):
-        return self.model.query.get(obj_id)
+        try:
+            return self.model.query.get(obj_id)
+        except SQLAlchemyError as e:
+            raise ValueError(f"Error fetching object with ID {obj_id}: {e}")
 
+    def get_all(self):
+        try:
+            return self.model.query.all()
+        except SQLAlchemyError as e:
+            raise ValueError(f"Error fetching all objects: {e}")
+
+    def update(self, obj_id, data):
+        try:
+            obj = self.get(obj_id)
+            if obj:
+                for key, value in data.items():
+                    setattr(obj, key, value)
+                db.session.commit()
+                return obj
+            return None
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            raise ValueError(f"Error updating object with ID {obj_id}: {e}")
+
+    def delete(self, obj_id):
+        try:
+            obj = self.get(obj_id)
+            if obj:
+                db.session.delete(obj)
+                db.session.commit()
+                return True
+            return False
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            raise ValueError(f"Error deleting object with ID {obj_id}: {e}")
+
+    def get_by_attribute(self, attr_name, attr_value):
+        try:
+            return self.model.query.filter(getattr(self.model, attr_name) == attr_value).first()
+        except SQLAlchemyError as e:
+            raise ValueError(f"Error fetching object by {attr_name}={attr_value}: {e}")
+
+
+class UserRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(User)
+
+    def get_user_by_email(self, email):
+        try:
+            return self.model.query.filter_by(email=email).first()
+        except SQLAlchemyError as e:
+            raise ValueError(f"Error fetching user by email {email}: {e}")
+
+
+class PlaceRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Place)
+
+    def get_places_by_price_range(self, min_price, max_price):
+        try:
+            return self.model.query.filter(self.model.price.between(min_price, max_price)).all()
+        except SQLAlchemyError as e:
+            raise ValueError(f"Error fetching places in price range {min_price}-{max_price}: {e}")
+
+
+class ReviewRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Review)
+
+    def get_reviews_for_place(self, place_id):
+        try:
+            return self.model.query.filter_by(place_id=place_id).all()
+        except SQLAlchemyError as e:
+            raise ValueError(f"Error fetching reviews for place ID {place_id}: {e}")
+
+
+class AmenityRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Amenity)
+
+    def get_by_name(self, name):
+        try:
+            return self.model.query.filter_by(name=name).first()
+        except SQLAlchemyError as e:
+            raise ValueError(f"Error fetching amenity by name {name}: {e}")
     def get_all(self):
         return self.model.query.all()
 
@@ -64,20 +151,6 @@ class PlaceRepository(SQLAlchemyRepository):
 
     def get_all(self):
         return self.model.query.all()
-
-    # def get_all(self):
-    #     """
-    #     Retrieve all places from the database.
-
-    #     Returns:
-    #         list: A list of all Place objects.
-    #     """
-    #     try:
-    #         places = Place.query.all()  # Fetch all places from the database
-    #         return places
-    #     except Exception as e:
-    #         # current_app.logger.error(f"Error retrieving all places: {e}")
-    #         raise ValueError("Failed to retrieve places.")
 
     def add(self, place):
         db.session.add(place)
