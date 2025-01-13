@@ -219,6 +219,16 @@ class HBnBFacade:
 #             # current_app.logger.error(f"Error retrieving places: {e}", exc_info=True)
 #             # raise ValueError("Failed to retrieve places.")
 
+    # def get_all(self):
+    #     """
+    #     Retrieve all places from the database.
+    #     """
+    #     try:
+    #         return self.model.query.all()  # Fetch all Place records
+    #     except Exception as e:
+    #         logger.error(f"Error fetching places: {e}")
+    #         raise
+
 
     @staticmethod
     def get_place_by_id(place_id):

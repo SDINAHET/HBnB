@@ -131,22 +131,55 @@ class PlaceList(Resource):
         except ValueError as err:
             api.abort(400, str(err))
 
+    # @api.doc(description='Retrieve the list of all places')
+    # @api.response(200, 'List of places retrieved successfully')
+    # def get(self):
+    #     """
+    #     Retrieve a list of all places.
+    #     """
+    #     places = facade.get_all_places()
+    #     if not places:
+    #         return {'error': 'No places found'}, 404
+    #     return [{
+    #         'id': place.id,
+    #         'title': place.title,
+    #         'latitude': place.latitude,
+    #         'longitude': place.longitude
+    #     } for place in places], 200
+
+
     @api.doc(description='Retrieve the list of all places')
     @api.response(200, 'List of places retrieved successfully')
+    @api.response(404, 'No places found')
+    @api.response(500, 'Internal Server Error')
     def get(self):
         """
         Retrieve a list of all places.
         """
-        places = facade.get_all_places()
+        # try:
+        # Call the facade method to retrieve all places
+        places = facade.list_places()
+
+        # Check if places exist
         if not places:
             return {'error': 'No places found'}, 404
-        return [{
-            'id': place.id,
-            'title': place.title,
-            'latitude': place.latitude,
-            'longitude': place.longitude
-        } for place in places], 200
-        
+
+        # Format the places for the API response
+        return [
+            {
+                'id': place.id,
+                'title': place.title,
+                'latitude': place.latitude,
+                'longitude': place.longitude
+            } for place in places
+        ], 200
+        # except ValueError as e:
+        #     # Handle known errors
+        #     return {'error': str(e)}, 500
+        # except Exception as e:
+        #     # Handle unexpected errors
+        #     # logger.error(f"Unexpected error retrieving places: {e}", exc_info=True)
+        #     return {'error': 'Internal Server Error'}, 500
 
     # @api.doc(description='Retrieve the list of all places')
     # @api.response(200, 'Success')

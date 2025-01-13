@@ -91,61 +91,62 @@
     <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
   </footer>
   <script>
-    /**
-   * Affiche la liste des lieux dans le DOM.
-   * @param {Array} data - Liste des lieux à afficher.
-   */
-  function renderPlaceList(data) {
-    const placeListEl = document.querySelector(".place-list");
-    if (!placeListEl) return;
+    <script>
+      /**
+     * Affiche la liste des lieux dans le DOM.
+     * @param {Array} data - Liste des lieux à afficher.
+     */
+    function renderPlaceList(data) {
+      const placeListEl = document.querySelector(".place-list");
+      if (!placeListEl) return;
 
-    // Vider les anciens éléments
-    placeListEl.innerHTML = "";
+      // Vider les anciens éléments
+      placeListEl.innerHTML = "";
 
-    // Créer une carte pour chaque lieu
-    data.forEach((place) => {
-      const card = document.createElement("div");
-      card.className = "place-card";
-      card.innerHTML = `
-        <h2>${place.name}</h2>
-        <p>Price per night: ${place.price}€</p> <!-- Symbole € après le prix -->
-        <button class="details-btn" data-id="${place.id}">View Details</button>
-      `;
-      placeListEl.appendChild(card);
-    });
-
-    // Ajouter des événements aux boutons "View Details"
-    document.querySelectorAll(".details-btn").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const pid = e.target.getAttribute("data-id");
-        window.location.href = `place.html?id=${pid}`;
+      // Créer une carte pour chaque lieu
+      data.forEach((place) => {
+        const card = document.createElement("div");
+        card.className = "place-card";
+        card.innerHTML = `
+          <h2>${place.name}</h2>
+          <p>Price per night: ${place.price}€</p> <!-- Symbole € après le prix -->
+          <button class="details-btn" data-id="${place.id}">View Details</button>
+        `;
+        placeListEl.appendChild(card);
       });
-    });
-  }
 
-  /**
-   * Configure le filtre "Max Price".
-   */
-  function setupMaxPriceFilter() {
-    const maxPriceSelect = document.getElementById("maxPrice");
-    if (!maxPriceSelect) return;
+      // Ajouter des événements aux boutons "View Details"
+      document.querySelectorAll(".details-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const pid = e.target.getAttribute("data-id");
+          window.location.href = `place.html?id=${pid}`;
+        });
+      });
+    }
 
-    // Filtrer les lieux lorsqu'une option est sélectionnée
-    maxPriceSelect.addEventListener("change", () => {
-      const value = maxPriceSelect.value; // Ex: "100" ou "all"
-      const maxPrice = value === "10" ? Infinity : parseInt(value, 10);
+    /**
+     * Configure le filtre "Max Price".
+     */
+    function setupMaxPriceFilter() {
+      const maxPriceSelect = document.getElementById("maxPrice");
+      if (!maxPriceSelect) return;
 
-      // Filtrer les lieux en fonction du prix
-      const filteredPlaces = places.filter((place) => place.price <= maxPrice);
+      // Filtrer les lieux lorsqu'une option est sélectionnée
+      maxPriceSelect.addEventListener("change", () => {
+        const value = maxPriceSelect.value; // Ex: "100" ou "all"
+        const maxPrice = value === "10" ? Infinity : parseInt(value, 10);
 
-      // Réafficher les lieux filtrés
-      renderPlaceList(filteredPlaces);
-    });
-  }
+        // Filtrer les lieux en fonction du prix
+        const filteredPlaces = places.filter((place) => place.price <= maxPrice);
 
-  // Initialisation
-  renderPlaceList(places); // Affiche tous les lieux au départ
-  setupMaxPriceFilter();   // Active le filtrage par prix
+        // Réafficher les lieux filtrés
+        renderPlaceList(filteredPlaces);
+      });
+    }
+
+    // Initialisation
+    renderPlaceList(places); // Affiche tous les lieux au départ
+    setupMaxPriceFilter();   // Active le filtrage par prix
   </script>
   <script src="../assets/js/scripts.js"></script>
 </body>
