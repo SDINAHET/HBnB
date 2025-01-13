@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="../images/icon.png" type="image/x-icon">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create a Place</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
+      }
+
+      main {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #ff5722;
+        font-size: 28px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        border-color: #ff5722;
+        outline: none;
+      }
+
+      textarea {
+        resize: vertical;
+      }
+
+      button {
+        padding: 12px;
+        background-color: orange;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: darkorange;
+      }
+    </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <a href="index.html" id="index-link2">
+        <img src="../images/logo.png" alt="HBnB Logo" class="logo-img">
+        <span class="HBnB logo-text"></span>
+      </a>
+    </div>
+    <nav>
+      <a href="login.html" id="login-link" style="color: white; text-decoration: none;">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Create a New Place</h1>
+    <form id="createPlaceForm">
+		<!-- Title -->
+		<div class="form-group">
+		  <label for="title">Title:</label>
+		  <input type="text" id="title" name="title" placeholder="Enter the title of the place" required>
+		</div>
+
+		<!-- Description -->
+		<div class="form-group">
+		  <label for="description">Description:</label>
+		  <textarea id="description" name="description" rows="4" placeholder="Describe the place..." required></textarea>
+		</div>
+
+		<!-- Price -->
+		<div class="form-group">
+		  <label for="price">Price per night (€):</label>
+		  <input type="number" id="price" name="price" min="0" placeholder="Enter the price per night" required>
+		</div>
+
+		<!-- Latitude -->
+		<div class="form-group">
+		  <label for="latitude">Latitude:</label>
+		  <input type="number" step="0.000001" id="latitude" name="latitude" placeholder="Enter latitude" required>
+		</div>
+
+		<!-- Longitude -->
+		<div class="form-group">
+		  <label for="longitude">Longitude:</label>
+		  <input type="number" step="0.000001" id="longitude" name="longitude" placeholder="Enter longitude" required>
+		</div>
+
+		<!-- Owner ID -->
+		<div class="form-group">
+		  <label for="owner_id">Owner ID:</label>
+		  <input type="text" id="owner_id" name="owner_id" readonly>
+		</div>
+
+		<!-- Amenities -->
+		<div class="form-group">
+		  <label>Amenities:</label>
+		  <div id="amenities-container">
+			<!-- Cases à cocher générées dynamiquement -->
+		  </div>
+		</div>
+
+		<!-- Submit Button -->
+		<button type="submit">Create Place</button>
+	  </form>
+  </main>
+
+  <footer>
+    <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
+  </footer>
+
+  <script>
+	// Charger les amenities et afficher des cases à cocher
+	async function loadAmenities() {
+	  const amenitiesContainer = document.getElementById('amenities-container');
+	  try {
+		// Simulation de la liste d'amenities
+		const amenities = [
+		  { id: "a12ef460-8e90-4e7a-8f43-1918a006078d", name: "WiFi" },
+		  { id: "acbc951d-ef60-4486-84b9-87afc471eb12", name: "Swimming Pool" },
+		  { id: "6fac204d-90b6-40cc-a87a-dbbc081745e5", name: "Air Conditioning" },
+		  { id: "de9e2f01-bfac-4a56-a94d-8e1a453cb3cb", name: "Fireplace" },
+		  { id: "5a73e4cd-3026-4f71-a65c-f71fde342921", name: "Hiking Trails" },
+		  { id: "db3f396e-7666-4636-b839-e51bfb47a6de", name: "Smart TV" },
+		  { id: "f74cc8b7-1b53-4d78-93ef-3a59b544b4de", name: "High-Speed WiFi" },
+		  { id: "e1b2f62e-447c-498c-8134-77d69db6c00c", name: "Private Garden" },
+		  { id: "f85cc6b7-3c12-42e1-b3ff-8347b52a3eb3", name: "Pet-Friendly" },
+		  { id: "c8e7de58-d6a4-4e0f-a79b-58a9ef812dc9", name: "Smart Home Automation" }
+		];
+
+		// Ajouter chaque amenity comme case à cocher
+		amenities.forEach(amenity => {
+		  const div = document.createElement('div');
+		  div.className = 'checkbox-group';
+
+		  const checkbox = document.createElement('input');
+		  checkbox.type = 'checkbox';
+		  checkbox.id = `amenity-${amenity.id}`;
+		  checkbox.name = 'amenities';
+		  checkbox.value = amenity.id;
+
+		  const label = document.createElement('label');
+		  label.htmlFor = `amenity-${amenity.id}`;
+		  label.textContent = amenity.name;
+
+		  div.appendChild(checkbox);
+		  div.appendChild(label);
+
+		  amenitiesContainer.appendChild(div);
+		});
+	  } catch (error) {
+		console.error('Error fetching amenities:', error);
+	  }
+	}
+
+	// Récupérer l'ID utilisateur depuis les cookies
+	function getCookie(name) {
+	  const value = `; ${document.cookie}`;
+	  const parts = value.split(`; ${name}=`);
+	  if (parts.length === 2) return parts.pop().split(';').shift();
+	}
+
+	// Soumission du formulaire
+	document.getElementById('createPlaceForm').addEventListener('submit', async function (e) {
+	  e.preventDefault(); // Empêcher l'envoi par défaut du formulaire
+
+	  // Récupérer les données des cases à cocher sélectionnées
+	  const selectedAmenities = Array.from(document.querySelectorAll('#amenities-container input:checked')).map(
+		checkbox => checkbox.value
+	  );
+
+	  // Récupération des données du formulaire
+	  const formData = {
+		title: document.getElementById('title').value,
+		description: document.getElementById('description').value,
+		price: parseFloat(document.getElementById('price').value),
+		latitude: parseFloat(document.getElementById('latitude').value),
+		longitude: parseFloat(document.getElementById('longitude').value),
+		owner_id: document.getElementById('owner_id').value,
+		amenities: selectedAmenities
+	  };
+
+	  try {
+		// Ajout du token JWT (récupéré depuis les cookies ou localStorage)
+		const jwtToken = getCookie('jwt_token'); // Assurez-vous que le token JWT est stocké dans un cookie nommé `jwt_token`
+
+		// Envoi de la requête POST
+		const response = await fetch('http://127.0.0.1:5000/api/v1/places/', {
+		  method: 'POST',
+		  headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${jwtToken}` // Token JWT pour l'authentification
+		  },
+		  body: JSON.stringify(formData)
+		});
+
+		// Vérification de la réponse
+		if (response.ok) {
+		  alert('Place created successfully!');
+		} else {
+		  const error = await response.json();
+		  alert(`Error: ${error.message}`);
+		}
+	  } catch (err) {
+		console.error('Error:', err);
+		alert('Failed to create the place. Please try again.');
+	  }
+	});
+
+	// Initialisation
+	document.addEventListener('DOMContentLoaded', () => {
+	  document.getElementById('owner_id').value = getCookie('user_id'); // Remplir automatiquement l'ID utilisateur
+	  loadAmenities(); // Charger les amenities dans des cases à cocher
+	});
+  </script>
+
+
+</body>
+</html>
