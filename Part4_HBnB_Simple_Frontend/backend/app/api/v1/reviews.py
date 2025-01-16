@@ -56,6 +56,7 @@ class ReviewList(Resource):
 # --------------------- Get All Reviews ---------------------
 
 @api.route('/')
+# @api.route('')
 class ReviewListAll(Resource):
     @jwt_required()
     def get(self):

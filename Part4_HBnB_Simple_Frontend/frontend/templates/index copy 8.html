@@ -24,7 +24,7 @@
       <div class="title-section">
         <h1>Available Places</h1>
         <div class="index_filter">
-          <label for="max-Price">Max Price:</label>
+          <label for="maxPrice">Max Price:</label>
           <select id="max-price">
             <option value="all">All</option>
             <option value="10">10€</option>
@@ -43,7 +43,7 @@
         © 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.
       </p>
     </footer>
-    <!-- <script>
+    <script>
       document.addEventListener("DOMContentLoaded", async () => {
         try {
           const places = await fetchPlaces();
@@ -92,7 +92,7 @@
           card.innerHTML = `
             <h2>${place.title}</h2>
             <p>Price: ${place.price}€</p>
-             <p>Location: (${place.latitude}, ${place.longitude})</p>
+            <!-- <p>Location: (${place.latitude}, ${place.longitude})</p> -->
             <button class="view-details" data-id="${place.id}">View Details</button>
           `;
           placeListEl.appendChild(card);
@@ -121,7 +121,6 @@
           renderPlaceList(filteredPlaces);
         });
       }
-    </script> -->
-    <script src="../assets/js/index.js"></script>
+    </script>
   </body>
 </html>

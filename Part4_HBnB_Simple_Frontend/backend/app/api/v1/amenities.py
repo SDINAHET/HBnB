@@ -159,6 +159,7 @@ class AdminAmenityUpdate(Resource):
 # -------------------------- Admin Routes to List All Amenities --------------------------
 
 @api.route('/admin/')
+@api.route('/admin')
 class AdminAmenityList(Resource):
     @jwt_required()
     @api.doc(description='Admin: Get the list of all amenities.', security='BearerAuth')

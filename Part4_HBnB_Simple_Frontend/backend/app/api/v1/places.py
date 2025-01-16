@@ -79,6 +79,7 @@ place_list_model = api.model('PlaceList', {
 
 
 @api.route('/')
+@api.route('')
 class PlaceList(Resource):
     """
     Resource for handling requests to list all places or to create a new place.
@@ -170,6 +171,7 @@ class PlaceList(Resource):
 
             # Return the list of places
             return {'places': [place.to_dict() for place in places]}, 200
+            # return jsonify({"places": [...]})
 
         except Exception as e:
             # Log the exception and return a 500 response
