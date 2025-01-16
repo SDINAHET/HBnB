@@ -8,10 +8,10 @@ from datetime import datetime
 
 class Amenity(BaseEntity):
     __tablename__ = 'amenities'
-    
+
     id = db.Column(db.String(36), primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)  # 50 caractères max pour le nom
-    description = db.Column(db.String(255), default="")  # Optionnel, maximum 255 caractères
+    # description = db.Column(db.String(255), default="")  # Optionnel, maximum 255 caractères
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Date de création
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Date de mise à jour
 

@@ -29,7 +29,7 @@ class Review(BaseEntity):
     __tablename__ = 'reviews'  # Define the table name once
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    comment = db.Column(db.String(500), nullable=False)  # Review comment (max 500 characters)
+    text = db.Column(db.String(500), nullable=False)  # Review comment (max 500 characters)
     rating = db.Column(db.Integer, nullable=False)  # Review rating (1-5)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Creation timestamp
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Update timestamp
@@ -45,14 +45,14 @@ class Review(BaseEntity):
         """Initialise une instance de Review.
         """
         super().__init__()
-        self.comment = comment
+        self.text = comment
         self.rating = rating
         self.user = user
         self.place = place
         self.validate()
 
     def validate(self):
-        if not isinstance(self.comment, str) or not self.comment:
+        if not isinstance(self.text, str) or not self.text:
             raise ValueError('Comment must be a non-empty string.')
         if not isinstance(self.rating, int) or self.rating < 1 or self.rating > 5:
             raise ValueError('Rating must be an integer between 1 and 5.')
@@ -65,7 +65,7 @@ class Review(BaseEntity):
         """Return a dictionary representation of the Review instance."""
         return {
             'id': self.id,
-            'comment': self.comment,
+            'comment': self.text,
             'rating': self.rating,
             'user': self.get_user().to_dict() if self.get_user() else None,
             'place': self.get_place().to_dict() if self.get_place() else None,

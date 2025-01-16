@@ -15,14 +15,14 @@ api = Namespace('reviews', description='Review operations')
 
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
-    'comment': fields.String(required=True, description='The review comment'),
+    'text': fields.String(required=True, description='The review comment'),
     'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
     'user_id': fields.String(required=True, description='ID of the user'),
     'place_id': fields.String(required=True, description='ID of the place')
 })
 
 review_update_model = api.model('ReviewUpdate', {
-    'content': fields.String(description="New content of the review"),
+    'text': fields.String(description="New content of the review"),
     'rating': fields.Integer(description="New rating for the review (1 to 5)")
 })
 
@@ -64,7 +64,7 @@ class ReviewListAll(Resource):
         Accessible to authenticated users only.
         """
         current_user = get_jwt_identity()
-        
+
         try:
             reviews = facade.get_all_reviews()
             reviews_data = [{
@@ -74,7 +74,7 @@ class ReviewListAll(Resource):
                 "user_id": review.user_id,
                 "place_id": review.place_id,
             } for review in reviews]
-            
+
             return {"reviews": reviews_data}, 200
         except Exception as e:
             raise BadRequest(str(e))
@@ -90,12 +90,12 @@ class ReviewByID(Resource):
         Accessible to authenticated users only.
         """
         current_user = get_jwt_identity()
-        
+
         try:
             review = facade.get_review(review_id)
             if not review:
                 raise NotFound("Review not found")
-            
+
             return {
                 "review_id": review.id,
                 "content": review.content,

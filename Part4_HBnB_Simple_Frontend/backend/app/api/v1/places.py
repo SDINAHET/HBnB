@@ -73,6 +73,10 @@ place_model = api.model('Place', {
     'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
 })
 
+place_list_model = api.model('PlaceList', {
+    'places': fields.List(fields.Nested(place_model), description='List of places'),
+})
+
 
 @api.route('/')
 class PlaceList(Resource):
@@ -149,33 +153,59 @@ class PlaceList(Resource):
 
 
     @api.doc(description='Retrieve the list of all places')
-    @api.response(200, 'List of places retrieved successfully')
+    @api.response(200, 'List of places retrieved successfully', place_list_model)
     @api.response(404, 'No places found')
     @api.response(500, 'Internal Server Error')
     def get(self):
         """
         Retrieve a list of all places.
         """
-        # try:
-        # Call the facade method to retrieve all places
-        places = facade.list_places()
+        try:
+            # Retrieve all places using the facade
+            places = facade.list_places()
 
-        # Check if places exist
-        if not places:
-            return {'error': 'No places found'}, 404
+            # Check if there are no places
+            if not places:
+                return {'error': 'No places found'}, 404
 
-        # Format the places for the API response
-        return [
-            {
-                'id': place.id,
-                'title': place.title,
-                'latitude': place.latitude,
-                'longitude': place.longitude
-            } for place in places
-        ], 200
+            # Return the list of places
+            return {'places': [place.to_dict() for place in places]}, 200
+
+        except Exception as e:
+            # Log the exception and return a 500 response
+            return {'error': 'Internal Server Error', 'message': str(e)}, 500
+
+
+
+    # @api.doc(description='Retrieve the list of all places')
+    # @api.response(200, 'List of places retrieved successfully')
+    # @api.response(404, 'No places found')
+    # @api.response(500, 'Internal Server Error')
+    # def get(self):
+    #     """
+    #     Retrieve a list of all places.
+    #     """
+    #     # try:
+    #     # Call the facade method to retrieve all places
+    #     places = facade.list_places()
+
+    #     # Check if places exist
+    #     if not places:
+    #         return {'error': 'No places found'}, 404
+
+    #     # Format the places for the API response
+    #     return [
+    #         {
+    #             'id': place.id,
+    #             'title': place.title,
+    #             'latitude': place.latitude,
+    #             'longitude': place.longitude
+    #         } for place in places
+    #     ], 200
         # except ValueError as e:
         #     # Handle known errors
         #     return {'error': str(e)}, 500
+
         # except Exception as e:
         #     # Handle unexpected errors
         #     # logger.error(f"Unexpected error retrieving places: {e}", exc_info=True)
@@ -218,7 +248,7 @@ class PlaceResource(Resource):
         Get the details of a place by its ID.
         """
 
-        place = facade.get_place(place_id)
+        place = facade.get_place_by_id(place_id)
         if place is None:
             api.abort(404, 'Place not found')
 
