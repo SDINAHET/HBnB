@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="icon" href="../images/icon.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Success - HBnB</title>
+    <link rel="icon" href="../images/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #f99b03;
+            color: white;
+            padding: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            margin: 50px auto;
+            max-width: 600px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .token-info {
+            background-color: #e0ffe0;
+            border: 1px solid #5bc505;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .links a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #003366;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            background: #ffab02;
+            color: white;
+			margin-top: auto; /* Place le footer en bas même si le contenu est insuffisant */
+        }
+    </style>
+</head>
+<body>
+    <header>
+
+		<div class="logo">
+			<!-- <img src="images/logo.png" alt="HBnB Logo" class="logo-img">
+			<span class="HBnB logo-text"></span> -->
+			<a href="index.html" id="index-link2">
+			  <img src="../images/logo.png" alt="HBnB Logo" class="logo-img">
+			  <span class="HBnB logo-text"></span>
+			</a>
+		  </div>
+		  <h1>HBnB</h1>
+		  <nav>
+			<!-- <a href="place.html" id="place-link">Place</a> -->
+			<!-- <a href="add_review.html" id="add_review-link">Add-review</a> -->
+		  </nav>
+		  <nav>
+			<a href="login.html" id="login-link">Login</a>
+		  </nav>
+    </header>
+    <div class="container">
+        <h2>Registration Successful</h2>
+        <p class="success-message">Thank you for registering!</p>
+        <div class="token-info" id="token-info">
+            <strong>Token:</strong> <span id="token"></span><br>
+            <strong>User ID:</strong> <span id="user-id"></span>
+        </div>
+        <div class="links">
+            <a href="index.html">Go to Home</a>
+        </div>
+    </div>
+    <footer>
+        <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
+    </footer>
+    <script>
+        // Simulate token and user ID retrieval (Replace this with actual logic if needed)
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token') || 'N/A';
+            const userId = params.get('id') || 'N/A';
+
+            document.getElementById('token').textContent = token;
+            document.getElementById('user-id').textContent = userId;
+        });
+    </script>
+</body>
+</html>

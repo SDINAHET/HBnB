@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Details</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+ -->
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="HBnB Logo" class="logo-img">
+          <span class="HBnB logo-text"></span>
+        </a>
+      </div>
+      <nav>
+        <a href="login.html" id="login-link">Login</a>
+        <button id="logout-button" style="display: none;">Logout</button>
+      </nav>
+    </header>
+
+    <main class="place-page">
+      <section class="place-details">
+        <h1 id="place-title">Loading...</h1>
+        <p><strong>Host:</strong> <span id="place-host">Loading...</span></p>
+        <p><strong>Price per night:</strong> <span id="place-price">Loading...</span></p>
+        <p><strong>Description:</strong> <span id="place-description">Loading...</span></p>
+        <p><strong>Amenities:</strong> <span id="place-amenities">Loading...</span></p>
+      </section>
+
+      <h2 id="reviews-title">Reviews</h2>
+      <div class="reviews-section" id="reviews-section">
+        <p>Loading reviews...</p>
+      </div>
+      <br>
+      <br>
+      <div id="add-review-container"></div>
+    </main>
+
+    <footer>
+      <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
+    </footer>
+
+    <script src="../assets/js/place.js"></script>
+  </body>
+</html>

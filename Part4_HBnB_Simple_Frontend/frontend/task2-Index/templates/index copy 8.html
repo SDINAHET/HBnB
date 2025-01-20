@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" href="../images/icon.png" type="image/x-icon" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>List of Places</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="index.html" id="index-link2">
+          <img src="../images/logo.png" alt="HBnB Logo" class="logo-img" />
+          <span class="HBnB logo-text"></span>
+        </a>
+      </div>
+      <nav>
+        <a href="login.html" id="login-link">Login</a>
+        <button id="logout-button" style="display: none;">Logout</button>
+      </nav>
+    </header>
+    <main class="home-page">
+      <div class="title-section">
+        <h1>Available Places</h1>
+        <div class="index_filter">
+          <label for="maxPrice">Max Price:</label>
+          <select id="max-price">
+            <option value="all">All</option>
+            <option value="10">10€</option>
+            <option value="50">50€</option>
+            <option value="100">100€</option>
+          </select>
+        </div>
+      </div>
+      <section class="place-list"></section>
+      <div class="add-place-button">
+        <a href="create_place.html" class="create-place-link">Create a Place</a>
+      </div>
+    </main>
+    <footer>
+      <p>
+        © 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.
+      </p>
+    </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const places = await fetchPlaces();
+          renderPlaceList(places);
+          setupPriceFilter(places);
+        } catch (error) {
+          console.error("Error initializing the page:", error);
+          document.querySelector(".place-list").innerHTML =
+            "<p>Failed to load places. Please try again later.</p>";
+        }
+      });
+
+      /**
+       * Fetch places from the API.
+       * Publicly accessible without requiring a token.
+       * @returns {Array} List of places.
+       */
+      async function fetchPlaces() {
+        const response = await fetch("http://127.0.0.1:5000/api/v1/places/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch places");
+        }
+        const data = await response.json();
+        return data.places || []; // Adjust based on expected response structure
+      }
+
+      /**
+       * Render the list of places dynamically.
+       * @param {Array} places - List of places to render.
+       */
+      function renderPlaceList(places) {
+        const placeListEl = document.querySelector(".place-list");
+        placeListEl.innerHTML = "";
+        if (!places.length) {
+          placeListEl.innerHTML = "<p>No places available.</p>";
+          return;
+        }
+        places.forEach((place) => {
+          const card = document.createElement("div");
+          card.className = "place-card";
+          card.innerHTML = `
+            <h2>${place.title}</h2>
+            <p>Price: ${place.price}€</p>
+            <!-- <p>Location: (${place.latitude}, ${place.longitude})</p> -->
+            <button class="view-details" data-id="${place.id}">View Details</button>
+          `;
+          placeListEl.appendChild(card);
+        });
+
+        document.querySelectorAll(".view-details").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const placeId = e.target.getAttribute("data-id");
+            window.location.href = `place.html?id=${placeId}`;
+          });
+        });
+      }
+
+      /**
+       * Set up the max price filter.
+       * @param {Array} places - Original list of places.
+       */
+      function setupPriceFilter(places) {
+        const maxPriceFilter = document.getElementById("max-price");
+        maxPriceFilter.addEventListener("change", (e) => {
+          const maxPrice =
+            e.target.value === "all" ? Infinity : parseInt(e.target.value, 10);
+          const filteredPlaces = places.filter(
+            (place) => place.price <= maxPrice
+          );
+          renderPlaceList(filteredPlaces);
+        });
+      }
+    </script>
+  </body>
+</html>

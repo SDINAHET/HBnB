@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un compte - HBnB</title>
+    <link rel="icon" href="../images/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        html, body {
+            height: 100%; /* S'assure que le html et le body remplissent toute la hauteur de l'écran */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+
+        .container {
+            flex: 1; /* Permet au contenu de prendre toute la place disponible */
+        }
+
+        header {
+            background-color: #f99b03;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        header img {
+            width: 150px;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 10px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h2 {
+            color: #111111;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 0.5rem 0 0.2rem;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.7rem;
+            background-color: #5bc505;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #268f03;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .links a {
+            color: #003366;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        input:invalid {
+            border-color: red;
+            background-color: #ffe6e6;
+        }
+
+        input:valid {
+            border-color: green;
+            background-color: #e6ffe6;
+        }
+
+        .error-message {
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #ffab02;
+            color: #fff;
+            margin-top: 50px;
+            margin-top: auto; /* Place le footer en bas même si le contenu est insuffisant */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html" id="index-link2">
+                <img src="../images/logo.png" alt="HBnB Logo" class="logo-img">
+                <span class="HBnB logo-text"></span>
+            </a>
+        </div>
+        <h1>Welcome</h1>
+        <a href="index.html" id="login-link" style="color: #f5f4f1; text-decoration: none;">Home</a>
+    </header>
+
+    <div class="container">
+        <h2>Register a new user</h2>
+        <form action="register-success.html" method="get">
+            <label for="first-name">First name</label>
+            <input type="text" id="first-name" name="first_name" placeholder="First name" required>
+
+            <label for="last-name">Name</label>
+            <input type="text" id="last-name" name="last_name" placeholder="Name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your-email@exemple.com" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="* * * * * * * *" minlength="6" required/>
+
+            <label for="confirm-password">Confirm password</label>
+            <input type="password" id="confirm-password" name="confirm_password" placeholder="* * * * * * * *" required>
+
+            <button type="submit">Sign in</button>
+        </form>
+
+        <!-- Zone pour afficher les résultats -->
+        <div id="result" style="display: none; margin-top: 20px;"></div>
+
+        <div class="links">
+            <a href="login.html">Already register? Login</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 HBnB Evolution. All rights reserved. Author: Stéphane DINAHET.</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            const apiUrl = 'http://127.0.0.1:5000/api/v1/users/users';
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                // Retrieve form data
+                const firstName = document.getElementById('first-name').value.trim();
+                const lastName = document.getElementById('last-name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const confirmPassword = document.getElementById('confirm-password').value.trim();
+
+                // Validate passwords match
+                if (password !== confirmPassword) {
+                    alert("Passwords do not match. Please try again.");
+                    return;
+                }
+
+                // Create the user data object
+                const userData = {
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    password: password,
+                };
+
+                try {
+                    // POST request to the API
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(userData),
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        displaySuccess(data.token, data.user_id); // Display success message and redirect
+                    } else {
+                        const error = await response.json();
+                        alert(`Error: ${error.message || 'Registration failed.'}`);
+                    }
+                } catch (error) {
+                    console.error('Error during registration:', error);
+                    alert('Could not connect to the server. Please try again later.');
+                }
+            });
+
+            // Function to display success message and redirect
+            function displaySuccess(token, userId) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <strong>Registration Successful!</strong><br>
+                    <strong>Token:</strong> ${token}<br>
+                    <strong>User ID:</strong> ${userId}
+                `;
+
+                // Redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = `register-success.html?token=${token}&id=${userId}`;
+                }, 3000);
+            }
+
+            // Function to validate form fields and display errors
+            function displayValidationErrors() {
+                const inputs = form.querySelectorAll('input');
+                inputs.forEach((input) => {
+                    const errorElement = document.createElement('small');
+                    errorElement.classList.add('error-message');
+                    errorElement.style.color = 'red';
+                    errorElement.style.fontSize = '0.9rem';
+
+                    // Remove existing error messages
+                    if (input.nextSibling && input.nextSibling.classList?.contains('error-message')) {
+                        input.nextSibling.remove();
+                    }
+
+                    // Check validity and display error messages
+                    if (!input.validity.valid) {
+                        let message = '';
+                        if (input.validity.valueMissing) {
+                            message = `Please fill out the ${input.name} field.`;
+                        } else if (input.validity.typeMismatch) {
+                            message = `Please enter a valid ${input.type}.`;
+                        } else if (input.validity.tooShort) {
+                            message = `${input.name} must be at least ${input.minLength} characters.`;
+                        }
+                        errorElement.textContent = message;
+                        input.parentNode.insertBefore(errorElement, input.nextSibling);
+                    }
+                });
+            }
+        });
+
+
+    </script>
+    <script src="../assets/js/scripts.js"></script>
+</body>
+</html>

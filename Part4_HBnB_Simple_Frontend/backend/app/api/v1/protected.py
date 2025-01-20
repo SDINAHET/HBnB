@@ -87,10 +87,42 @@ class ProtectedResource(Resource):
         #     return {'msg': 'Invalid token'}, 401
         # except IndexError:
         #     return {'msg': 'Token malformed'}, 401
-        current_user = get_jwt_identity()  # Get user identity (payload) from the JWT
+        # auth_header = request.headers.get('Authorization')
+        # current_app.logger.info(f"Authorization Header: {auth_header}")
+        # current_user = get_jwt_identity()  # Get user identity (payload) from the JWT
+        # return {'message': f'Hello, user {current_user["id"]}'}, 200
+
+        # Vérifiez si le token est dans l'en-tête ou dans l'URL
+        # auth_header = request.headers.get('Authorization')
+        # token_from_url = request.args.get('Authorization')
+
+        # if auth_header:
+        #     # Si le token est dans l'en-tête, utilisez-le
+        #     verify_jwt_in_request()
+        # elif token_from_url:
+        #     # Si le token est dans l'URL, simulez l'en-tête `Authorization`
+        #     request.headers = {**request.headers, 'Authorization': f'Bearer {token_from_url}'}
+        #     verify_jwt_in_request()
+        # else:
+        #     # Aucun token trouvé
+        #     return {'msg': 'Missing Authorization Header or Token in URL'}, 401
+
+        # auth_header = request.headers.get('Authorization')
+        # current_app.logger.info(f"Authorization Header: {auth_header}")
+        current_user = get_jwt_identity()
         return {'message': f'Hello, user {current_user["id"]}'}, 200
 
+        # Récupérez l'identité de l'utilisateur
+        # current_user = get_jwt_identity()
+        # return {'message': f'Hello, user {current_user["id"]}'}, 200
 
+
+        # try:
+        #     # Récupérer l'utilisateur actuel depuis le token JWT
+        #     current_user = get_jwt_identity()
+        #     return {'message': f'Hello, user {current_user["id"]}'}, 200
+        # except Exception as e:
+        #     return {'message': 'Error processing request', 'error': str(e)}, 500
 
 
 # authentification token JWT OK avec curl
@@ -109,3 +141,21 @@ class ProtectedResource(Resource):
 # }
 # root@UID7E:/mnt/c/Users/steph/Documents/2ème trimestre holberton/HBnB/HBnB/Part3_HBnB_
 # Auth_&_DB/hbnb/app#
+#
+#
+#
+#
+#root@UID7E:/mnt/c/Users/steph/Documents/2ème trimestre holberton/HBnB/HBnB# curl -X 'GET' \
+#   'http://127.0.0.1:5000/api/v1/protected/protected?Authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczNzExNTAzMiwianRpIjoiMmFlMmZjYTItZDdlMS00NWU5LWI1ZTUtNDJjYjFhY2FmYTQ3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJpZCI6ImZmN2I5NzM0LTVhYWQtNDk1Ni05NTAzLWE2OTA1MTZlMDY2MSIsImlzX2FkbWluIjpmYWxzZX0sIm5iZiI6MTczNzExNTAzMiwiZXhwIjoxNzM3MTE1OTMyfQ.z5l9MT74k7bdbvxcl78bfy2N7zYiZUV_FHrLKmZCvTI' \
+#   -H 'accept: application/json'
+# {
+#   "msg": "Missing Authorization Header"
+# }
+# root@UID7E:/mnt/c/Users/steph/Documents/2ème trimestre holberton/HBnB/HBnB# curl -X GET \
+#   'http://127.0.0.1:5000/api/v1/protected/protected' \
+#   -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczNzExNTAzMiwianRpIjoiMmFlMmZjYTItZDdlMS00NWU5LWI1ZTUtNDJjYjFhY2FmYTQ3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJpZCI6ImZmN2I5NzM0LTVhYWQtNDk1Ni05NTAzLWE2OTA1MTZlMDY2MSIsImlzX2FkbWluIjpmYWxzZX0sIm5iZiI6MTczNzExNTAzMiwiZXhwIjoxNzM3MTE1OTMyfQ.z5l9MT74k7bdbvxcl78bfy2N7zYiZUV_FHrLKmZCvTI' \
+#   -H 'accept: application/json'
+# {
+#     "message": "Hello, user ff7b9734-5aad-4956-9503-a690516e0661"
+# }
+
