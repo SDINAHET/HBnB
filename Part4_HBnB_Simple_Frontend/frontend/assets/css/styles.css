@@ -226,7 +226,7 @@ header #index-link:hover {
   align-items: center;
   height: calc(100vh - 120px);
   background-color: #e5e4e4;
-  text-align: center; /* Centre le contenu */
+  text-align: left; /* Centre le contenu */
   padding: 20px;
 }
 
@@ -994,7 +994,7 @@ select {
 }
 
 .add-review-container h2 {
-  text-align: center; /* Centre le titre */
+  text-align: left; /* left le titre */
   font-size: 1.8rem; /* Taille légèrement plus grande */
   font-weight: bold; /* Rend le texte plus gras */
   color: #333; /* Couleur sombre */
